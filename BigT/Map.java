@@ -5,13 +5,26 @@ import java.lang.*;
 import global.*;
 import BigT.*;
 
+package BigT;
+
+import java.io.*;
+import java.lang.*;
+import global.*;
+import BigT.*;
 
 public class Map {
+    private byte[] map;
+    private int offset;
+    private int size;
+
   /*
     Class constructor create a new map with the appropriate size.
   */
   public Map()
   {
+    this.map = new byte[1024];
+    this.offset = 0;
+    this.size = this.map.length;
   }
   
   /*
@@ -19,6 +32,9 @@ public class Map {
   */
   public Map(byte[] amap, int offset)
   {
+    this.map = amap;
+    this.offset = offset;
+    this.size = this.map.length;    
   }
   
   /*
@@ -26,6 +42,10 @@ public class Map {
   */
   public Map(Map fromMap)
   {
+    this.map = new byte[fromMap.size];
+    System.arraycopy(fromMap.map, fromMap.offset, this.map, 0, fromMap.size);
+    this.offset = 0;
+    this.size = this.map.length;
   }
   
   /*
@@ -33,7 +53,7 @@ public class Map {
   */
   public java.lang.String getRowLabel()
   {
-    return "";
+    return new String(map, offset, MAXROWLABELSIZE).trim();
   }
   
   /*
@@ -41,7 +61,7 @@ public class Map {
   */
   public java.lang.String getColumnLabel()
   {
-    return "";
+    return new String(map, offset + MAXROWLABELSIZE, MAXCOLUMNLABELSIZE).trim();
   }
   
   /*
@@ -49,7 +69,7 @@ public class Map {
   */
   public int getTimeStamp()
   {
-    return 0;
+    return Convert.getIntValue(offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE, map);
   }
   
   /*
@@ -57,7 +77,7 @@ public class Map {
   */
   public java.lang.String getValue()
   {
-    return "";
+    return new String(map, offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE + 4, MAXVALUESIZE).trim();
   }
   
   /*
@@ -65,7 +85,8 @@ public class Map {
   */
   public Map setRowLabel(java.lang.String val)
   {
-    return new Map();
+    Convert.setStrValue(val, offset, map);
+    return this;
   }
   
   /*
@@ -73,7 +94,8 @@ public class Map {
   */
   public Map setColumnLabel(java.lang.String val)
   {
-    return new Map();
+    Convert.setStrValue(val, offset + MAXROWLABELSIZE, map);
+    return this;
   }
   
   /*
@@ -81,7 +103,8 @@ public class Map {
   */
   public Map setTimeStamp(int val)
   {
-    return new Map();
+    Convert.setIntValue(val, offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE, map);
+    return this;
   }
   
   /*
@@ -89,7 +112,8 @@ public class Map {
   */
   public Map setValue(java.lang.String val)
   {
-    return new Map();
+    Convert.setStrValue(val, offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE + 4, map);
+    return this;
   }
   
   /*
@@ -97,7 +121,9 @@ public class Map {
   */
   public byte[] getMapByteArray()
   {
-    return new byte[0];
+    byte[] out = new byte[size];
+    System.arraycopy(map, offset, out, 0, size);
+    return out;
   }
   
   /*
@@ -105,6 +131,8 @@ public class Map {
   */
   public void print()
   {
+     System.out.println(getRowLabel() + " " + getColumnLabel() + " " + getTimeStamp() + " " + getValue());
+
   }
   
   /*
@@ -112,7 +140,7 @@ public class Map {
   */
   public int size()
   {
-    return 0;
+    return size;
   }
   
   /*
@@ -120,7 +148,8 @@ public class Map {
   */
   public Map mapCopy(Map fromMap)
   {
-    return new Map();
+    System.arraycopy(fromMap.map, fromMap.offset, this.map, this.offset, fromMap.size);
+    this.size = fromMap.size;
   }
   
   /*
@@ -128,7 +157,9 @@ public class Map {
   */
   public Map mapInit(byte[] amap, int offset)
   {
-    return new Map();
+     this.map = amap;
+    this.offset = offset;
+    this.size = this.map.length;
   }
   
   /*
@@ -140,6 +171,6 @@ public class Map {
   */
   public Map mapSet(byte[] frommap, int offset)
   {
-    return new Map();
+    System.arraycopy(frommap, offset, this.map, this.offset, this.size);
   }
 } // end of Map
