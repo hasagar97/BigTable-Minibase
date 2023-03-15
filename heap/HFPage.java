@@ -5,6 +5,7 @@ package heap;
 import java.io.*;
 import java.lang.*;
 
+import BigT.Map;
 import global.*;
 import diskmgr.*;
 
@@ -328,16 +329,16 @@ public class HFPage extends Page
   
   
   /**
-   * inserts a new record onto the page, returns RID of this record 
+   * inserts a new record onto the page, returns MID of this record 
    * @param	record 	a record to be inserted
-   * @return	RID of record, null if sufficient space does not exist
+   * @return	MID of record, null if sufficient space does not exist
    * @exception IOException I/O errors
-   * in C++ Status insertRecord(char *recPtr, int recLen, RID& rid)
+   * in C++ Status insertRecord(char *recPtr, int recLen, MID& mid)
    */
-  public RID insertRecord ( byte [] record)		
+  public MID insertRecord ( byte [] record)		
     throws IOException
     {
-      RID rid = new RID();
+      MID mid = new MID();
       
       int recLen = record.length;
       int spaceNeeded = recLen + SIZE_OF_SLOT;
@@ -389,24 +390,24 @@ public class HFPage extends Page
 	// insert data onto the data page
 	System.arraycopy (record, 0, data, usedPtr, recLen);
 	curPage.pid = Convert.getIntValue (CUR_PAGE, data);
-	rid.pageNo.pid = curPage.pid;
-	rid.slotNo = i;
-	return   rid ;
+	mid.pageNo.pid = curPage.pid;
+	mid.slotNo = i;
+	return   mid ;
       }
     } 
   
   /**
-   * delete the record with the specified rid
-   * @param	rid 	the record ID
+   * delete the record with the specified mid
+   * @param	mid 	the record ID
    * @exception	InvalidSlotNumberException Invalid slot number
    * @exception IOException I/O errors
-   * in C++ Status deleteRecord(const RID& rid)
+   * in C++ Status deleteRecord(const MID& mid)
    */
-  public void deleteRecord ( RID rid )
+  public void deleteRecord ( MID mid )
     throws IOException,  
 	   InvalidSlotNumberException
     {
-      int slotNo = rid.slotNo;
+      int slotNo = mid.slotNo;
       short recLen = getSlotLength (slotNo);
       slotCnt = Convert.getShortValue (SLOT_CNT, data);
       
@@ -459,15 +460,15 @@ public class HFPage extends Page
     }
   
   /**
-   * @return RID of first record on page, null if page contains no records.  
+   * @return MID of first record on page, null if page contains no records.  
    * @exception  IOException I/O errors
-   * in C++ Status firstRecord(RID& firstRid)
+   * in C++ Status firstRecord(MID& firstRid)
    * 
    */ 
-  public RID firstRecord() 
+  public MID firstRecord() 
     throws IOException
     {
-      RID rid = new RID();
+      MID mid = new MID();
       // find the first non-empty slot
       
       
@@ -487,27 +488,27 @@ public class HFPage extends Page
       
       // found a non-empty slot
       
-      rid.slotNo = i;
+      mid.slotNo = i;
       curPage.pid= Convert.getIntValue(CUR_PAGE, data);
-      rid.pageNo.pid = curPage.pid;
+      mid.pageNo.pid = curPage.pid;
       
-      return rid;
+      return mid;
     }
   
   /**
-   * @return RID of next record on the page, null if no more 
+   * @return MID of next record on the page, null if no more 
    * records exist on the page
-   * @param 	curRid	current record ID
+   * @param 	currentDataPageRid	current record ID
    * @exception  IOException I/O errors
-   * in C++ Status nextRecord (RID curRid, RID& nextRid)
+   * in C++ Status nextRecord (MID curRid, MID& nextRid)
    */
-  public RID nextRecord (RID curRid) 
+  public MID nextRecord (MID currentDataPageRid) 
     throws IOException 
     {
-      RID rid = new RID();
+      MID mid = new MID();
       slotCnt = Convert.getShortValue (SLOT_CNT, data);
       
-      int i=curRid.slotNo;
+      int i=currentDataPageRid.slotNo;
       short length; 
       
       // find the next non-empty slot
@@ -523,24 +524,24 @@ public class HFPage extends Page
       
       // found a non-empty slot
       
-      rid.slotNo = i;
+      mid.slotNo = i;
       curPage.pid = Convert.getIntValue(CUR_PAGE, data);
-      rid.pageNo.pid = curPage.pid;
+      mid.pageNo.pid = curPage.pid;
       
-      return rid;
+      return mid;
     }
   
   /**
-   * copies out record with RID rid into record pointer.
+   * copies out record with MID mid into record pointer.
    * <br>
-   * Status getRecord(RID rid, char *recPtr, int& recLen)
-   * @param	rid 	the record ID
-   * @return 	a tuple contains the record
+   * Status getRecord(MID mid, char *recPtr, int& recLen)
+   * @param	currentDataPageRid 	the record ID
+   * @return 	a map contains the record
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception  	IOException I/O errors
-   * @see 	Tuple
+   * @see 	Map
    */
-  public Tuple getRecord ( RID rid ) 
+  public Map getRecord ( MID currentDataPageRid ) 
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -548,9 +549,9 @@ public class HFPage extends Page
       short offset;
       byte []record;
       PageId pageNo = new PageId();
-      pageNo.pid= rid.pageNo.pid;
+      pageNo.pid= currentDataPageRid.pageNo.pid;
       curPage.pid = Convert.getIntValue (CUR_PAGE, data);
-      int slotNo = rid.slotNo;
+      int slotNo = currentDataPageRid.slotNo;
       
       // length of record being returned
       recLen = getSlotLength (slotNo);
@@ -561,8 +562,8 @@ public class HFPage extends Page
 	  offset = getSlotOffset (slotNo);
 	  record = new byte[recLen];
 	  System.arraycopy(data, offset, record, 0, recLen);
-	  Tuple tuple = new Tuple(record, 0, recLen);
-	  return tuple;
+	  Map map = new Map(record, 0, recLen);
+	  return map;
 	}
       
       else {
@@ -573,26 +574,26 @@ public class HFPage extends Page
     }
   
   /**
-   * returns a tuple in a byte array[pageSize] with given RID rid.
+   * returns a map in a byte array[pageSize] with given MID mid.
    * <br>
-   * in C++	Status returnRecord(RID rid, char*& recPtr, int& recLen)
-   * @param       rid     the record ID
-   * @return      a tuple  with its length and offset in the byte array
+   * in C++	Status returnRecord(MID mid, char*& recPtr, int& recLen)
+   * @param       mid     the record ID
+   * @return      a map  with its length and offset in the byte array
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception   IOException I/O errors
-   * @see 	Tuple
+   * @see 	Map
    */  
-  public Tuple returnRecord ( RID rid )
+  public Map returnRecord ( MID mid )
     throws IOException, 
 	   InvalidSlotNumberException
     {
       short recLen;
       short offset;
       PageId pageNo = new PageId();
-      pageNo.pid = rid.pageNo.pid;
+      pageNo.pid = mid.pageNo.pid;
       
       curPage.pid = Convert.getIntValue (CUR_PAGE, data);
-      int slotNo = rid.slotNo;
+      int slotNo = mid.slotNo;
       
       // length of record being returned
       recLen = getSlotLength (slotNo);
@@ -603,8 +604,8 @@ public class HFPage extends Page
 	{
 	  
 	  offset = getSlotOffset (slotNo);
-	  Tuple tuple = new Tuple(data, offset, recLen);
-	  return tuple;
+	  Map map = new Map(data, offset, recLen);
+	  return map;
 	}
       
       else {   
@@ -709,5 +710,20 @@ public class HFPage extends Page
 	  Convert.setShortValue (slotCnt, SLOT_CNT, data);
 	}
     }
+
+  public Object[] getSlotDir() {
+    return null;
+  }
+
+public byte[] selectRecord(int slotNo) {
+    return null;
+}
+
+public void markSlotUsed(int slotNo, boolean b) {
+}
+
+public int getFreeSpace() {
+    return 0;
+}
   
 }
