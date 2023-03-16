@@ -10,13 +10,9 @@ import heap.*;
 
 
 public class bigt extends HeapFile{
-  private:
-    int m_strategy;
-    IndexFile m_indexfile1 = null;
-    IndexFile m_indexfile2 = null;
-    Set<Integer> m_row_set = new HashSet<Integer>();
-    Set<Integer> m_col_Set = new HashSet<Integer>();
-    Map<Integer, Object> timestamp_map = new HashMap<Integer, Object>();
+  private int m_strategy;
+  private IndexFile m_indexfile1 = null;
+  private IndexFile m_indexfile2 = null;
 
   /* 
     Initializes the big table
@@ -24,7 +20,7 @@ public class bigt extends HeapFile{
   	type - the clustering/index strategy to use
   */
   public bigt(java.lang.String name, int type)
-  { 
+  {
     super(name);
     m_strategy = type;
 
@@ -209,7 +205,6 @@ public class bigt extends HeapFile{
     {
       MID oldest = getOldest(row_hash, column_hash);
       m_hfile.deleteRecord(oldest);
-      // TODO delete oldest index
     }
 
     return mid;
@@ -244,7 +239,6 @@ public class bigt extends HeapFile{
   {
     return m_indexfile;
   }
-
 } // end of bigt
 
 
