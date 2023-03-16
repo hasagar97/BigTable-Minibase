@@ -92,27 +92,27 @@ public class bigt {
     switch (m_strategy) {
       case 1:
         // one btree to index row labels
-        IntegerKey key = new IntegerKey(map.getRowLabel().getHashCode());
+        StringKey key = new StringKey(map.getRowLabel());
         m_indexfile1.insert(key, mid);
         break;
       case 2:
         // one btree to index column labels
-        IntegerKey key = new IntegerKey(map.getColumnLabel().getHashCode());
+        StringKey key = new StringKey(map.getColumnLabel());
         m_indexfile1.insert(key, mid);
         break;
       case 3:
         // one btree to index column label and row label (combined key) and
         // one btree to index timestamps
-        IntegerKey key1 = new IntegerKey((map.getColumnLabel() + map.getRowLabel()).getHashCode());
-        IntegerKey key2 = new IntegerKey(map.getTimeStamp());
+        StringKey key1 = new StringKey(map.getColumnLabel() + map.getRowLabel());
+        StringKey key2 = new StringKey(map.getTimeStamp());
         m_indexfile1.insert(key1, mid);
         m_indexfile2.insert(key2, mid);
         break;
       case 4:
         // one btree to index row label and value (combined key) and
         // one btree to index timestamps
-        IntegerKey key1 = new IntegerKey((map.getRowLabel() + map.getValue()).getHashCode());
-        IntegerKey key2 = new IntegerKey(map.getTimeStamp());
+        StringKey key1 = new StringKey(map.getRowLabel() + map.getValue());
+        StringKey key2 = new StringKey(map.getTimeStamp());
         m_indexfile1.insert(key1, mid);
         m_indexfile2.insert(key2, mid);
         break;
@@ -161,7 +161,6 @@ public class bigt {
         timestamp_set.add(timestamp);
         col_map.put(column_hash, timestamp_set);
         timestamp_map.put(row_hash, col_map);
-
       }
     }
     else
@@ -209,7 +208,9 @@ public class bigt {
     // Check whether to drop the map
     if (checkDropMap(row_hash, column_hash, timestamp))
     {
-      m_hfile.deleteRecord(getOldest(row_hash, column_hash));
+      MID oldest = getOldest(row_hash, column_hash);
+      m_hfile.deleteRecord(oldest);
+      // TODO delete oldest index
     }
 
     return mid;
