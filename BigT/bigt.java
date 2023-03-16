@@ -205,6 +205,10 @@ public class bigt extends HeapFile{
     {
       MID oldest = getOldest(row_hash, column_hash);
       m_hfile.deleteRecord(oldest);
+<<<<<<< HEAD
+=======
+      // TODO delete oldest index
+>>>>>>> 0b83845 (Update bigt.java)
     }
 
     return mid;
