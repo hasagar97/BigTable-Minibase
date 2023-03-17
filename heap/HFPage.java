@@ -726,20 +726,5 @@ public class HFPage extends Page
 	  Convert.setShortValue (slotCnt, SLOT_CNT, data);
 	}
     }
-
-  public Object[] getSlotDir() {
-    return null;
-  }
-
-public byte[] selectRecord(int slotNo) {
-    return null;
-}
-
-public void markSlotUsed(int slotNo, boolean b) {
-}
-
-public int getFreeSpace() {
-    return 0;
-}
   
 }
