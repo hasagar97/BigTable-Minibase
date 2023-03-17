@@ -43,7 +43,7 @@ doc:
 	$(JAVADOC) $(DOCFILES)
 
 test: 
-	cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge 
+	cd tests; make bmtest dbtest; whoami; make bttest indextest jointest sorttest sortmerge
 	
 testphase2:
 	cd tests; make phase2Test

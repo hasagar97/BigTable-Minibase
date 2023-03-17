@@ -1,16 +1,14 @@
 package tests;
 //originally from : joins.C
 
+import BigT.Mapp;
 import iterator.*;
 import heap.*;
 import global.*;
-import index.*;
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
-import diskmgr.*;
-import bufmgr.*;
-import btree.*; 
 
 /**
    Here is the implementation for the tests. There are N tests performed.
@@ -165,7 +163,7 @@ class SM_JoinsDriver implements GlobalConst {
     short [] Ssizes = new short [1];
     Ssizes[0] = 30; //first elt. is 30
     
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     try {
       t.setHdr((short) 4,Stypes, Ssizes);
     }
@@ -189,7 +187,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 4, Stypes, Ssizes);
     }
@@ -237,7 +235,7 @@ class SM_JoinsDriver implements GlobalConst {
     short  []  Bsizes = new short[2];
     Bsizes[0] = 30;
     Bsizes[1] = 20;
-    t = new Tuple();
+    t = new Mapp();
     try {
       t.setHdr((short) 3,Btypes, Bsizes);
     }
@@ -261,7 +259,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 3, Btypes, Bsizes);
     }
@@ -306,7 +304,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     short [] Rsizes = new short [1];
     Rsizes[0] = 15; 
-    t = new Tuple();
+    t = new Mapp();
     try {
       t.setHdr((short) 3,Rtypes, Rsizes);
     }
@@ -330,7 +328,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 3, Rtypes, Rsizes);
     }
@@ -547,7 +545,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query1_CondExpr(outFilter);
  
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     
     AttrType [] Stypes = new AttrType[4];
     Stypes[0] = new AttrType (AttrType.attrInteger);
@@ -712,7 +710,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query3_CondExpr(outFilter);
  
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     t = null;
  
     AttrType Stypes[] = {
@@ -868,7 +866,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query3_CondExpr(outFilter);
  
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     t = null;
  
     AttrType Stypes[] = {
@@ -1032,7 +1030,7 @@ class SM_JoinsDriver implements GlobalConst {
     CondExpr [] outFilter;
     outFilter = Query5_CondExpr();
  
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     t = null;
  
     AttrType Stypes[] = {

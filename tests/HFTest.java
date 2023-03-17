@@ -1,11 +1,10 @@
 package tests;
 
 import java.io.*;
-import java.util.*;
 import java.lang.*;
+
+import BigT.Mapp;
 import heap.*;
-import bufmgr.*;
-import diskmgr.*;
 import global.*;
 import chainexception.*;
 
@@ -182,7 +181,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len, i = 0;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      Mapp tuple = new Mapp();
       
       boolean done = false;
       while (!done) { 
@@ -298,7 +297,7 @@ public boolean runTests () {
     
     if ( status == OK ) {
       int len, i = 0;
-      Tuple tuple = new Tuple();
+      Mapp tuple = new Mapp();
       boolean done = false;
 
       while (!done) { 
@@ -362,7 +361,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len, i = 0;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      Mapp tuple = new Mapp();
       boolean done = false;
 
       while ( !done ) {
@@ -442,7 +441,7 @@ public boolean runTests () {
 
       int len, i = 0;
       DummyRecord rec = null; 
-      Tuple tuple = new Tuple();
+      Mapp tuple = new Mapp();
       boolean done = false;
       
       while ( !done ) {
@@ -468,9 +467,9 @@ public boolean runTests () {
 
 	  rec.fval =(float) 7*i;     // We'll check that i==rec.ival below.
 
-	  Tuple newTuple = null; 
+	  Mapp newTuple = null;
 	  try {
-	    newTuple = new Tuple (rec.toByteArray(),0,rec.getRecLength()); 
+	    newTuple = new Mapp(rec.toByteArray(),0,rec.getRecLength());
 	  }
 	  catch (Exception e) {
 	    status = FAIL;
@@ -526,8 +525,8 @@ public boolean runTests () {
       int len, i = 0;
       DummyRecord rec = null;
       DummyRecord rec2 = null;
-      Tuple tuple = new Tuple(); 
-      Tuple tuple2 = new Tuple(); 
+      Mapp tuple = new Mapp();
+      Mapp tuple2 = new Mapp();
       boolean done = false;
       
       while ( !done ) {
@@ -636,7 +635,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      Mapp tuple = new Mapp();
       
       try {
 	tuple = scan.getNext(rid);
@@ -661,9 +660,9 @@ public boolean runTests () {
 	  status = FAIL;
 	}
 	len = tuple.getLength();
-	  Tuple newTuple = null;
+	  Mapp newTuple = null;
 	try {
-	  newTuple = new Tuple(rec.toByteArray(), 0, len-1);
+	  newTuple = new Mapp(rec.toByteArray(), 0, len-1);
 	}
 	catch (Exception e) {
 	  System.err.println (""+e);
@@ -702,9 +701,9 @@ public boolean runTests () {
 	}
 	
 	len = tuple.getLength();
-	Tuple newTuple = null;
+	Mapp newTuple = null;
 	try {
-	  newTuple = new Tuple(rec.toByteArray(), 0, len+1);
+	  newTuple = new Mapp(rec.toByteArray(), 0, len+1);
 	}
 	catch (Exception e) {
 	  System.err.println( ""+e );
@@ -832,7 +831,7 @@ class DummyRecord  {
    *  it will make a copy of the data in the tuple
    * @param atuple: the input tuple
    */
-  public DummyRecord(Tuple _atuple) 
+  public DummyRecord(Mapp _atuple)
 	throws java.io.IOException{   
     data = new byte[_atuple.getLength()];
     data = _atuple.getTupleByteArray();

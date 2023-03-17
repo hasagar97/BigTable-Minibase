@@ -4,6 +4,7 @@ package heap;
 /** File DataPageInfo.java */
 
 
+import BigT.Mapp;
 import global.*;
 import java.io.*;
 
@@ -72,7 +73,7 @@ class DataPageInfo implements GlobalConst{
    *  it will make a copy of the data in the tuple
    * @param atuple: the input tuple
    */
-  public DataPageInfo(Tuple _atuple)
+  public DataPageInfo(Mapp _atuple)
        throws InvalidTupleSizeException, IOException
   {   
      // need check _atuple size == this.size ?otherwise, throw new exception
@@ -97,7 +98,7 @@ class DataPageInfo implements GlobalConst{
    *  
    *
    */
-  public Tuple convertToTuple()
+  public Mapp convertToTuple()
        throws IOException
   {
 
@@ -108,7 +109,7 @@ class DataPageInfo implements GlobalConst{
 
 
     // 2) creat a Tuple object using this array
-    Tuple atuple = new Tuple(data, offset, size); 
+    Mapp atuple = new Mapp(data, offset, size);
  
     // 3) return tuple object
     return atuple;

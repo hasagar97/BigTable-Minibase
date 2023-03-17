@@ -1,8 +1,8 @@
 package iterator;
 
+import BigT.Mapp;
 import heap.*;
 import global.*;
-import diskmgr.*;
 import bufmgr.*;
 import index.*;
 import java.io.*;
@@ -29,15 +29,15 @@ public class SortMerge extends Iterator implements GlobalConst
   private  boolean        process_next_block;
   private  short     inner_str_sizes[];
   private  IoBuf    io_buf1,  io_buf2;
-  private  Tuple     TempTuple1,  TempTuple2;
-  private  Tuple     tuple1,  tuple2;
+  private Mapp TempTuple1,  TempTuple2;
+  private Mapp tuple1,  tuple2;
   private  boolean       done;
   private  byte    _bufs1[][],_bufs2[][];
   private  int        _n_pages; 
   private  Heapfile temp_file_fd1, temp_file_fd2;
   private  AttrType   sortFldType;
   private  int        t1_size, t2_size;
-  private  Tuple     Jtuple;
+  private Mapp Jtuple;
   private  FldSpec   perm_mat[];
   private  int        nOutFlds;
   
@@ -106,7 +106,7 @@ public class SortMerge extends Iterator implements GlobalConst
       in1_len = len_in1;
       in2_len = len_in2;
       
-      Jtuple = new Tuple();
+      Jtuple = new Mapp();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size = null;
       perm_mat = proj_list;
@@ -160,10 +160,10 @@ public class SortMerge extends Iterator implements GlobalConst
       io_buf2 = new IoBuf();
       
       // Allocate memory for the temporary tuples
-      TempTuple1 = new Tuple();
-      TempTuple2 =  new Tuple();
-      tuple1 = new Tuple();
-      tuple2 =  new Tuple();
+      TempTuple1 = new Mapp();
+      TempTuple2 =  new Mapp();
+      tuple1 = new Mapp();
+      tuple2 =  new Mapp();
       
       
       if (io_buf1  == null || io_buf2  == null ||
@@ -236,7 +236,7 @@ public class SortMerge extends Iterator implements GlobalConst
    *@exception Exception other exceptions
    */
 
-  public Tuple get_next() 
+  public Mapp get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -253,7 +253,7 @@ public class SortMerge extends Iterator implements GlobalConst
     {
       
       int    comp_res;
-      Tuple _tuple1,_tuple2;
+      Mapp _tuple1,_tuple2;
       if (done) return null;
       
       while (true)

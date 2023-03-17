@@ -1,9 +1,8 @@
 
 package iterator;
+import BigT.Mapp;
 import heap.*;
 import global.*;
-import diskmgr.*;
-import bufmgr.*;
 
 import java.io.*;
 
@@ -49,7 +48,7 @@ public class IoBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception  other exceptions
    */
-  public void Put(Tuple buf)
+  public void Put(Mapp buf)
     throws NoOutputBuffer,
 	   IOException,
 	   Exception
@@ -85,11 +84,11 @@ public class IoBuf implements GlobalConst{
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public Tuple Get(Tuple  buf)
+  public Mapp Get(Mapp buf)
     throws IOException,
 	   Exception
     {
-      Tuple temptuple;
+      Mapp temptuple;
       if (done){
 	buf =null;
 	return null;

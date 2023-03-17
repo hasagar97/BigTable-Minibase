@@ -1,9 +1,9 @@
 package tests;
 
-import java.io.*; 
+import java.io.*;
+
+import BigT.Mapp;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 import heap.*;
 import iterator.*;
 import index.*;
@@ -132,7 +132,7 @@ class IndexDriver extends TestDriver
     attrSize[1] = REC_LEN1;
     
     // create a tuple of appropriate size
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -154,7 +154,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -208,7 +208,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     String key = null;
-    Tuple temp = null;
+    Mapp temp = null;
     
     try {
       temp = scan.getNext(rid);
@@ -349,7 +349,7 @@ class IndexDriver extends TestDriver
     attrSize[1] = REC_LEN1;
     
     // create a tuple of appropriate size
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -372,7 +372,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -395,7 +395,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     String key = null;
-    Tuple temp = null;
+    Mapp temp = null;
     
 
     FldSpec[] projlist = new FldSpec[2];
@@ -593,7 +593,7 @@ class IndexDriver extends TestDriver
     attrSize[0] = REC_LEN1;
     attrSize[1] = REC_LEN1;
     
-    Tuple t = new Tuple();
+    Mapp t = new Mapp();
 
     try {
       t.setHdr((short) 4, attrType, attrSize);
@@ -616,7 +616,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new Mapp(size);
     try {
       t.setHdr((short) 4, attrType, attrSize);
     }
@@ -679,7 +679,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     int key = 0;
-    Tuple temp = null;
+    Mapp temp = null;
     
     try {
       temp = scan.getNext(rid);

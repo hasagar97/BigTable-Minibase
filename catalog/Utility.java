@@ -7,10 +7,10 @@
 package catalog;
 
 import java.io.*;
-import bufmgr.*;
+
+import BigT.Mapp;
 import global.*;
 import heap.*;
-import diskmgr.*;
 import btree.*;
 
 public class Utility implements Catalogglobal{
@@ -22,7 +22,7 @@ public class Utility implements Catalogglobal{
  void deleteRecUT(String relation, attrNode item){};
 
  // DELETES INDEX ENRIES FOR RECORDS
- void deleteRecIndexesUT(String relation, RID rid, Tuple tuple){};
+ void deleteRecIndexesUT(String relation, RID rid, Mapp tuple){};
 
  // WRAPS INSERT UTILITY  IN TX
  public static void insertRecordUT(String relation, int attrCnt, attrNode [] attrList)
@@ -93,7 +93,7 @@ public static void insertRecUT(String relation, int attrCnt, attrNode [] attrLis
  // DELETE FOLLOWING ON RETURN 
  AttrDesc  [] attrRecs = null;
  IndexDesc [] indexRecs = null;
- Tuple     tuple = null;
+ Mapp tuple = null;
  String    indexName = null;
  BTreeFile btree = null;
  AttrType  [] typeArray = null;
@@ -160,7 +160,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
    
 // CREATE TUPLE  
 
-  tuple = new Tuple(Tuple.max_size);
+  tuple = new Mapp(Mapp.max_size);
 
   count = ExtendedSystemDefs.MINIBASE_ATTRCAT.getTupleStructure(relation,
         count, typeArray,sizeArray);
