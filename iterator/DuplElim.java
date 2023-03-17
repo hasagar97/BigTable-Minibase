@@ -1,9 +1,9 @@
 package iterator;
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
-import diskmgr.*;
 import index.*;
 
 import java.lang.*;
@@ -23,9 +23,9 @@ public class DuplElim extends Iterator
   
   private AttrType  sortFldType;
   private int       sortFldLen;
-  private Tuple    Jtuple;
+  private BigT.Map Jtuple;
   
-  private Tuple TempTuple1, TempTuple2;
+  private BigT.Map TempTuple1, TempTuple2;
   
   /**
    *Constructor to set up some information.
@@ -50,7 +50,7 @@ public class DuplElim extends Iterator
       System.arraycopy(in,0,_in,0,in.length);
       in_len = len_in;
      
-      Jtuple =  new Tuple();
+      Jtuple =  new BigT.Map();
       try {
 	Jtuple.setHdr(len_in, _in, s_sizes);
       }catch (Exception e){
@@ -88,8 +88,8 @@ public class DuplElim extends Iterator
 	}
 
       // Allocate memory for the temporary tuples
-      TempTuple1 =  new Tuple();
-      TempTuple2 = new Tuple();
+      TempTuple1 =  new BigT.Map();
+      TempTuple2 = new BigT.Map();
       try{
 	TempTuple1.setHdr(in_len, _in, s_sizes);
 	TempTuple2.setHdr(in_len, _in, s_sizes);
@@ -116,7 +116,7 @@ public class DuplElim extends Iterator
    *@exception UnknownKeyTypeException key type unknown
    *@exception Exception other exceptions
    */
-  public Tuple get_next() 
+  public BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -131,7 +131,7 @@ public class DuplElim extends Iterator
 	   UnknownKeyTypeException,
 	   Exception
     {
-      Tuple t;
+      BigT.Map t;
       
       if (done)
         return null;

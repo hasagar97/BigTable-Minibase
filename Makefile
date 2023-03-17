@@ -4,7 +4,7 @@
 #the assignment to be generated
 
 JARFILES=bufmgr/*.class diskmgr/*.class global/*.class iterator/*.class\
-         heap/*.class chainexception/*.class  btree/*.class index/*.class tests/*.class
+         heap/*.class chainexception/*.class  btree/*.class index/*.class tests/*.class BigT/*.class
 
 jdkfile = jdk.txt
 JDKPATH = $(shell cat ${jdkfile})
@@ -38,15 +38,16 @@ db:
 	make -C heap
 	make -C index
 	make -C iterator
+	make -C BigT
 	
 doc:
 	$(JAVADOC) $(DOCFILES)
 
-test: 
-	cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge 
+test:
+	make clean; cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge
 	
 testphase2:
-	cd tests; make phase2Test
+	make clean; cd tests; make phase2Test
 
 clean:
 	\rm -f $(CLASSPATH)/*.class *~ \#* core $(JARFILES) TRACE

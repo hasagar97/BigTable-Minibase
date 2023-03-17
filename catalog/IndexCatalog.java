@@ -8,6 +8,7 @@ package catalog;
 
 import java.io.*;
 
+import BigT.Map;
 import global.*;
 import heap.*;
 import bufmgr.*;
@@ -27,7 +28,7 @@ public class IndexCatalog extends Heapfile
     {
       super(filename);
       
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new BigT.Map(BigT.Map.max_size);
       attrs = new AttrType[7];
       
       attrs[0] = new AttrType(AttrType.attrString);
@@ -430,7 +431,7 @@ public class IndexCatalog extends Heapfile
       
       Heapfile datafile = null;
       String	indexName = null;
-      Tuple 	tuple = null;
+      BigT.Map tuple = null;
       BTreeFile btree = null;
       Scan 	pscan = null;
       AttrType [] typeArray = null;
@@ -559,7 +560,7 @@ public class IndexCatalog extends Heapfile
 	throw new IndexCatalogException(e,"getTupleStructure");
       }
       
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new BigT.Map(BigT.Map.max_size);
       if (tuple == null)
 	throw new Catalognomem(null, "Catalog, No Enough Memory!");
       
@@ -625,7 +626,7 @@ public class IndexCatalog extends Heapfile
   void dropRelation(String relation){};
   
   
-  void make_tuple(Tuple tuple, IndexDesc record)
+  void make_tuple(BigT.Map tuple, IndexDesc record)
     throws IOException,
 	   IndexCatalogException
     {
@@ -666,7 +667,7 @@ public class IndexCatalog extends Heapfile
       return;
     };
   
-  void read_tuple(Tuple tuple, IndexDesc record)
+  void read_tuple(BigT.Map tuple, IndexDesc record)
     throws IOException,
 	   IndexCatalogException
     {
@@ -712,7 +713,7 @@ public class IndexCatalog extends Heapfile
     };
   
   
-  Tuple tuple;
+  BigT.Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   

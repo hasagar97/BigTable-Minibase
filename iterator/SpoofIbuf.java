@@ -1,9 +1,8 @@
 package iterator;
 
-import heap.*;          
+import BigT.Map;
+import heap.*;
 import global.*;
-import diskmgr.*;
-import bufmgr.*;
 
 import java.io.*;
 
@@ -67,7 +66,7 @@ public class SpoofIbuf implements GlobalConst  {
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public  Tuple Get(Tuple  buf)throws IOException, Exception
+  public BigT.Map Get(BigT.Map buf)throws IOException, Exception
     {
       if (tot_t_proc == n_tuples) done = true;
       
@@ -119,7 +118,7 @@ public class SpoofIbuf implements GlobalConst  {
   private int readin()throws IOException,InvalidTupleSizeException
     {
       int   t_read = 0, tot_read = 0;
-      Tuple t      = new Tuple ();
+      BigT.Map t      = new BigT.Map();
       byte[] t_copy;
       
       curr_page = 0;

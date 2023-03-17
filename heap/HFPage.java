@@ -5,6 +5,7 @@ package heap;
 import java.io.*;
 import java.lang.*;
 
+import BigT.Map;
 import global.*;
 import diskmgr.*;
 
@@ -538,9 +539,9 @@ public class HFPage extends Page
    * @return 	a tuple contains the record
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception  	IOException I/O errors
-   * @see 	Tuple
+   * @see    BigT.Map
    */
-  public Tuple getRecord ( RID rid ) 
+  public BigT.Map getRecord (RID rid )
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -561,7 +562,7 @@ public class HFPage extends Page
 	  offset = getSlotOffset (slotNo);
 	  record = new byte[recLen];
 	  System.arraycopy(data, offset, record, 0, recLen);
-	  Tuple tuple = new Tuple(record, 0, recLen);
+	  BigT.Map tuple = new BigT.Map(record, 0, recLen);
 	  return tuple;
 	}
       
@@ -580,9 +581,9 @@ public class HFPage extends Page
    * @return      a tuple  with its length and offset in the byte array
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception   IOException I/O errors
-   * @see 	Tuple
+   * @see    BigT.Map
    */  
-  public Tuple returnRecord ( RID rid )
+  public BigT.Map returnRecord (RID rid )
     throws IOException, 
 	   InvalidSlotNumberException
     {
@@ -603,7 +604,7 @@ public class HFPage extends Page
 	{
 	  
 	  offset = getSlotOffset (slotNo);
-	  Tuple tuple = new Tuple(data, offset, recLen);
+	  BigT.Map tuple = new BigT.Map(data, offset, recLen);
 	  return tuple;
 	}
       

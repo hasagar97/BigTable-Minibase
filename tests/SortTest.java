@@ -1,12 +1,12 @@
 package tests;
 
-import java.io.*; 
+import java.io.*;
+
+import BigT.Map;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 import heap.*;
 import iterator.*;
-import index.*;
+
 import java.util.Random;
 
 
@@ -135,7 +135,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Tuple t = new Tuple();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -157,7 +157,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -295,7 +295,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Tuple t = new Tuple();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 1, attrType, attrSize);
     }
@@ -316,7 +316,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 1, attrType, attrSize);
     }
@@ -457,7 +457,7 @@ class SORTDriver extends TestDriver
     order[0] = new TupleOrder(TupleOrder.Ascending);
     order[1] = new TupleOrder(TupleOrder.Descending);
     
-    Tuple t = new Tuple();
+    BigT.Map t = new BigT.Map();
 
     try {
       t.setHdr((short) 4, attrType, attrSize);
@@ -481,7 +481,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 4, attrType, attrSize);
     }
@@ -745,7 +745,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Tuple t = new Tuple();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -768,7 +768,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Tuple(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -830,8 +830,8 @@ class SORTDriver extends TestDriver
     
 
     int count = 0;
-    Tuple t1 = null;
-    Tuple t2 = null; 
+    BigT.Map t1 = null;
+    BigT.Map t2 = null;
     String outval = null;
     
     try {
