@@ -9,12 +9,11 @@ import btree.*;
 import heap.*;
 
 
-public class bigt {
+public class bigt extends HeapFile{
   private:
     int m_strategy;
     IndexFile m_indexfile1 = null;
     IndexFile m_indexfile2 = null;
-    HeapFile m_hfile;
     Set<Integer> m_row_set = new HashSet<Integer>();
     Set<Integer> m_col_Set = new HashSet<Integer>();
     Map<Integer, Object> timestamp_map = new HashMap<Integer, Object>();
@@ -26,8 +25,8 @@ public class bigt {
   */
   public bigt(java.lang.String name, int type)
   { 
+    super(name);
     m_strategy = type;
-    m_hfile = new HeapFile(name);
 
     switch (m_strategy) {
       case 1:
@@ -192,7 +191,7 @@ public class bigt {
   public MID insertMap(byte[] mapPtr)
   {
     Map map = Map(mapPtr, 0);
-    MID mid = m_hfile.insertMap(mapPtr);
+    MID mid = insertMap(mapPtr);
     java.lang.String row_label = map.getRowLabel();
     java.lang.String column_label = map.getColumnLabel();
     int timestamp = map.getTimeStamp();
@@ -244,11 +243,6 @@ public class bigt {
   public int getIndexFile()
   {
     return m_indexfile;
-  }
-
-  public int getHFile()
-  {
-    return m_hfile;
   }
 
 } // end of bigt
