@@ -1,6 +1,6 @@
 package iterator;
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -26,9 +26,9 @@ public class Projection
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception IOException some I/O fault 
    */
-  public static void Join(Mapp t1, AttrType type1[],
-						  Mapp t2, AttrType type2[],
-						  Mapp Jtuple, FldSpec  perm_mat[],
+  public static void Join(BigT.Map t1, AttrType type1[],
+						  BigT.Map t2, AttrType type2[],
+						  BigT.Map Jtuple, FldSpec  perm_mat[],
 						  int nOutFlds
 			   )
     throws UnknowAttrType,
@@ -101,8 +101,8 @@ public class Projection
    *@exception IOException some I/O fault 
    */
   
-  public static void Project(Mapp t1, AttrType type1[],
-							 Mapp Jtuple, FldSpec  perm_mat[],
+  public static void Project(BigT.Map t1, AttrType type1[],
+							 BigT.Map Jtuple, FldSpec  perm_mat[],
 							 int nOutFlds
 			     )
     throws UnknowAttrType,

@@ -8,7 +8,7 @@ package heap;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import diskmgr.*;
 
@@ -82,11 +82,11 @@ public class Scan implements GlobalConst{
    * @param rid Record ID of the record
    * @return the Tuple of the retrieved record.
    */
-  public Mapp getNext(RID rid)
+  public BigT.Map getNext(RID rid)
     throws InvalidTupleSizeException,
 	   IOException
   {
-    Mapp recptrtuple = null;
+    BigT.Map recptrtuple = null;
     
     if (nextUserStatus != true) {
         nextDataPage();
@@ -250,7 +250,7 @@ public class Scan implements GlobalConst{
 	   IOException
   {
     DataPageInfo dpinfo;
-    Mapp rectuple = null;
+    BigT.Map rectuple = null;
     Boolean      bst;
 
     /** copy data about first directory page */
@@ -403,7 +403,7 @@ public class Scan implements GlobalConst{
     
     boolean nextDataPageStatus;
     PageId nextDirPageId = new PageId();
-    Mapp rectuple = null;
+    BigT.Map rectuple = null;
 
   // ASSERTIONS:
   // - this->dirpageId has Id of current directory page

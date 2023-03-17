@@ -1,6 +1,6 @@
 package iterator;
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -29,15 +29,15 @@ public class SortMerge extends Iterator implements GlobalConst
   private  boolean        process_next_block;
   private  short     inner_str_sizes[];
   private  IoBuf    io_buf1,  io_buf2;
-  private Mapp TempTuple1,  TempTuple2;
-  private Mapp tuple1,  tuple2;
+  private BigT.Map TempTuple1,  TempTuple2;
+  private BigT.Map tuple1,  tuple2;
   private  boolean       done;
   private  byte    _bufs1[][],_bufs2[][];
   private  int        _n_pages; 
   private  Heapfile temp_file_fd1, temp_file_fd2;
   private  AttrType   sortFldType;
   private  int        t1_size, t2_size;
-  private Mapp Jtuple;
+  private BigT.Map Jtuple;
   private  FldSpec   perm_mat[];
   private  int        nOutFlds;
   
@@ -106,7 +106,7 @@ public class SortMerge extends Iterator implements GlobalConst
       in1_len = len_in1;
       in2_len = len_in2;
       
-      Jtuple = new Mapp();
+      Jtuple = new BigT.Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size = null;
       perm_mat = proj_list;
@@ -160,10 +160,10 @@ public class SortMerge extends Iterator implements GlobalConst
       io_buf2 = new IoBuf();
       
       // Allocate memory for the temporary tuples
-      TempTuple1 = new Mapp();
-      TempTuple2 =  new Mapp();
-      tuple1 = new Mapp();
-      tuple2 =  new Mapp();
+      TempTuple1 = new BigT.Map();
+      TempTuple2 =  new BigT.Map();
+      tuple1 = new BigT.Map();
+      tuple2 =  new BigT.Map();
       
       
       if (io_buf1  == null || io_buf2  == null ||
@@ -236,7 +236,7 @@ public class SortMerge extends Iterator implements GlobalConst
    *@exception Exception other exceptions
    */
 
-  public Mapp get_next()
+  public BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -253,7 +253,7 @@ public class SortMerge extends Iterator implements GlobalConst
     {
       
       int    comp_res;
-      Mapp _tuple1,_tuple2;
+      BigT.Map _tuple1,_tuple2;
       if (done) return null;
       
       while (true)

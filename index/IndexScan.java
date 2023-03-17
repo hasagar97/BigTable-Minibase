@@ -1,5 +1,5 @@
 package index;
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import btree.*;
 import iterator.*;
@@ -60,7 +60,7 @@ public class IndexScan extends Iterator {
     
     AttrType[] Jtypes = new AttrType[noOutFlds];
     short[] ts_sizes;
-    Jtuple = new Mapp();
+    Jtuple = new BigT.Map();
     
     try {
       ts_sizes = TupleUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
@@ -75,7 +75,7 @@ public class IndexScan extends Iterator {
     _selects = selects;
     perm_mat = outFlds;
     _noOutFlds = noOutFlds;
-    tuple1 = new Mapp();
+    tuple1 = new BigT.Map();
     try {
       tuple1.setHdr((short) noInFlds, types, str_sizes);
     }
@@ -132,7 +132,7 @@ public class IndexScan extends Iterator {
    * @exception UnknownKeyTypeException key type unknown
    * @exception IOException from the lower layer
    */
-  public Mapp get_next()
+  public BigT.Map get_next()
     throws IndexException, 
 	   UnknownKeyTypeException,
 	   IOException
@@ -281,8 +281,8 @@ public class IndexScan extends Iterator {
   private int           _noInFlds;
   private int           _noOutFlds;
   private Heapfile      f;
-  private Mapp tuple1;
-  private Mapp Jtuple;
+  private BigT.Map tuple1;
+  private BigT.Map Jtuple;
   private int           t1_size;
   private int           _fldNum;       
   private boolean       index_only;    

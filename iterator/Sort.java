@@ -2,7 +2,7 @@ package iterator;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import heap.*;
 
@@ -34,10 +34,10 @@ public class Sort extends Iterator implements GlobalConst
   private pnodeSplayPQ Q;
   private Heapfile[]   temp_files; 
   private int          n_tempfiles;
-  private Mapp output_tuple;
+  private BigT.Map output_tuple;
   private int[]        n_tuples;
   private int          n_runs;
-  private Mapp op_buf;
+  private BigT.Map op_buf;
   private OBuf         o_buf;
   private SpoofIbuf[]  i_buf;
   private PageId[]     bufs_pids;
@@ -87,7 +87,7 @@ public class Sort extends Iterator implements GlobalConst
       
       // may need change depending on whether Get() returns the original
       // or make a copy of the tuple, need io_bufs.java ???
-      Mapp temp_tuple = new Mapp(tuple_size);
+      BigT.Map temp_tuple = new BigT.Map(tuple_size);
 
       try {
 	temp_tuple.setHdr(n_cols, _in, str_lens);
@@ -138,13 +138,13 @@ public class Sort extends Iterator implements GlobalConst
 	   JoinsException,
 	   Exception
   {
-    Mapp tuple;
+    BigT.Map tuple;
     pnode cur_node;
     pnodeSplayPQ Q1 = new pnodeSplayPQ(_sort_fld, sortFldType, order);
     pnodeSplayPQ Q2 = new pnodeSplayPQ(_sort_fld, sortFldType, order);
     pnodeSplayPQ pcurr_Q = Q1;
     pnodeSplayPQ pother_Q = Q2; 
-    Mapp lastElem = new Mapp(tuple_size);  // need tuple.java
+    BigT.Map lastElem = new BigT.Map(tuple_size);  // need tuple.java
     try {
       lastElem.setHdr(n_cols, _in, str_lens);
     }
@@ -195,7 +195,7 @@ public class Sort extends Iterator implements GlobalConst
 	break;
       }
       cur_node = new pnode();
-      cur_node.tuple = new Mapp(tuple); // tuple copy needed --  Bingjie 4/29/98
+      cur_node.tuple = new BigT.Map(tuple); // tuple copy needed --  Bingjie 4/29/98
 
       pcurr_Q.enq(cur_node);
       p_elems_curr_Q ++;
@@ -307,7 +307,7 @@ public class Sort extends Iterator implements GlobalConst
 	    break;
 	  }
 	  cur_node = new pnode();
-	  cur_node.tuple = new Mapp(tuple); // tuple copy needed --  Bingjie 4/29/98
+	  cur_node.tuple = new BigT.Map(tuple); // tuple copy needed --  Bingjie 4/29/98
 
 	  try {
 	    pcurr_Q.enq(cur_node);
@@ -404,13 +404,13 @@ public class Sort extends Iterator implements GlobalConst
    * @exception IOException from lower layers
    * @exception SortException something went wrong in the lower layer. 
    */
-  private Mapp delete_min()
+  private BigT.Map delete_min()
     throws IOException, 
 	   SortException,
 	   Exception
   {
     pnode cur_node;                // needs pq_defs.java  
-    Mapp new_tuple, old_tuple;
+    BigT.Map new_tuple, old_tuple;
 
     cur_node = Q.deq();
     old_tuple = cur_node.tuple;
@@ -422,7 +422,7 @@ public class Sort extends Iterator implements GlobalConst
     // tuple of the same run into the queue
     if (i_buf[cur_node.run_num].empty() != true) { 
       // run not exhausted 
-      new_tuple = new Mapp(tuple_size); // need tuple.java??
+      new_tuple = new BigT.Map(tuple_size); // need tuple.java??
 
       try {
 	new_tuple.setHdr(n_cols, _in, str_lens);
@@ -463,7 +463,7 @@ public class Sort extends Iterator implements GlobalConst
    * @exception IOException from lower layers
    * @exception UnknowAttrType attrSymbol or attrNull encountered
    */
-  private void MIN_VAL(Mapp lastElem, AttrType sortFldType)
+  private void MIN_VAL(BigT.Map lastElem, AttrType sortFldType)
     throws IOException, 
 	   FieldNumberOutOfBoundException,
 	   UnknowAttrType {
@@ -505,7 +505,7 @@ public class Sort extends Iterator implements GlobalConst
    * @exception IOException from lower layers
    * @exception UnknowAttrType attrSymbol or attrNull encountered
    */
-  private void MAX_VAL(Mapp lastElem, AttrType sortFldType)
+  private void MAX_VAL(BigT.Map lastElem, AttrType sortFldType)
     throws IOException, 
 	   FieldNumberOutOfBoundException,
 	   UnknowAttrType {
@@ -585,7 +585,7 @@ public class Sort extends Iterator implements GlobalConst
       }
     }
     
-    Mapp t = new Mapp(); // need Tuple.java
+    BigT.Map t = new BigT.Map(); // need Tuple.java
     try {
       t.setHdr(len_in, _in, str_sizes);
     }
@@ -642,7 +642,7 @@ public class Sort extends Iterator implements GlobalConst
     
     Q = new pnodeSplayPQ(sort_fld, in[sort_fld - 1], order);
 
-    op_buf = new Mapp(tuple_size);   // need Tuple.java
+    op_buf = new BigT.Map(tuple_size);   // need Tuple.java
     try {
       op_buf.setHdr(n_cols, _in, str_lens);
     }
@@ -663,7 +663,7 @@ public class Sort extends Iterator implements GlobalConst
    * @exception LowMemException memory low exception
    * @exception Exception other exceptions
    */
-  public Mapp get_next()
+  public BigT.Map get_next()
     throws IOException, 
 	   SortException, 
 	   UnknowAttrType,

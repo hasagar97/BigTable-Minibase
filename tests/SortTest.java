@@ -2,7 +2,7 @@ package tests;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import heap.*;
 import iterator.*;
@@ -135,7 +135,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -157,7 +157,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -295,7 +295,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 1, attrType, attrSize);
     }
@@ -316,7 +316,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 1, attrType, attrSize);
     }
@@ -457,7 +457,7 @@ class SORTDriver extends TestDriver
     order[0] = new TupleOrder(TupleOrder.Ascending);
     order[1] = new TupleOrder(TupleOrder.Descending);
     
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
 
     try {
       t.setHdr((short) 4, attrType, attrSize);
@@ -481,7 +481,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 4, attrType, attrSize);
     }
@@ -745,7 +745,7 @@ class SORTDriver extends TestDriver
     order[1] = new TupleOrder(TupleOrder.Descending);
     
     // create a tuple of appropriate size
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -768,7 +768,7 @@ class SORTDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -830,8 +830,8 @@ class SORTDriver extends TestDriver
     
 
     int count = 0;
-    Mapp t1 = null;
-    Mapp t2 = null;
+    BigT.Map t1 = null;
+    BigT.Map t2 = null;
     String outval = null;
     
     try {

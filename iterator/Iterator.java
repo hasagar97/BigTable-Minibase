@@ -1,5 +1,5 @@
 package iterator;
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import heap.*;
 import diskmgr.*;
@@ -38,7 +38,7 @@ public abstract class Iterator implements Flags {
    *@exception UnknownKeyTypeException key type unknown
    *@exception Exception other exceptions
    */
-  public abstract Mapp get_next()
+  public abstract BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,

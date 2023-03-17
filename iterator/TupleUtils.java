@@ -1,7 +1,7 @@
 package iterator;
 
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -34,8 +34,8 @@ public class TupleUtils
    *         -1        if the tuple is smaller,                              
    */
   public static int CompareTupleWithTuple(AttrType fldType,
-										  Mapp t1, int t1_fld_no,
-										  Mapp t2, int t2_fld_no)
+										  BigT.Map t1, int t1_fld_no,
+										  BigT.Map t2, int t2_fld_no)
     throws IOException,
 	   UnknowAttrType,
 	   TupleUtilsException
@@ -105,8 +105,8 @@ public class TupleUtils
    *@exception TupleUtilsException exception from this class   
    */            
   public static int CompareTupleWithValue(AttrType fldType,
-										  Mapp t1, int t1_fld_no,
-										  Mapp value)
+										  BigT.Map t1, int t1_fld_no,
+										  BigT.Map value)
     throws IOException,
 	   UnknowAttrType,
 	   TupleUtilsException
@@ -127,7 +127,7 @@ public class TupleUtils
    *@exception TupleUtilsException exception from this class
    */            
   
-  public static boolean Equal(Mapp t1, Mapp t2, AttrType types[], int len)
+  public static boolean Equal(BigT.Map t1, BigT.Map t2, AttrType types[], int len)
     throws IOException,UnknowAttrType,TupleUtilsException
     {
       int i;
@@ -146,7 +146,7 @@ public class TupleUtils
    *@exception IOException some I/O fault
    *@exception TupleUtilsException exception from this class
    */
-  public static String Value(Mapp tuple, int fldno)
+  public static String Value(BigT.Map tuple, int fldno)
     throws IOException,
 	   TupleUtilsException
     {
@@ -170,7 +170,7 @@ public class TupleUtils
    *@exception IOException some I/O fault
    *@exception TupleUtilsException exception from this class
    */  
-  public static void SetValue(Mapp value, Mapp tuple, int fld_no, AttrType fldType)
+  public static void SetValue(BigT.Map value, BigT.Map tuple, int fld_no, AttrType fldType)
     throws IOException,
 	   UnknowAttrType,
 	   TupleUtilsException
@@ -223,7 +223,7 @@ public class TupleUtils
    *@exception IOException some I/O fault
    *@exception TupleUtilsException exception from this class
    */
-  public static short[] setup_op_tuple(Mapp Jtuple, AttrType[] res_attrs,
+  public static short[] setup_op_tuple(BigT.Map Jtuple, AttrType[] res_attrs,
 									   AttrType in1[], int len_in1, AttrType in2[],
 									   int len_in2, short t1_str_sizes[],
 									   short t2_str_sizes[],
@@ -293,7 +293,7 @@ public class TupleUtils
    *@exception InvalidRelation invalid relation 
    */
 
-  public static short[] setup_op_tuple(Mapp Jtuple, AttrType res_attrs[],
+  public static short[] setup_op_tuple(BigT.Map Jtuple, AttrType res_attrs[],
 									   AttrType in1[], int len_in1,
 									   short t1_str_sizes[],
 									   FldSpec proj_list[], int nOutFlds)

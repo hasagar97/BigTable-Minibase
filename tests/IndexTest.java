@@ -2,7 +2,7 @@ package tests;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import heap.*;
 import iterator.*;
@@ -132,7 +132,7 @@ class IndexDriver extends TestDriver
     attrSize[1] = REC_LEN1;
     
     // create a tuple of appropriate size
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -154,7 +154,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -208,7 +208,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     String key = null;
-    Mapp temp = null;
+    BigT.Map temp = null;
     
     try {
       temp = scan.getNext(rid);
@@ -349,7 +349,7 @@ class IndexDriver extends TestDriver
     attrSize[1] = REC_LEN1;
     
     // create a tuple of appropriate size
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -372,7 +372,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 2, attrType, attrSize);
     }
@@ -395,7 +395,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     String key = null;
-    Mapp temp = null;
+    BigT.Map temp = null;
     
 
     FldSpec[] projlist = new FldSpec[2];
@@ -593,7 +593,7 @@ class IndexDriver extends TestDriver
     attrSize[0] = REC_LEN1;
     attrSize[1] = REC_LEN1;
     
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
 
     try {
       t.setHdr((short) 4, attrType, attrSize);
@@ -616,7 +616,7 @@ class IndexDriver extends TestDriver
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 4, attrType, attrSize);
     }
@@ -679,7 +679,7 @@ class IndexDriver extends TestDriver
     
     rid = new RID();
     int key = 0;
-    Mapp temp = null;
+    BigT.Map temp = null;
     
     try {
       temp = scan.getNext(rid);

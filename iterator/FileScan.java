@@ -1,7 +1,7 @@
 package iterator;
    
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -21,8 +21,8 @@ public class FileScan extends  Iterator
   private short[] s_sizes; 
   private Heapfile f;
   private Scan scan;
-  private Mapp tuple1;
-  private Mapp Jtuple;
+  private BigT.Map tuple1;
+  private BigT.Map Jtuple;
   private int        t1_size;
   private int nOutFlds;
   private CondExpr[]  OutputFilter;
@@ -61,7 +61,7 @@ public class FileScan extends  Iterator
       in1_len = len_in1;
       s_sizes = s1_sizes;
       
-      Jtuple =  new Mapp();
+      Jtuple =  new BigT.Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size;
       ts_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
@@ -69,7 +69,7 @@ public class FileScan extends  Iterator
       OutputFilter = outFilter;
       perm_mat = proj_list;
       nOutFlds = n_out_flds; 
-      tuple1 =  new Mapp();
+      tuple1 =  new BigT.Map();
 
       try {
 	tuple1.setHdr(in1_len, _in1, s1_sizes);
@@ -114,7 +114,7 @@ public class FileScan extends  Iterator
    *@exception FieldNumberOutOfBoundException array out of bounds
    *@exception WrongPermat exception for wrong FldSpec argument
    */
-  public Mapp get_next()
+  public BigT.Map get_next()
     throws JoinsException,
 	   IOException,
 	   InvalidTupleSizeException,

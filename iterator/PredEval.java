@@ -1,6 +1,6 @@
 package iterator;
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -23,7 +23,7 @@ public class PredEval
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception PredEvalException exception from this method
    */
-  public static boolean Eval(CondExpr p[], Mapp t1, Mapp t2, AttrType in1[],
+  public static boolean Eval(CondExpr p[], BigT.Map t1, BigT.Map t2, AttrType in1[],
                              AttrType in2[])
     throws IOException,
 	   UnknowAttrType,
@@ -34,9 +34,9 @@ public class PredEval
     {
       CondExpr temp_ptr;
       int       i = 0;
-      Mapp tuple1 = null, tuple2 = null;
+      BigT.Map tuple1 = null, tuple2 = null;
       int      fld1, fld2;
-      Mapp value =   new Mapp();
+      BigT.Map value =   new BigT.Map();
       short[]     str_size = new short[1];
       AttrType[]  val_type = new AttrType[1];
       

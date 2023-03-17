@@ -1,7 +1,7 @@
 package iterator;
    
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -30,8 +30,8 @@ public class NestedLoopsJoins  extends Iterator
   private   int        n_buf_pgs;        // # of buffer pages available.
   private   boolean        done,         // Is the join complete
     get_from_outer;                 // if TRUE, a tuple is got from outer
-  private Mapp outer_tuple, inner_tuple;
-  private Mapp Jtuple;           // Joined tuple
+  private BigT.Map outer_tuple, inner_tuple;
+  private BigT.Map Jtuple;           // Joined tuple
   private   FldSpec   perm_mat[];
   private   int        nOutFlds;
   private   Heapfile  hf;
@@ -82,8 +82,8 @@ public class NestedLoopsJoins  extends Iterator
       
       outer = am1;
       t2_str_sizescopy =  t2_str_sizes;
-      inner_tuple = new Mapp();
-      Jtuple = new Mapp();
+      inner_tuple = new BigT.Map();
+      Jtuple = new BigT.Map();
       OutputFilter = outFilter;
       RightFilter  = rightFilter;
       
@@ -134,7 +134,7 @@ public class NestedLoopsJoins  extends Iterator
    *@exception Exception other exceptions
 
    */
-  public Mapp get_next()
+  public BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,

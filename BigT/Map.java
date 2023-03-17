@@ -10,7 +10,7 @@ import heap.InvalidTupleSizeException;
 import heap.InvalidTypeException;
 
 
-public class Mapp implements GlobalConst{
+public class Map implements GlobalConst{
 
 
  /** 
@@ -51,7 +51,7 @@ public class Mapp implements GlobalConst{
     * Creat a new tuple with length = max_size,tuple offset = 0.
     */
 
-  public Mapp()
+  public Map()
   {
        // Creat a new tuple
        data = new byte[max_size];
@@ -65,7 +65,7 @@ public class Mapp implements GlobalConst{
     * @param length the length of the tuple
     */
 
-   public Mapp(byte [] atuple, int offset, int length)
+   public Map(byte [] atuple, int offset, int length)
    {
       data = atuple;
       tuple_offset = offset;
@@ -77,7 +77,7 @@ public class Mapp implements GlobalConst{
     * @param fromTuple   a byte array which contains the tuple
     * 
     */
-   public Mapp(Mapp fromTuple)
+   public Map(Map fromTuple)
    {
        data = fromTuple.getTupleByteArray();
        tuple_length = fromTuple.getLength();
@@ -91,7 +91,7 @@ public class Mapp implements GlobalConst{
     * Creat a new tuple with length = size,tuple offset = 0.
     */
  
-  public Mapp(int size)
+  public Map(int size)
   {
        // Creat a new tuple
        data = new byte[size];
@@ -103,7 +103,7 @@ public class Mapp implements GlobalConst{
     *  you must make sure the tuple lengths must be equal
     * @param fromTuple the tuple being copied
     */
-   public void tupleCopy(Mapp fromTuple)
+   public void tupleCopy(Map fromTuple)
    {
        byte [] temparray = fromTuple.getTupleByteArray();
        System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);   
@@ -288,7 +288,7 @@ public class Mapp implements GlobalConst{
    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
    */
 
-  public Mapp setIntFld(int fldNo, int val)
+  public Map setIntFld(int fldNo, int val)
   	throws IOException, FieldNumberOutOfBoundException
   { 
     if ( (fldNo > 0) && (fldNo <= fldCnt))
@@ -309,7 +309,7 @@ public class Mapp implements GlobalConst{
    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
    */
 
-  public Mapp setFloFld(int fldNo, float val)
+  public Map setFloFld(int fldNo, float val)
   	throws IOException, FieldNumberOutOfBoundException
   { 
    if ( (fldNo > 0) && (fldNo <= fldCnt))
@@ -331,7 +331,7 @@ public class Mapp implements GlobalConst{
    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
    */
 
-   public Mapp setStrFld(int fldNo, String val)
+   public Map setStrFld(int fldNo, String val)
 		throws IOException, FieldNumberOutOfBoundException  
    {
      if ( (fldNo > 0) && (fldNo <= fldCnt))        

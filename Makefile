@@ -36,7 +36,7 @@ db:
 	make -C bufmgr
 	make -C diskmgr
 	make -C heap
-	make -C index   
+	make -C index
 	make -C iterator
 	make -C BigT
 	

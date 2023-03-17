@@ -8,7 +8,7 @@ package catalog;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import bufmgr.*;
 import global.*;
 import heap.*;
@@ -29,7 +29,7 @@ public class RelCatalog extends Heapfile
     {
         super(filename);
       
-      tuple = new Mapp(Mapp.max_size);
+      tuple = new BigT.Map(BigT.Map.max_size);
       
       attrs = new AttrType[5];
       attrs[0] = new AttrType(AttrType.attrString);
@@ -359,7 +359,7 @@ public class RelCatalog extends Heapfile
     };
   
   // Converts AttrDesc to tuple.
-  public void make_tuple(Mapp tuple, RelDesc record)
+  public void make_tuple(BigT.Map tuple, RelDesc record)
     throws IOException, 
 	   RelCatalogException
     {
@@ -377,7 +377,7 @@ public class RelCatalog extends Heapfile
       
     };
   
-  public void read_tuple(Mapp tuple, RelDesc record)
+  public void read_tuple(BigT.Map tuple, RelDesc record)
     throws IOException, 
 	   RelCatalogException
     {
@@ -426,7 +426,7 @@ public class RelCatalog extends Heapfile
   //                    int indexCnt, int attrsize){};
   
   
-  Mapp tuple;
+  BigT.Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   

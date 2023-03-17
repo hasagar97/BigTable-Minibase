@@ -8,7 +8,7 @@ package catalog;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import global.*;
 import heap.*;
 
@@ -28,7 +28,7 @@ public class AttrCatalog extends Heapfile
       
       int sizeOfInt = 4;
       int sizeOfFloat = 4;
-      tuple = new Mapp(Mapp.max_size);
+      tuple = new BigT.Map(BigT.Map.max_size);
       attrs = new AttrType[9];
       
       attrs[0] = new AttrType(AttrType.attrString);
@@ -381,7 +381,7 @@ public class AttrCatalog extends Heapfile
   // Tuple must have been initialized properly in the 
   // constructor
   // Converts AttrDesc to tuple. 
-  public void make_tuple(Mapp tuple, AttrDesc record)
+  public void make_tuple(BigT.Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -419,7 +419,7 @@ public class AttrCatalog extends Heapfile
   // READ_TUPLE
   //--------------------------------------------------
   
-  public void read_tuple(Mapp tuple, AttrDesc record)
+  public void read_tuple(BigT.Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -473,7 +473,7 @@ public class AttrCatalog extends Heapfile
 		       IndexType accessType){};
   
   
-  Mapp tuple;
+  BigT.Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   short max;

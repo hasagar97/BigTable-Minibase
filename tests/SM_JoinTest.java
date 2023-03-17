@@ -1,7 +1,7 @@
 package tests;
 //originally from : joins.C
 
-import BigT.Mapp;
+import BigT.Map;
 import iterator.*;
 import heap.*;
 import global.*;
@@ -163,7 +163,7 @@ class SM_JoinsDriver implements GlobalConst {
     short [] Ssizes = new short [1];
     Ssizes[0] = 30; //first elt. is 30
     
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     try {
       t.setHdr((short) 4,Stypes, Ssizes);
     }
@@ -187,7 +187,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 4, Stypes, Ssizes);
     }
@@ -235,7 +235,7 @@ class SM_JoinsDriver implements GlobalConst {
     short  []  Bsizes = new short[2];
     Bsizes[0] = 30;
     Bsizes[1] = 20;
-    t = new Mapp();
+    t = new BigT.Map();
     try {
       t.setHdr((short) 3,Btypes, Bsizes);
     }
@@ -259,7 +259,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 3, Btypes, Bsizes);
     }
@@ -304,7 +304,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     short [] Rsizes = new short [1];
     Rsizes[0] = 15; 
-    t = new Mapp();
+    t = new BigT.Map();
     try {
       t.setHdr((short) 3,Rtypes, Rsizes);
     }
@@ -328,7 +328,7 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    t = new Mapp(size);
+    t = new BigT.Map(size);
     try {
       t.setHdr((short) 3, Rtypes, Rsizes);
     }
@@ -545,7 +545,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query1_CondExpr(outFilter);
  
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     
     AttrType [] Stypes = new AttrType[4];
     Stypes[0] = new AttrType (AttrType.attrInteger);
@@ -710,7 +710,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query3_CondExpr(outFilter);
  
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     t = null;
  
     AttrType Stypes[] = {
@@ -866,7 +866,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     Query3_CondExpr(outFilter);
  
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     t = null;
  
     AttrType Stypes[] = {
@@ -1030,7 +1030,7 @@ class SM_JoinsDriver implements GlobalConst {
     CondExpr [] outFilter;
     outFilter = Query5_CondExpr();
  
-    Mapp t = new Mapp();
+    BigT.Map t = new BigT.Map();
     t = null;
  
     AttrType Stypes[] = {

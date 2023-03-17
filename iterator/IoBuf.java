@@ -1,6 +1,6 @@
 
 package iterator;
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 
@@ -48,7 +48,7 @@ public class IoBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception  other exceptions
    */
-  public void Put(Mapp buf)
+  public void Put(BigT.Map buf)
     throws NoOutputBuffer,
 	   IOException,
 	   Exception
@@ -84,11 +84,11 @@ public class IoBuf implements GlobalConst{
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public Mapp Get(Mapp buf)
+  public BigT.Map Get(BigT.Map buf)
     throws IOException,
 	   Exception
     {
-      Mapp temptuple;
+      BigT.Map temptuple;
       if (done){
 	buf =null;
 	return null;

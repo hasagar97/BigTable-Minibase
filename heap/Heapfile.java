@@ -2,7 +2,7 @@ package heap;
 
 import java.io.*;
 
-import BigT.Mapp;
+import BigT.Map;
 import diskmgr.*;
 import global.*;
 
@@ -108,7 +108,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       pinPage(currentDirPageId, currentDirPage, false/*read disk*/);
       
-      Mapp atuple = new Mapp();
+      BigT.Map atuple = new BigT.Map();
       
       while (currentDirPageId.pid != INVALID_PAGE)
 	{// Start While01
@@ -321,7 +321,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 	   pinPage(currentDirPageId, currentDirPage, false);
 	   
 	   RID rid = new RID();
-	   Mapp atuple;
+	   BigT.Map atuple;
 	   for (rid = currentDirPage.firstRecord();
 	        rid != null;	// rid==NULL means no more record
 	        rid = currentDirPage.nextRecord(rid))
@@ -389,7 +389,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       pinPage(currentDirPageId, currentDirPage, false/*Rdisk*/);
       
       found = false;
-      Mapp atuple;
+      BigT.Map atuple;
       DataPageInfo dpinfo = new DataPageInfo();
       while (found == false)
 	{ //Start While01
@@ -640,7 +640,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       // - currentDataPage, currentDataPageid valid and pinned
       
       // get datapageinfo from the current directory page:
-      Mapp atuple;
+      BigT.Map atuple;
       
       atuple = currentDirPage.returnRecord(currentDataPageRid);
       DataPageInfo pdpinfo = new DataPageInfo(atuple);
@@ -760,7 +760,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @exception Exception other exception
    * @return ture:update success   false: can't find the record
    */
-  public boolean updateRecord(RID rid, Mapp newtuple)
+  public boolean updateRecord(RID rid, BigT.Map newtuple)
     throws InvalidSlotNumberException, 
 	   InvalidUpdateException, 
 	   InvalidTupleSizeException,
@@ -782,7 +782,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 			     currentDataPageRid);
       
       if(status != true) return status;	// record not found
-      Mapp atuple = new Mapp();
+      BigT.Map atuple = new BigT.Map();
       atuple = dataPage.returnRecord(rid);
       
       // Assume update a record with a record whose length is equal to
@@ -821,7 +821,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    *
    * @return a Tuple. if Tuple==null, no more tuple
    */
-  public Mapp getRecord(RID rid)
+  public BigT.Map getRecord(RID rid)
     throws InvalidSlotNumberException, 
 	   InvalidTupleSizeException, 
 	   HFException, 
@@ -843,7 +843,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       if(status != true) return null; // record not found 
       
-      Mapp atuple = new Mapp();
+      BigT.Map atuple = new BigT.Map();
       atuple = dataPage.getRecord(rid);
       
       /*
@@ -907,7 +907,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       nextDirPageId.pid = 0;
       Page pageinbuffer = new Page();
       HFPage currentDirPage =  new HFPage();
-      Mapp atuple;
+      BigT.Map atuple;
       
       pinPage(currentDirPageId, currentDirPage, false);
       //currentDirPage.openHFpage(pageinbuffer);

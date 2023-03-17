@@ -1,6 +1,6 @@
 package tests;
 
-import BigT.Mapp;
+import BigT.Map;
 import btree.*;
 import global.RID;
 import global.SystemDefs;
@@ -37,7 +37,7 @@ public class Phase2Test {
         printRID(rid2);
         printRID(rid3);
         try {
-            Mapp out2 = f.getRecord(rid);
+            BigT.Map out2 = f.getRecord(rid);
             System.out.println(new String(out2.getTupleByteArray(), StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -62,7 +62,7 @@ public class Phase2Test {
             RID id = leafData.getData();
             try {
                 printRID(id);
-                Mapp out = f.getRecord(id);
+                BigT.Map out = f.getRecord(id);
                 System.out.println(out);
                 System.out.println(new String(out.getTupleByteArray(), StandardCharsets.UTF_8));
             } catch (Exception e) {

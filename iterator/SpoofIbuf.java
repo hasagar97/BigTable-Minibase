@@ -1,6 +1,6 @@
 package iterator;
 
-import BigT.Mapp;
+import BigT.Map;
 import heap.*;
 import global.*;
 
@@ -66,7 +66,7 @@ public class SpoofIbuf implements GlobalConst  {
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public Mapp Get(Mapp buf)throws IOException, Exception
+  public BigT.Map Get(BigT.Map buf)throws IOException, Exception
     {
       if (tot_t_proc == n_tuples) done = true;
       
@@ -118,7 +118,7 @@ public class SpoofIbuf implements GlobalConst  {
   private int readin()throws IOException,InvalidTupleSizeException
     {
       int   t_read = 0, tot_read = 0;
-      Mapp t      = new Mapp();
+      BigT.Map t      = new BigT.Map();
       byte[] t_copy;
       
       curr_page = 0;
