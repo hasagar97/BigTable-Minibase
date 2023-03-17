@@ -24,7 +24,7 @@ public class bigt extends HeapFile{
   	type - the clustering/index strategy to use
   */
   public bigt(java.lang.String name, int type)
-  { 
+  {
     super(name);
     m_strategy = type;
 
@@ -244,7 +244,6 @@ public class bigt extends HeapFile{
   {
     return m_indexfile;
   }
-
 } // end of bigt
 
 

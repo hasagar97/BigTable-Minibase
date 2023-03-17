@@ -1,2 +1,2 @@
-**/Makefile
+tests/*.db
 **/*.class
