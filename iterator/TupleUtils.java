@@ -1,6 +1,7 @@
 package iterator;
 
 
+import BigT.Tuple;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -105,7 +106,7 @@ public class TupleUtils
    */            
   public static int CompareTupleWithValue(AttrType fldType,
 					  Tuple  t1, int t1_fld_no,
-					  Tuple  value)
+					  Tuple value)
     throws IOException,
 	   UnknowAttrType,
 	   TupleUtilsException

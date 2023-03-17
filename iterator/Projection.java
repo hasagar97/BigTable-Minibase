@@ -1,5 +1,6 @@
 package iterator;
 
+import BigT.Tuple;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -25,10 +26,10 @@ public class Projection
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception IOException some I/O fault 
    */
-  public static void Join( Tuple  t1, AttrType type1[],
-                           Tuple  t2, AttrType type2[],
-        	           Tuple Jtuple, FldSpec  perm_mat[], 
-                           int nOutFlds
+  public static void Join(Tuple  t1, AttrType type1[],
+                          Tuple  t2, AttrType type2[],
+                          Tuple Jtuple, FldSpec  perm_mat[],
+                          int nOutFlds
 			   )
     throws UnknowAttrType,
 	   FieldNumberOutOfBoundException,

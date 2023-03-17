@@ -1,10 +1,10 @@
 package iterator;
    
 
+import BigT.Tuple;
 import heap.*;
 import global.*;
 import bufmgr.*;
-import diskmgr.*;
 
 
 import java.lang.*;
@@ -21,7 +21,7 @@ public class FileScan extends  Iterator
   private short[] s_sizes; 
   private Heapfile f;
   private Scan scan;
-  private Tuple     tuple1;
+  private Tuple tuple1;
   private Tuple    Jtuple;
   private int        t1_size;
   private int nOutFlds;

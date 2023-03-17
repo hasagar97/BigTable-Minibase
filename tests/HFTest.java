@@ -8,6 +8,7 @@ import bufmgr.*;
 import diskmgr.*;
 import global.*;
 import chainexception.*;
+import BigT.*;
 
 /** Note that in JAVA, methods can't be overridden to be more private.
     Therefore, the declaration of all private functions are now declared

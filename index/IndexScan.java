@@ -1,7 +1,6 @@
 package index;
+import BigT.Tuple;
 import global.*;
-import bufmgr.*;
-import diskmgr.*; 
 import btree.*;
 import iterator.*;
 import heap.*; 
@@ -282,7 +281,7 @@ public class IndexScan extends Iterator {
   private int           _noInFlds;
   private int           _noOutFlds;
   private Heapfile      f;
-  private Tuple         tuple1;
+  private Tuple tuple1;
   private Tuple         Jtuple;
   private int           t1_size;
   private int           _fldNum;       

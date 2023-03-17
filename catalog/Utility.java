@@ -7,10 +7,10 @@
 package catalog;
 
 import java.io.*;
-import bufmgr.*;
+
+import BigT.Tuple;
 import global.*;
 import heap.*;
-import diskmgr.*;
 import btree.*;
 
 public class Utility implements Catalogglobal{

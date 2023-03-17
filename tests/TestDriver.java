@@ -3,6 +3,8 @@ import java.io.*;
 import java.util.*;
 import java.lang.*;
 import chainexception.*;
+import BigT.*;
+import heap.*;
 
 //    Major Changes:
 //    1. Change the return type of test() functions from 'int' to 'boolean'

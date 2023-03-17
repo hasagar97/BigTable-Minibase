@@ -1,8 +1,9 @@
 package heap;
 
 import java.io.*;
+
+import BigT.Tuple;
 import diskmgr.*;
-import bufmgr.*;
 import global.*;
 
 /**  This heapfile implementation is directory-based. We maintain a

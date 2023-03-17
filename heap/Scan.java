@@ -7,8 +7,9 @@ package heap;
  */
 
 import java.io.*;
+
+import BigT.Tuple;
 import global.*;
-import bufmgr.*;
 import diskmgr.*;
 
 

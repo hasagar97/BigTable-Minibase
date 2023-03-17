@@ -1,12 +1,10 @@
 package iterator;
 
-import java.io.*; 
+import java.io.*;
+
+import BigT.Tuple;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 import heap.*;
-import index.*;
-import chainexception.*;
 
 /**
  * The Sort class sorts a file. All necessary information are passed as 

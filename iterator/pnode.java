@@ -1,9 +1,6 @@
 package iterator; 
 
-import global.*;
-import bufmgr.*;
-import diskmgr.*;
-import heap.*;
+import BigT.Tuple;
 
 /**
  * A structure describing a tuple.
@@ -14,7 +11,7 @@ public class pnode {
   public int     run_num;
 
   /** the tuple reference */
-  public Tuple   tuple;
+  public Tuple tuple;
 
   /**
    * class constructor, sets <code>run_num</code> to 0 and <code>tuple</code>

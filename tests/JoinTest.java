@@ -12,6 +12,7 @@ import diskmgr.*;
 import bufmgr.*;
 import btree.*; 
 import catalog.*;
+import BigT.*;
 
 /**
    Here is the implementation for the tests. There are N tests performed.

@@ -4,6 +4,7 @@ package heap;
 /** File DataPageInfo.java */
 
 
+import BigT.Tuple;
 import global.*;
 import java.io.*;
 
@@ -108,7 +109,7 @@ class DataPageInfo implements GlobalConst{
 
 
     // 2) creat a Tuple object using this array
-    Tuple atuple = new Tuple(data, offset, size); 
+    Tuple atuple = new Tuple(data, offset, size);
  
     // 3) return tuple object
     return atuple;

@@ -1,8 +1,7 @@
 package iterator;
+import BigT.Tuple;
 import heap.*;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 
 import java.io.*;
 
