@@ -366,7 +366,6 @@ public class BufMgr implements GlobalConst{
 	  if ( frmeTable[i].dirty != false ) {
 	    
 	    if(frmeTable[i].pageNo.pid == INVALID_PAGE)
-	      
 	      throw new PageNotFoundException( null, "BUFMGR: INVALID_PAGE_NO");
 	    pageid.pid = frmeTable[i].pageNo.pid;
 	    
@@ -395,11 +394,27 @@ public class BufMgr implements GlobalConst{
 	}
       
       if (all_pages != 0) {
-	if (unpinned != 0) 
+	if (unpinned != 0)
 	  throw new PagePinnedException (null, "BUFMGR: PAGE_PINNED.");
       }
     }
-  
+
+    /** Writes all the dirty pages in the buffer pool to disk, without removing them
+     * from the buffer.
+     *
+     * @exception BufMgrException if write_page() fails
+     */
+    public void softFlushAll() throws BufMgrException {
+        for (int i = 0; i < numBuffers; i++) {
+            if (frmeTable[i].pageNo.pid != INVALID_PAGE) {
+                if (frmeTable[i].dirty == true) {
+                    Page apage = new Page(bufPool[i]);
+                    write_page(frmeTable[i].pageNo, apage);
+                }
+            }
+        }
+    }
+
   
   /** 
    * Create a buffer manager object.

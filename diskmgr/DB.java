@@ -28,6 +28,7 @@ public class DB implements GlobalConst {
 	   DiskMgrException {
     
     name = fname;
+    pCounter = new PCounter();
     
     // Creaat a random access file
     fp = new RandomAccessFile(fname, "rw");
@@ -72,6 +73,7 @@ public class DB implements GlobalConst {
 	   DiskMgrException {
     
     name = new String(fname);
+    pCounter = new PCounter();
     num_pages = (num_pgs > 2) ? num_pgs : 2;
     
     File DBfile = new File(name);
@@ -109,8 +111,10 @@ public class DB implements GlobalConst {
   /** Close DB file.
    * @exception IOException I/O errors.
    */
-  public void closeDB() throws IOException {
-    fp.close();
+  public void closeDB() throws IOException, BufMgrException {
+      // Makes sure the changes made to the pages in the buffer pool are persisted in the DB
+      SystemDefs.JavabaseBM.softFlushAll();
+      fp.close();
   }
   
   
@@ -149,6 +153,7 @@ public class DB implements GlobalConst {
     byte [] buffer = apage.getpage();  //new byte[MINIBASE_PAGESIZE];
     try{
       fp.read(buffer);
+      pCounter.readIncrement();
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -179,6 +184,7 @@ public class DB implements GlobalConst {
     // Write the appropriate number of bytes.
     try{
       fp.write(apage.getpage());
+      pCounter.writeIncrement();
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -722,6 +728,7 @@ public class DB implements GlobalConst {
   private RandomAccessFile fp;
   private int num_pages;
   private String name;
+  private PCounter pCounter;
   
   
   /** Set runsize bits starting from start to value specified
