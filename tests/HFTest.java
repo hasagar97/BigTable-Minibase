@@ -3,7 +3,6 @@ package tests;
 import java.io.*;
 import java.lang.*;
 
-import BigT.Map;
 import heap.*;
 import global.*;
 import chainexception.*;
@@ -123,7 +122,7 @@ public boolean runTests () {
 	rec.name = "record" + i;
 
 	try {
-	  rid = f.insertRecord(rec.toByteArray());
+	  rid = f.insertMap(rec.toByteArray());
 	}
 	catch (Exception e) {
 	  status = FAIL;
@@ -739,7 +738,7 @@ public boolean runTests () {
       System.out.println ("  - Try to insert a record that's too long\n");
       byte [] record = new byte [MINIBASE_PAGESIZE+4];
       try {
-	rid = f.insertRecord( record );
+	rid = f.insertMap( record );
       }
       catch (ChainException e) {
 	status = checkException (e, "heap.SpaceNotAvailableException");

@@ -351,7 +351,7 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status insertRecord(char *recPtr, int recLen, RID& rid)
    */
-  public RID insertRecord ( byte [] record)		
+  public RID insertMap(byte [] record)
     throws IOException
     {
       RID rid = new RID();
@@ -419,7 +419,7 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status deleteRecord(const RID& rid)
    */
-  public void deleteRecord ( RID rid )
+  public void deleteMap(RID rid )
     throws IOException,  
 	   InvalidSlotNumberException
     {

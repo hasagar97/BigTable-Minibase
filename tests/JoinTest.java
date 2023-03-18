@@ -1,7 +1,6 @@
 package tests;
 //originally from : joins.C
 
-import BigT.Map;
 import iterator.*;
 import heap.*;
 import global.*;
@@ -213,7 +212,7 @@ class JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnTupleByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -284,7 +283,7 @@ class JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnTupleByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -354,7 +353,7 @@ class JoinsDriver implements GlobalConst {
       }      
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnTupleByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
