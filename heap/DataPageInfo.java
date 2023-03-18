@@ -108,6 +108,7 @@ class DataPageInfo implements GlobalConst{
 
 
     // 2) creat a Tuple object using this array
+    System.out.println("Converting to map in datapageinfo with offset "+offset);
     BigT.Map atuple = new BigT.Map(data, offset, size);
  
     // 3) return tuple object

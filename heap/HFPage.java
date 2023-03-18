@@ -562,6 +562,7 @@ public class HFPage extends Page
 	  offset = getSlotOffset (slotNo);
 	  record = new byte[recLen];
 	  System.arraycopy(data, offset, record, 0, recLen);
+        System.out.println("Attempting to create map in get record");
 	  BigT.Map tuple = new BigT.Map(record, 0, recLen);
 	  return tuple;
 	}
@@ -604,7 +605,9 @@ public class HFPage extends Page
 	{
 	  
 	  offset = getSlotOffset (slotNo);
+        System.out.println("Attempting to create map in returning record with offset: "+offset);
 	  BigT.Map tuple = new BigT.Map(data, offset, recLen);
+        System.out.println("recieved Map");
 	  return tuple;
 	}
       
