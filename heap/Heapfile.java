@@ -356,8 +356,6 @@ public class Heapfile implements Filetype,  GlobalConst {
   /** Insert record into file, return its Rid.
    *
    * @param recPtr pointer of the record
-   * @param recLen the length of the record
-   *
    * @exception InvalidSlotNumberException invalid slot number
    * @exception InvalidMapSizeException invalid tuple size
    * @exception SpaceNotAvailableException no space left
@@ -462,7 +460,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 		  
 		  amap = dpinfo.convertToTuple();
 		  
-		  byte [] tmpData = amap.getTupleByteArray();
+		  byte [] tmpData = amap.getMapByteArray();
 		  currentDataPageRid = currentDirPage.insertMap(tmpData);
 		  
 		  RID tmprid = currentDirPage.firstRecord();
