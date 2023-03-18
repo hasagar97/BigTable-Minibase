@@ -4,7 +4,6 @@ package heap;
 /** File DataPageInfo.java */
 
 
-import BigT.Map;
 import global.*;
 import java.io.*;
 
@@ -82,7 +81,7 @@ class DataPageInfo implements GlobalConst{
     }
 
     else{
-      data = _atuple.returnTupleByteArray();
+      data = _atuple.returnMapByteArray();
       offset = _atuple.getOffset();
       
       availspace = Convert.getIntValue(offset, data);

@@ -2,7 +2,6 @@ package tests;
 
 import java.io.*;
 
-import BigT.Map;
 import global.*;
 import heap.*;
 import iterator.*;
@@ -173,7 +172,7 @@ class IndexDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -644,7 +643,7 @@ class IndexDriver extends TestDriver
       }
 
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;

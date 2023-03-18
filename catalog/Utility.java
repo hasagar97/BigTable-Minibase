@@ -8,7 +8,6 @@ package catalog;
 
 import java.io.*;
 
-import BigT.Map;
 import global.*;
 import heap.*;
 import btree.*;
@@ -202,7 +201,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
 
 // INSERT INTO DATAFILE
-	heap.insertRecord(tuple.getTupleByteArray());
+	heap.insertRecord(tuple.getMapByteArray());
 
 // NOW INSERT INTO EACH INDEX FOR RELATION
 

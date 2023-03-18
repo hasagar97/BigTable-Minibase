@@ -1,6 +1,5 @@
 package iterator;
 
-import BigT.Map;
 import heap.*;
 import global.*;
 
@@ -129,7 +128,7 @@ public class SpoofIbuf implements GlobalConst  {
 	      RID rid =new RID();
 	      try {
 		if ( (t = hf_scan.getNext(rid)) == null) return tot_read;
-		t_copy = t.getTupleByteArray();
+		t_copy = t.getMapByteArray();
 		System.arraycopy(t_copy,0,_bufs[curr_page],t_read*t_size,t_size); 
 	      }
 	      catch (Exception e) {

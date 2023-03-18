@@ -1,5 +1,4 @@
 package iterator;
-import BigT.Map;
 import heap.*;
 import global.*;
 
@@ -60,7 +59,7 @@ public class OBuf implements GlobalConst{
     {
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
       BigT.Map tuple_ptr = new BigT.Map(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
       

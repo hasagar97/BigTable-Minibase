@@ -8,7 +8,6 @@ package catalog;
 
 import java.io.*;
 
-import BigT.Map;
 import bufmgr.*;
 import global.*;
 import heap.*;
@@ -301,7 +300,7 @@ public class RelCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertRecord(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	System.err.println ("insertRecord"+e2);

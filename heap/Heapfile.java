@@ -2,7 +2,6 @@ package heap;
 
 import java.io.*;
 
-import BigT.Map;
 import diskmgr.*;
 import global.*;
 
@@ -459,7 +458,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 		  
 		  atuple = dpinfo.convertToTuple();
 		  
-		  byte [] tmpData = atuple.getTupleByteArray();
+		  byte [] tmpData = atuple.getMapByteArray();
 		  currentDataPageRid = currentDirPage.insertRecord(tmpData);
 		  
 		  RID tmprid = currentDirPage.firstRecord();

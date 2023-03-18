@@ -3,7 +3,6 @@ package tests;
 import java.io.*;
 import java.lang.*;
 
-import BigT.Map;
 import heap.*;
 import global.*;
 import chainexception.*;
@@ -834,7 +833,7 @@ class DummyRecord  {
   public DummyRecord(BigT.Map _atuple)
 	throws java.io.IOException{   
     data = new byte[_atuple.getLength()];
-    data = _atuple.getTupleByteArray();
+    data = _atuple.getMapByteArray();
     setRecLen(_atuple.getLength());
     
     setIntRec (data);

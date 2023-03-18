@@ -2,7 +2,6 @@ package tests;
 
 import java.io.*;
 
-import BigT.Map;
 import global.*;
 import heap.*;
 import iterator.*;
@@ -176,7 +175,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -335,7 +334,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -509,7 +508,7 @@ class SORTDriver extends TestDriver
       }
 
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+	rid = f.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -787,8 +786,8 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid1 = f1.insertRecord(t.returnTupleByteArray());
-	rid2 = f2.insertRecord(t.returnTupleByteArray());
+	rid1 = f1.insertRecord(t.returnMapByteArray());
+	rid2 = f2.insertRecord(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
