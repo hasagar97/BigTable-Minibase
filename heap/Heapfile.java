@@ -3,9 +3,7 @@ package heap;
 import BigT.Map;
 import java.io.*;
 
-import BigT.Map;
 import diskmgr.*;
-import bufmgr.*;
 import global.*;
 
 /**  This heapfile implementation is directory-based. We maintain a
@@ -367,7 +365,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    *
    * @return the rid of the record
    */
-  public RID insertMap(byte[] recPtr) 
+  public RID insertMap(byte[] recPtr)
     throws InvalidSlotNumberException,  
 	   InvalidTupleSizeException,
 	   SpaceNotAvailableException,
@@ -462,7 +460,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 		  amap = dpinfo.convertToTuple();
 		  
 		  byte [] tmpData = amap.getTupleByteArray();
-		  currentDataPageRid = currentDirPage.insertRecord(tmpData);
+		  currentDataPageRid = currentDirPage.insertMap(tmpData);
 		  
 		  RID tmprid = currentDirPage.firstRecord();
 		  
@@ -577,7 +575,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       
       RID rid;
-      rid = currentDataPage.insertRecord(recPtr);
+      rid = currentDataPage.insertMap(recPtr);
       
       dpinfo.recct++;
       dpinfo.availspace = currentDataPage.available_space();
@@ -648,7 +646,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       DataPageInfo pdpinfo = new DataPageInfo(amap);
       
       // delete the record on the datapage
-      currentDataPage.deleteRecord(rid);
+      currentDataPage.deleteMap(rid);
       
       pdpinfo.recct--;
       pdpinfo.flushToMap();	//Write to the buffer pool
@@ -681,7 +679,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 	  // delete corresponding DataPageInfo-entry on the directory page:
 	  // currentDataPageMid points to datapage (from for loop above)
 	  
-	  currentDirPage.deleteRecord(currentDataPageMid);
+	  currentDirPage.deleteMap(currentDataPageMid);
 	  
 	  
 	  // ASSERTIONS:

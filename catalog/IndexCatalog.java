@@ -8,7 +8,6 @@ package catalog;
 
 import java.io.*;
 
-import BigT.Map;
 import global.*;
 import heap.*;
 import bufmgr.*;
@@ -342,7 +341,7 @@ public class IndexCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertMap(tuple.getTupleByteArray());
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e, "insertRecord() failed");
@@ -393,7 +392,7 @@ public class IndexCatalog extends Heapfile
 	     && (record.accessType == accessType))
 	    {
 	      try {
-		deleteRecord(rid);  //  FOUND -  DELETE        
+		deleteMap(rid);  //  FOUND -  DELETE
 	      }
 	      catch (Exception e){
 		throw new IndexCatalogException(e, "deleteRecord() failed");

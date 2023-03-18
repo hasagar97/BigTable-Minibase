@@ -1,6 +1,5 @@
 package tests;
 
-import BigT.Map;
 import btree.*;
 import global.RID;
 import global.SystemDefs;
@@ -26,18 +25,18 @@ public class Phase2Test {
         byte[] data4 = "Hello World 4!".getBytes();
         byte[] data5 = "Hello World 5!".getBytes();
         byte[] data6 = "Hello World 6!".getBytes();
-        RID rid = f.insertRecord(data);
-        RID rid1 = f.insertRecord(data1);
-        RID rid2 = f.insertRecord(data2);
-        RID rid3 = f.insertRecord(data3);
-        RID rid4 = f.insertRecord(data4);
-        RID rid5 = f.insertRecord(data5);
-        RID rid6 = f.insertRecord(data6);
+        RID rid = f.insertMap(data);
+        RID rid1 = f.insertMap(data1);
+        RID rid2 = f.insertMap(data2);
+        RID rid3 = f.insertMap(data3);
+        RID rid4 = f.insertMap(data4);
+        RID rid5 = f.insertMap(data5);
+        RID rid6 = f.insertMap(data6);
         printRID(rid1);
         printRID(rid2);
         printRID(rid3);
         try {
-            BigT.Map out2 = f.getRecord(rid);
+            BigT.Map out2 = f.getMap(rid);
             System.out.println(new String(out2.getTupleByteArray(), StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -62,7 +61,7 @@ public class Phase2Test {
             RID id = leafData.getData();
             try {
                 printRID(id);
-                BigT.Map out = f.getRecord(id);
+                BigT.Map out = f.getMap(id);
                 System.out.println(out);
                 System.out.println(new String(out.getTupleByteArray(), StandardCharsets.UTF_8));
             } catch (Exception e) {
