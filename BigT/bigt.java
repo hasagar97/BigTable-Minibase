@@ -4,7 +4,6 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import global.*;
 import BigT.*;
 import btree.*;
@@ -12,12 +11,12 @@ import heap.*;
 import global.*;
 
 
-public class BigT extends HeapFile{
+public class BigT extends Heapfile 
+{
   private int m_strategy;
   private BTreeFile m_defaultindex = null;
-  private IndexFile m_indexfile1 = null;
-  private IndexFile m_indexfile2 = null;
-
+  private BTreeFile m_indexfile1 = null;
+  private BTreeFile m_indexfile2 = null;
   /* 
     Initializes the big table
   	name - name of the table
@@ -83,7 +82,7 @@ public class BigT extends HeapFile{
   /*
     Returns the number of maps in the big table
   */
-    public int getMapCnt ()
+    public int getMapCnt()
     {
       return super.getMapCnt();
     }
@@ -110,7 +109,7 @@ public class BigT extends HeapFile{
 
         while(next != null)
         {
-          current_map = super.getMap(next.data);
+          current_map = super.getMap((RID)next.data);
 
           // Insert scanned index entries into temporary index file
           switch (type) {
@@ -123,8 +122,9 @@ public class BigT extends HeapFile{
             default:
               temp_key = new StringKey(current_map.getRowLabel());
               break;
+          }
 
-          temp_index.insert(temp_key, next.data);
+          temp_index.insert(temp_key, (RID)next.data);
           next = scan.get_next();
         }
       }
@@ -150,7 +150,7 @@ public class BigT extends HeapFile{
   /*
     Returns the number of distinct row labels in the big table
   */
-    public int getRowCnt ()
+    public int getRowCnt()
     {
       return getCnt(1);
     }
@@ -158,7 +158,7 @@ public class BigT extends HeapFile{
   /*
     Returns the number of distinct column labels in the big table
   */
-    public int getColumnCnt ()
+    public int getColumnCnt()
     {
       return getCnt(2);
     }
@@ -211,7 +211,7 @@ public class BigT extends HeapFile{
           // one btree to index column label and row label (combined key) and
           // one btree to index timestamps
           key1 = new StringKey(map.getColumnLabel() + map.getRowLabel());
-          key2 = new StringKey(map.getTimeStamp());
+          key2 = new StringKey(Interger.toString(map.getTimeStamp()));
           if(operation == 0) {
             m_defaultindex.insert(key1, mid);
             m_indexfile2.insert(key2, mid);
@@ -234,7 +234,7 @@ public class BigT extends HeapFile{
           // one btree to index row label and value (combined key) and
           // one btree to index timestamps
           key1 = new StringKey(map.getRowLabel() + map.getValue());
-          key2 = new StringKey(map.getTimeStamp());
+          key2 = new StringKey(Interger.toString(map.getTimeStamp()));
           if(operation == 0) {
             m_indexfile1.insert(key1, mid);
             m_indexfile2.insert(key2, mid);
@@ -272,7 +272,7 @@ public class BigT extends HeapFile{
 
       if (current_entry != null)
       {
-        current_mid = current_entry.data;
+        current_mid = (RID) current_entry.data;
         current_map = super.getMap(current_mid);
         timestamp_count += 1;
         oldest = current_mid;
@@ -281,7 +281,7 @@ public class BigT extends HeapFile{
         while(current_entry != null)
         {
           current_entry = scan.get_next();
-          current_mid = current_entry.data;
+          current_mid = (RID) current_entry.data;
           current_map = super.getMap(current_mid);
           timestamp_count += 1;
 
@@ -329,12 +329,12 @@ public class BigT extends HeapFile{
       RID oldestMapID = checkDropMap(map, mid);
 
       if(oldestMapID != null) {
-        Map oldestMap = getMap(oldestMapID);
+        Map oldestMap = super.getMap(oldestMapID);
 
         updateIndexFiles(oldestMap, oldestMapID, 1);
 
         // Change deleteRecord in heapfile to deleteMap
-        deleteMap(oldestMapID);
+        super.deleteMap(oldestMapID);
       }
 
       return mid;
@@ -343,7 +343,7 @@ public class BigT extends HeapFile{
     public Boolean deleteMap(RID mid) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
       Boolean deleteSuccess = super.deleteMap(mid);
       if(deleteSuccess) {
-        Map map = getMap(mid) // getRecord from heapfile
+        Map map = super.getMap(mid); // getRecord from heapfile
         updateIndexFiles(map, mid, 1);
       }
       return deleteSuccess;
@@ -351,10 +351,10 @@ public class BigT extends HeapFile{
 
     public Boolean updateMap(RID mid, Map newmap) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
       // get current map
-      Map currentmap = getMap(mid);
+      Map currentmap = super.getMap(mid);
 
       // update map (heapfile)
-      Boolean updateSuccess = updateMap(mid, newmap);
+      Boolean updateSuccess = super.updateMap(mid, newmap);
 
       if(updateSuccess) {
         // find affected attributes
@@ -403,8 +403,7 @@ public class BigT extends HeapFile{
     {
       return m_indexfile;
     }
-  } // end of bigt
-}
+} // end of bigt
 
 
 
