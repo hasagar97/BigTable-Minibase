@@ -78,5 +78,13 @@ phase2:Phase2Test.java
 
 phase2Test: phase2
 	$(JAVA) tests.Phase2Test
+
+# test bigt
+
+bigtTest:bigtTest.java
+	$(JAVAC) TestDriver.java bigtTest.java
+
+bigttest: bigtTest
+	$(JAVA) tests.bigtTest
 	
 

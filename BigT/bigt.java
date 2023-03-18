@@ -26,12 +26,12 @@ public class BigT extends HeapFile{
   public BigT(java.lang.String name, int type) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
     super(name);
     m_strategy = type;
-    BTreeFile m_defaultindex = new BTreeFile(name + "_row_index");
+    BTreeFile m_defaultindex = new BTreeFile(name + "_row_col_index");
 
     switch (m_strategy) {
       case 1:
         // one btree to index row labels
-        // already created by m_defaultindex
+        m_indexfile1 = new BTreeFile(name + "_row_index");
         break;
       case 2:
         // one btree to index column labels
@@ -40,8 +40,7 @@ public class BigT extends HeapFile{
       case 3:
         // one btree to index column label and row label (combined key) and
         // one btree to index timestamps
-        m_indexfile1 = new BTreeFile(name + "_row_col_index");
-        m_indexfile2 = new BTreeFile(name + "_timestamp_index");
+        m_indexfile1 = new BTreeFile(name + "_timestamp_index");
         break;
       case 4:
         // one btree to index row label and value (combined key) and
@@ -60,6 +59,7 @@ public class BigT extends HeapFile{
   */
     public void deleteBigt ()
     {
+      // Destroy the index files
       if (m_defaultindex != null)
       {
         m_defaultindex.close();
@@ -76,6 +76,7 @@ public class BigT extends HeapFile{
         m_indexfile2.destroyFile();
       }
 
+      // Destroy the heapfile
       super.deleteFile();
     }
 
@@ -88,30 +89,70 @@ public class BigT extends HeapFile{
     }
 
   /*
+    Returns the number of distinct labels in the big table
+    type 1 - gets row labels
+    type 2 - gets column labels
+  */
+    private int getCnt(int type)
+    {
+      int count = 0;
+      BTreeFile temp_index = new BTreeFile("temp_index");
+      StringKey temp_key;
+      Map current_map;
+      BTFileScan scan;
+      KeyDataEntry next;
+
+      if (temp_index != null)
+      {
+        // Scan all the entries in our default index
+        scan = m_defaultindex.new_scan(null, null);
+        next = scan.get_next();
+
+        while(next != null)
+        {
+          current_map = super.getMap(next.data);
+
+          // Insert scanned index entries into temporary index file
+          switch (type) {
+            case 1:
+              temp_key = new StringKey(current_map.getRowLabel());
+              break;
+            case 2:
+              temp_key = new StringKey(current_map.getColumnLabel());
+              break;
+            default:
+              temp_key = new StringKey(current_map.getRowLabel());
+              break;
+
+          temp_index.insert(temp_key, next.data);
+          next = scan.get_next();
+        }
+      }
+
+      // Count the entries in the temporary index file
+      if (temp_index != null)
+      {
+        scan = temp_index.new_scan(null, null);
+        next = scan.get_next();
+
+        while(next != null)
+        {
+            count += 1;
+            next = scan.get_next();
+        }
+      }
+
+      temp_index.destroyFile();
+
+      return count;
+    }
+
+  /*
     Returns the number of distinct row labels in the big table
   */
     public int getRowCnt ()
     {
-      int count = 0;
-
-      if (m_defaultindex != null)
-      {
-        BTFileScan scan = m_defaultindex.new_scan(null, null);
-        KeyDataEntry next = scan.get_next();
-
-        if (next != null)
-        {
-          count += 1;
-
-          while(next != null)
-          {
-            next = scan.get_next();
-            count += 1;
-          }
-        }
-      }
-
-      return count;
+      return getCnt(1);
     }
 
   /*
@@ -119,7 +160,7 @@ public class BigT extends HeapFile{
   */
     public int getColumnCnt ()
     {
-      return m_col_set.size();
+      return getCnt(2);
     }
 
     private void updateIndexFiles(Map map, RID mid, int operation) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
@@ -145,12 +186,12 @@ public class BigT extends HeapFile{
         case 1:
           // one btree to index row labels
           key = new StringKey(map.getRowLabel());
-          if(operation == 0) m_defaultindex.insert(key, mid);
-          else if(operation == 1) m_defaultindex.Delete(key, mid);
+          if(operation == 0) m_indexfile1.insert(key, mid);
+          else if(operation == 1) m_indexfile1.Delete(key, mid);
           else {
             if(isRowAffected) {
-              if(operation == 2) m_defaultindex.insert(key, mid);
-              else if(operation == 3) m_defaultindex.Delete(key, mid);
+              if(operation == 2) m_indexfile1.insert(key, mid);
+              else if(operation == 3) m_indexfile1.Delete(key, mid);
             }
           }
           break;
@@ -172,15 +213,15 @@ public class BigT extends HeapFile{
           key1 = new StringKey(map.getColumnLabel() + map.getRowLabel());
           key2 = new StringKey(map.getTimeStamp());
           if(operation == 0) {
-            m_indexfile1.insert(key1, mid);
+            m_defaultindex.insert(key1, mid);
             m_indexfile2.insert(key2, mid);
           } else if(operation == 1) {
-            m_indexfile1.Delete(key1, mid);
+            m_defaultindex.Delete(key1, mid);
             m_indexfile2.Delete(key2, mid);
           } else {
             if(isRowAffected || isColAffected) {
-              if(operation == 2) m_indexfile1.insert(key1, mid);
-              else if(operation == 3) m_indexfile1.Delete(key1, mid);
+              if(operation == 2) m_defaultindex.insert(key1, mid);
+              else if(operation == 3) m_defaultindex.Delete(key1, mid);
             }
 
             if(isTimestampAffected) {
@@ -220,21 +261,34 @@ public class BigT extends HeapFile{
 
     private RID checkDropMap ( Map map, RID mid)
     {
-      java.lang.String rowFilter = map.getRowLabel();
-      java.lang.String columnFilter = map.getColumnLabel();
-      Stream scan = new Stream(this, 6, rowFilter, columnFilter, null);
-      Map current_map = map;
-      RID oldest = mid;
+      StringKey key = new StringKey(map.getRowLabel() + map.getValue());
+      BTFileScan scan = m_defaultindex.new_scan(key, key);
+      Map current_map;
+      Map oldest_map;
+      RID current_mid;
+      RID oldest = null;
       int timestamp_count = 0;
+      KeyDataEntry current_entry = scan.get_next();
 
-      while(current_map != null)
+      if (current_entry != null)
       {
+        current_mid = current_entry.data;
+        current_map = super.getMap(current_mid);
         timestamp_count += 1;
-        current_map = scan.getNext(mid);
+        oldest = current_mid;
+        oldest_map = current_map;
 
-        if (current_map.getTimeStamp() < map.getTimeStamp())
+        while(current_entry != null)
         {
-          oldest = mid;
+          current_entry = scan.get_next();
+          current_mid = current_entry.data;
+          current_map = super.getMap(current_mid);
+          timestamp_count += 1;
+
+          if (current_map.getTimeStamp() < oldest_map.getTimeStamp())
+          {
+            oldest = current_mid;
+          }
         }
       }
 
