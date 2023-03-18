@@ -388,8 +388,40 @@ public class Map implements GlobalConst{
       Print out the map.
     */
     public void print() throws IOException {
-        //System.out.println("{row_lable:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
-        //+ getTimeStamp() + " ,value:" + getValue()+"}");
+        System.out.println("{row_lable:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
+        + getTimeStamp() + " ,value:" + getValue()+"}");
+
+    }
+
+
+    public void print(AttrType type[]) throws IOException {
+
+
+        System.out.print("[");
+        for (int i = 0; i < fldCnt ; i++) {
+            switch (type[i].attrType) {
+
+                case AttrType.attrInteger:
+                    System.out.print(Convert.getIntValue(fldOffset[i], map));
+                    break;
+
+                case AttrType.attrReal:
+                    System.out.print(Convert.getFloValue(fldOffset[i], map));
+                    break;
+
+                case AttrType.attrString:
+                    System.out.print(Convert.getStrValue(fldOffset[i], map, fldOffset[i + 1] - fldOffset[i]));
+                    break;
+
+                case AttrType.attrNull:
+                case AttrType.attrSymbol:
+                    break;
+            }
+            if(i!=fldCnt-1)
+                System.out.print(", ");
+            else
+                System.out.print(" ]");
+        }
 
     }
 
@@ -431,6 +463,13 @@ public class Map implements GlobalConst{
         // reseting map_offset to 0
         this.map_offset = 0;
         return this;
+    }
+
+    public void mapSet(byte [] record, int offset, int length)
+    {
+        System.arraycopy(record, offset, this.map, 0, length);
+        map_offset = 0;
+        map_length = length;
     }
 
 

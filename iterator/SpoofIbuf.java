@@ -86,7 +86,7 @@ public class SpoofIbuf implements GlobalConst  {
 	  done = true; buf = null;return null;
 	}
  
-      buf.tupleSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size); 
+      buf.mapSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);
       tot_t_proc++;
       
       // Setup for next read
