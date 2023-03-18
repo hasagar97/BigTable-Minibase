@@ -17,7 +17,7 @@ public class PredEval
    *@param in2[] the attribute type corespond to the t2
    *@exception IOException  some I/O error
    *@exception UnknowAttrType don't know the attribute type
-   *@exception InvalidTupleSizeException size of tuple not valid
+   *@exception InvalidMapSizeException size of tuple not valid
    *@exception InvalidTypeException type of tuple not valid
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception PredEvalException exception from this method
@@ -26,7 +26,7 @@ public class PredEval
                              AttrType in2[])
     throws IOException,
 	   UnknowAttrType,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException,
 	   FieldNumberOutOfBoundException,
 	   PredEvalException

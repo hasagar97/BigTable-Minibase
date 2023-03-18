@@ -29,7 +29,7 @@ public class IndexScan extends Iterator {
    * @param indexOnly whether the answer requires only the key or the tuple
    * @exception IndexException error from the lower layer
    * @exception InvalidTypeException tuple type not valid
-   * @exception InvalidTupleSizeException tuple size not valid
+   * @exception InvalidMapSizeException tuple size not valid
    * @exception UnknownIndexTypeException index type unknown
    * @exception IOException from the lower layer
    */
@@ -48,7 +48,7 @@ public class IndexScan extends Iterator {
 	   ) 
     throws IndexException, 
 	   InvalidTypeException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   UnknownIndexTypeException,
 	   IOException
   {

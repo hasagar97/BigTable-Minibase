@@ -89,8 +89,8 @@ public class Heapfile implements Filetype,  GlobalConst {
 				  PageId dirPageId, HFPage dirpage,
 				  PageId dataPageId, HFPage datapage,
 				  RID rpDataPageRid) 
-    throws InvalidSlotNumberException, 
-	   InvalidTupleSizeException, 
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
 	   HFException,
 	   HFBufMgrException,
 	   HFDiskMgrException,
@@ -294,14 +294,14 @@ public class Heapfile implements Filetype,  GlobalConst {
   /** Return number of records in file.
    *
    * @exception InvalidSlotNumberException invalid slot number
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception HFBufMgrException exception thrown from bufmgr layer
    * @exception HFDiskMgrException exception thrown from diskmgr layer
    * @exception IOException I/O errors
    */
   public int getRecCnt() 
-    throws InvalidSlotNumberException, 
-	   InvalidTupleSizeException, 
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
 	   HFDiskMgrException,
 	   HFBufMgrException,
 	   IOException
@@ -355,7 +355,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @param recLen the length of the record
    *
    * @exception InvalidSlotNumberException invalid slot number
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception SpaceNotAvailableException no space left
    * @exception HFException heapfile exception
    * @exception HFBufMgrException exception thrown from bufmgr layer
@@ -365,8 +365,8 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @return the rid of the record
    */
   public RID insertRecord(byte[] recPtr) 
-    throws InvalidSlotNumberException,  
-	   InvalidTupleSizeException,
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
 	   SpaceNotAvailableException,
 	   HFException,
 	   HFBufMgrException,
@@ -603,7 +603,7 @@ public class Heapfile implements Filetype,  GlobalConst {
   /** Delete record from file with given rid.
    *
    * @exception InvalidSlotNumberException invalid slot number
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception HFException heapfile exception
    * @exception HFBufMgrException exception thrown from bufmgr layer
    * @exception HFDiskMgrException exception thrown from diskmgr layer
@@ -612,8 +612,8 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @return true record deleted  false:record not found
    */
   public boolean deleteRecord(RID rid)  
-    throws InvalidSlotNumberException, 
-	   InvalidTupleSizeException, 
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
 	   HFException, 
 	   HFBufMgrException,
 	   HFDiskMgrException,
@@ -752,7 +752,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    *
    * @exception InvalidSlotNumberException invalid slot number
    * @exception InvalidUpdateException invalid update on record
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception HFException heapfile exception
    * @exception HFBufMgrException exception thrown from bufmgr layer
    * @exception HFDiskMgrException exception thrown from diskmgr layer
@@ -761,8 +761,8 @@ public class Heapfile implements Filetype,  GlobalConst {
    */
   public boolean updateRecord(RID rid, BigT.Map newtuple)
     throws InvalidSlotNumberException, 
-	   InvalidUpdateException, 
-	   InvalidTupleSizeException,
+	   InvalidUpdateException,
+		  InvalidMapSizeException,
 	   HFException, 
 	   HFDiskMgrException,
 	   HFBufMgrException,
@@ -811,7 +811,7 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @param rid Record ID
    *
    * @exception InvalidSlotNumberException invalid slot number
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception SpaceNotAvailableException no space left
    * @exception HFException heapfile exception
    * @exception HFBufMgrException exception thrown from bufmgr layer
@@ -821,8 +821,8 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @return a Tuple. if Tuple==null, no more tuple
    */
   public BigT.Map getRecord(RID rid)
-    throws InvalidSlotNumberException, 
-	   InvalidTupleSizeException, 
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
 	   HFException, 
 	   HFDiskMgrException,
 	   HFBufMgrException,
@@ -862,12 +862,12 @@ public class Heapfile implements Filetype,  GlobalConst {
   
   
   /** Initiate a sequential scan.
-   * @exception InvalidTupleSizeException Invalid tuple size
+   * @exception InvalidMapSizeException Invalid tuple size
    * @exception IOException I/O errors
    *
    */
   public Scan openScan() 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
     {
       Scan newscan = new Scan(this);
@@ -878,7 +878,7 @@ public class Heapfile implements Filetype,  GlobalConst {
   /** Delete the file from the database.
    *
    * @exception InvalidSlotNumberException invalid slot number
-   * @exception InvalidTupleSizeException invalid tuple size
+   * @exception InvalidMapSizeException invalid tuple size
    * @exception FileAlreadyDeletedException file is deleted already
    * @exception HFBufMgrException exception thrown from bufmgr layer
    * @exception HFDiskMgrException exception thrown from diskmgr layer
@@ -886,8 +886,8 @@ public class Heapfile implements Filetype,  GlobalConst {
    */
   public void deleteFile()  
     throws InvalidSlotNumberException, 
-	   FileAlreadyDeletedException, 
-	   InvalidTupleSizeException, 
+	   FileAlreadyDeletedException,
+		  InvalidMapSizeException,
 	   HFBufMgrException,
 	   HFDiskMgrException,
 	   IOException

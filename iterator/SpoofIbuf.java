@@ -112,9 +112,9 @@ public class SpoofIbuf implements GlobalConst  {
    *
    *@return the numbers of tuples in the buffer
    *@exception IOException some I/O fault
-   *@exception InvalidTupleSizeException Heapfile error
+   *@exception InvalidMapSizeException Heapfile error
    */
-  private int readin()throws IOException,InvalidTupleSizeException
+  private int readin()throws IOException, InvalidMapSizeException
     {
       int   t_read = 0, tot_read = 0;
       BigT.Map t      = new BigT.Map();

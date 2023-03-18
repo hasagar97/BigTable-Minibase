@@ -105,7 +105,7 @@ public class FileScan extends  Iterator
    *@return the result tuple
    *@exception JoinsException some join exception
    *@exception IOException I/O errors
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception PredEvalException exception from PredEval class
@@ -116,7 +116,7 @@ public class FileScan extends  Iterator
   public BigT.Map get_next()
     throws JoinsException,
 	   IOException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException,
 	   PageNotReadException, 
 	   PredEvalException,

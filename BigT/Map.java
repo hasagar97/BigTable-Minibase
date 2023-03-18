@@ -445,10 +445,10 @@ public class Map implements GlobalConst{
     }
 
     public void setHdr (short numFlds,  AttrType types[], short strSizes[])
-            throws IOException, InvalidTypeException, InvalidTupleSizeException
+            throws IOException, InvalidTypeException, InvalidMapSizeException
     {
         if((numFlds +2)*2 > max_size)
-            throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
+            throw new InvalidMapSizeException(null, "TUPLE: TUPLE_TOOBIG_ERROR");
 
         fldCnt = numFlds;
         Convert.setShortValue(numFlds, map_offset, map);
@@ -514,7 +514,7 @@ public class Map implements GlobalConst{
         map_length = fldOffset[numFlds] - map_offset;
 
         if(map_length > max_size)
-            throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
+            throw new InvalidMapSizeException(null, "TUPLE: TUPLE_TOOBIG_ERROR");
     }
 
     /**
