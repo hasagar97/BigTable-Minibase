@@ -3,6 +3,8 @@ package iterator;
 import BigT.Map;
 import heap.*;
 import global.*;
+import diskmgr.*;
+import bufmgr.*;
 
 import java.io.*;
 
@@ -87,7 +89,7 @@ public class SpoofIbuf implements GlobalConst  {
 	  done = true; buf = null;return null;
 	}
  
-      buf.tupleSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size); 
+      buf.mapSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);
       tot_t_proc++;
       
       // Setup for next read
@@ -113,9 +115,9 @@ public class SpoofIbuf implements GlobalConst  {
    *
    *@return the numbers of tuples in the buffer
    *@exception IOException some I/O fault
-   *@exception InvalidTupleSizeException Heapfile error
+   *@exception InvalidMapSizeException Heapfile error
    */
-  private int readin()throws IOException,InvalidTupleSizeException
+  private int readin()throws IOException, InvalidMapSizeException
     {
       int   t_read = 0, tot_read = 0;
       BigT.Map t      = new BigT.Map();
@@ -129,7 +131,7 @@ public class SpoofIbuf implements GlobalConst  {
 	      RID rid =new RID();
 	      try {
 		if ( (t = hf_scan.getNext(rid)) == null) return tot_read;
-		t_copy = t.getTupleByteArray();
+		t_copy = t.getMapByteArray();
 		System.arraycopy(t_copy,0,_bufs[curr_page],t_read*t_size,t_size); 
 	      }
 	      catch (Exception e) {

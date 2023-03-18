@@ -74,15 +74,15 @@ class DataPageInfo implements GlobalConst{
    * @param atuple: the input tuple
    */
   public DataPageInfo(BigT.Map _atuple)
-       throws InvalidTupleSizeException, IOException
+       throws InvalidMapSizeException, IOException
   {   
      // need check _atuple size == this.size ?otherwise, throw new exception
     if (_atuple.getLength()!=12){
-      throw new InvalidTupleSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
+      throw new InvalidMapSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
     }
 
     else{
-      data = _atuple.returnTupleByteArray();
+      data = _atuple.returnMapByteArray();
       offset = _atuple.getOffset();
       
       availspace = Convert.getIntValue(offset, data);
@@ -109,6 +109,7 @@ class DataPageInfo implements GlobalConst{
 
 
     // 2) creat a Tuple object using this array
+//    System.out.println("Converting to map in datapageinfo with offset "+offset);
     BigT.Map atuple = new BigT.Map(data, offset, size);
  
     // 3) return tuple object

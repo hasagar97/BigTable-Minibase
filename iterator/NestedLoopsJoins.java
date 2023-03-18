@@ -98,7 +98,7 @@ public class NestedLoopsJoins  extends Iterator
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	t_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
+	t_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
 					   in1, len_in1, in2, len_in2,
 					   t1_str_sizes, t2_str_sizes,
 					   proj_list, nOutFlds);
@@ -122,7 +122,7 @@ public class NestedLoopsJoins  extends Iterator
    *@exception IOException I/O errors
    *@exception JoinsException some join exception
    *@exception IndexException exception from super class
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception TupleUtilsException exception from using tuple utilities
@@ -138,7 +138,7 @@ public class NestedLoopsJoins  extends Iterator
     throws IOException,
 	   JoinsException ,
 	   IndexException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException, 
 	   PageNotReadException,
 	   TupleUtilsException, 

@@ -1,6 +1,7 @@
 package tests;
 //originally from : joins.C
 
+import BigT.Map;
 import iterator.*;
 import heap.*;
 import global.*;
@@ -17,113 +18,113 @@ import java.lang.*;
    We also allow the user to hardwire trees together.
 */
 
-////Define the Sailor schema
-//class Sailor {
-//  public int    sid;
-//  public String sname;
-//  public int    rating;
-//  public double age;
-//
-//  public Sailor (int _sid, String _sname, int _rating,double _age) {
-//    sid    = _sid;
-//    sname  = _sname;
-//    rating = _rating;
-//    age    = _age;
-//  }
-//}
-//
-////Define the Boat schema
-//class Boats {
-//  public int    bid;
-//  public String bname;
-//  public String color;
-//
-//  public Boats (int _bid, String _bname, String _color) {
-//    bid   = _bid;
-//    bname = _bname;
-//    color = _color;
-//  }
-//}
-//
-////Define the Reserves schema
-//class Reserves {
-//  public int    sid;
-//  public int    bid;
-//  public String date;
-//
-//  public Reserves (int _sid, int _bid, String _date) {
-//    sid  = _sid;
-//    bid  = _bid;
-//    date = _date;
-//  }
-//}
+////Define the SM_Sailor schema
+class SM_Sailor {
+  public int    sid;
+  public String sname;
+  public int    rating;
+  public double age;
+
+  public SM_Sailor (int _sid, String _sname, int _rating,double _age) {
+    sid    = _sid;
+    sname  = _sname;
+    rating = _rating;
+    age    = _age;
+  }
+}
+
+//Define the Boat schema
+class SM_Boats {
+  public int    bid;
+  public String bname;
+  public String color;
+
+  public SM_Boats (int _bid, String _bname, String _color) {
+    bid   = _bid;
+    bname = _bname;
+    color = _color;
+  }
+}
+
+//Define the SM_Reserves schema
+class SM_Reserves {
+  public int    sid;
+  public int    bid;
+  public String date;
+
+  public SM_Reserves (int _sid, int _bid, String _date) {
+    sid  = _sid;
+    bid  = _bid;
+    date = _date;
+  }
+}
 
 class SM_JoinsDriver implements GlobalConst {
   
   private boolean OK = true;
   private boolean FAIL = false;
-  private Vector sailors;
-  private Vector boats;
-  private Vector reserves;
+  private Vector SM_Sailors;
+  private Vector SM_Boats;
+  private Vector SM_Reserves;
   /** Constructor
    */
   public SM_JoinsDriver() {
     
-    //build Sailor, Boats, Reserves table
-    sailors  = new Vector();
-    boats    = new Vector();
-    reserves = new Vector();
+    //build SM_Sailor, SM_Boats, SM_Reserves table
+    SM_Sailors  = new Vector();
+    SM_Boats    = new Vector();
+    SM_Reserves = new Vector();
     
-    sailors.addElement(new Sailor(53, "Bob Holloway",       9, 53.6));
-    sailors.addElement(new Sailor(54, "Susan Horowitz",     1, 34.2));
-    sailors.addElement(new Sailor(57, "Yannis Ioannidis",   8, 40.2));
-    sailors.addElement(new Sailor(59, "Deborah Joseph",    10, 39.8));
-    sailors.addElement(new Sailor(61, "Landwebber",         8, 56.7));
-    sailors.addElement(new Sailor(63, "James Larus",        9, 30.3));
-    sailors.addElement(new Sailor(64, "Barton Miller",      5, 43.7));
-    sailors.addElement(new Sailor(67, "David Parter",       1, 99.9));   
-    sailors.addElement(new Sailor(69, "Raghu Ramakrishnan", 9, 37.1));
-    sailors.addElement(new Sailor(71, "Guri Sohi",         10, 42.1));
-    sailors.addElement(new Sailor(73, "Prasoon Tiwari",     8, 39.2));
-    sailors.addElement(new Sailor(39, "Anne Condon",        3, 30.3));
-    sailors.addElement(new Sailor(47, "Charles Fischer",    6, 46.3));
-    sailors.addElement(new Sailor(49, "James Goodman",      4, 50.3));
-    sailors.addElement(new Sailor(50, "Mark Hill",          5, 35.2));
-    sailors.addElement(new Sailor(75, "Mary Vernon",        7, 43.1));
-    sailors.addElement(new Sailor(79, "David Wood",         3, 39.2));
-    sailors.addElement(new Sailor(84, "Mark Smucker",       9, 25.3));
-    sailors.addElement(new Sailor(87, "Martin Reames",     10, 24.1));
-    sailors.addElement(new Sailor(10, "Mike Carey",         9, 40.3));
-    sailors.addElement(new Sailor(21, "David Dewitt",      10, 47.2));
-    sailors.addElement(new Sailor(29, "Tom Reps",           7, 39.1));
-    sailors.addElement(new Sailor(31, "Jeff Naughton",      5, 35.0));
-    sailors.addElement(new Sailor(35, "Miron Livny",        7, 37.6));
-    sailors.addElement(new Sailor(37, "Marv Solomon",      10, 48.9));
+    SM_Sailors.addElement(new SM_Sailor(53, "Bob Holloway",       9, 53.6));
+    SM_Sailors.addElement(new SM_Sailor(54, "Susan Horowitz",     1, 34.2));
+    SM_Sailors.addElement(new SM_Sailor(57, "Yannis Ioannidis",   8, 40.2));
+    SM_Sailors.addElement(new SM_Sailor(59, "Deborah Joseph",    10, 39.8));
+    SM_Sailors.addElement(new SM_Sailor(61, "Landwebber",         8, 56.7));
+    SM_Sailors.addElement(new SM_Sailor(63, "James Larus",        9, 30.3));
+    SM_Sailors.addElement(new SM_Sailor(64, "Barton Miller",      5, 43.7));
+    SM_Sailors.addElement(new SM_Sailor(67, "David Parter",       1, 99.9));
+    SM_Sailors.addElement(new SM_Sailor(69, "Raghu Ramakrishnan", 9, 37.1));
+    SM_Sailors.addElement(new SM_Sailor(71, "Guri Sohi",         10, 42.1));
+    SM_Sailors.addElement(new SM_Sailor(73, "Prasoon Tiwari",     8, 39.2));
+    SM_Sailors.addElement(new SM_Sailor(39, "Anne Condon",        3, 30.3));
+    SM_Sailors.addElement(new SM_Sailor(47, "Charles Fischer",    6, 46.3));
+    SM_Sailors.addElement(new SM_Sailor(49, "James Goodman",      4, 50.3));
+    SM_Sailors.addElement(new SM_Sailor(50, "Mark Hill",          5, 35.2));
+    SM_Sailors.addElement(new SM_Sailor(75, "Mary Vernon",        7, 43.1));
+    SM_Sailors.addElement(new SM_Sailor(79, "David Wood",         3, 39.2));
+    SM_Sailors.addElement(new SM_Sailor(84, "Mark Smucker",       9, 25.3));
+    SM_Sailors.addElement(new SM_Sailor(87, "Martin Reames",     10, 24.1));
+    SM_Sailors.addElement(new SM_Sailor(10, "Mike Carey",         9, 40.3));
+    SM_Sailors.addElement(new SM_Sailor(21, "David Dewitt",      10, 47.2));
+    SM_Sailors.addElement(new SM_Sailor(29, "Tom Reps",           7, 39.1));
+    SM_Sailors.addElement(new SM_Sailor(31, "Jeff Naughton",      5, 35.0));
+    SM_Sailors.addElement(new SM_Sailor(35, "Miron Livny",        7, 37.6));
+    SM_Sailors.addElement(new SM_Sailor(37, "Marv Solomon",      10, 48.9));
 
-    boats.addElement(new Boats(1, "Onion",      "white"));
-    boats.addElement(new Boats(2, "Buckey",     "red"  ));
-    boats.addElement(new Boats(3, "Enterprise", "blue" ));
-    boats.addElement(new Boats(4, "Voyager",    "green"));
-    boats.addElement(new Boats(5, "Wisconsin",  "red"  ));
+    SM_Boats.addElement(new SM_Boats(1, "Onion",      "white"));
+    SM_Boats.addElement(new SM_Boats(2, "Buckey",     "red"  ));
+    SM_Boats.addElement(new SM_Boats(3, "Enterprise", "blue" ));
+    SM_Boats.addElement(new SM_Boats(4, "Voyager",    "green"));
+    SM_Boats.addElement(new SM_Boats(5, "Wisconsin",  "red"  ));
  
-    reserves.addElement(new Reserves(10, 1, "05/10/95"));
-    reserves.addElement(new Reserves(21, 1, "05/11/95"));
-    reserves.addElement(new Reserves(10, 2, "05/11/95"));
-    reserves.addElement(new Reserves(31, 1, "05/12/95"));
-    reserves.addElement(new Reserves(10, 3, "05/13/95"));
-    reserves.addElement(new Reserves(69, 4, "05/12/95"));
-    reserves.addElement(new Reserves(69, 5, "05/14/95"));
-    reserves.addElement(new Reserves(21, 5, "05/16/95"));
-    reserves.addElement(new Reserves(57, 2, "05/10/95"));
-    reserves.addElement(new Reserves(35, 3, "05/15/95"));
+    SM_Reserves.addElement(new SM_Reserves(10, 1, "05/10/95"));
+    SM_Reserves.addElement(new SM_Reserves(21, 1, "05/11/95"));
+    SM_Reserves.addElement(new SM_Reserves(10, 2, "05/11/95"));
+    SM_Reserves.addElement(new SM_Reserves(31, 1, "05/12/95"));
+    SM_Reserves.addElement(new SM_Reserves(10, 3, "05/13/95"));
+    SM_Reserves.addElement(new SM_Reserves(69, 4, "05/12/95"));
+    SM_Reserves.addElement(new SM_Reserves(69, 5, "05/14/95"));
+    SM_Reserves.addElement(new SM_Reserves(21, 5, "05/16/95"));
+    SM_Reserves.addElement(new SM_Reserves(57, 2, "05/10/95"));
+    SM_Reserves.addElement(new SM_Reserves(35, 3, "05/15/95"));
 
     boolean status = OK;
-    int numsailors = 25;
-    int numsailors_attrs = 4;
-    int numreserves = 10;
-    int numreserves_attrs = 3;
-    int numboats = 5;
-    int numboats_attrs = 3;
+    int numSM_Sailors = 25;
+    int numSM_Sailors_attrs = 4;
+    int numSM_Reserves = 10;
+    int numSM_Reserves_attrs = 3;
+    int numSM_Boats = 5;
+    int numSM_Boats_attrs = 3;
     
     String dbpath = "/tmp/"+System.getProperty("user.name")+".minibase.jointestdb"; 
     String logpath = "/tmp/"+System.getProperty("user.name")+".joinlog";
@@ -151,7 +152,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     SystemDefs sysdef = new SystemDefs( dbpath, 1000, NUMBUF, "Clock" );
     
-    // creating the sailors relation
+    // creating the SM_Sailors relation
     AttrType [] Stypes = new AttrType[4];
     Stypes[0] = new AttrType (AttrType.attrInteger);
     Stypes[1] = new AttrType (AttrType.attrString);
@@ -174,11 +175,11 @@ class SM_JoinsDriver implements GlobalConst {
     
     int size = t.size();
     
-    // inserting the tuple into file "sailors"
+    // inserting the tuple into file "SM_Sailors"
     RID             rid;
     Heapfile        f = null;
     try {
-      f = new Heapfile("sailors.in");
+      f = new Heapfile("SM_Sailors.in");
     }
     catch (Exception e) {
       System.err.println("*** error in Heapfile constructor ***");
@@ -196,12 +197,12 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    for (int i=0; i<numsailors; i++) {
+    for (int i=0; i<numSM_Sailors; i++) {
       try {
-	t.setIntFld(1, ((Sailor)sailors.elementAt(i)).sid);
-	t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
-	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
-	t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
+	t.setIntFld(1, ((SM_Sailor)SM_Sailors.elementAt(i)).sid);
+	t.setStrFld(2, ((SM_Sailor)SM_Sailors.elementAt(i)).sname);
+	t.setIntFld(3, ((SM_Sailor)SM_Sailors.elementAt(i)).rating);
+	t.setFloFld(4, (float)((SM_Sailor)SM_Sailors.elementAt(i)).age);
       }
       catch (Exception e) {
 	System.err.println("*** Heapfile error in Tuple.setStrFld() ***");
@@ -210,7 +211,7 @@ class SM_JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -220,11 +221,11 @@ class SM_JoinsDriver implements GlobalConst {
     }
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error creating relation for sailors");
+      System.err.println ("*** Error creating relation for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
     
-    //creating the boats relation
+    //creating the SM_Boats relation
     AttrType [] Btypes = {
       new AttrType(AttrType.attrInteger), 
       new AttrType(AttrType.attrString), 
@@ -246,11 +247,11 @@ class SM_JoinsDriver implements GlobalConst {
     
     size = t.size();
     
-    // inserting the tuple into file "boats"
+    // inserting the tuple into file "SM_Boats"
     //RID             rid;
     f = null;
     try {
-      f = new Heapfile("boats.in");
+      f = new Heapfile("SM_Boats.in");
     }
     catch (Exception e) {
       System.err.println("*** error in Heapfile constructor ***");
@@ -268,11 +269,11 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    for (int i=0; i<numboats; i++) {
+    for (int i=0; i<numSM_Boats; i++) {
       try {
-	t.setIntFld(1, ((Boats)boats.elementAt(i)).bid);
-	t.setStrFld(2, ((Boats)boats.elementAt(i)).bname);
-	t.setStrFld(3, ((Boats)boats.elementAt(i)).color);
+	t.setIntFld(1, ((SM_Boats)SM_Boats.elementAt(i)).bid);
+	t.setStrFld(2, ((SM_Boats)SM_Boats.elementAt(i)).bname);
+	t.setStrFld(3, ((SM_Boats)SM_Boats.elementAt(i)).color);
       }
       catch (Exception e) {
 	System.err.println("*** error in Tuple.setStrFld() ***");
@@ -281,7 +282,7 @@ class SM_JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -291,11 +292,11 @@ class SM_JoinsDriver implements GlobalConst {
     }
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error creating relation for boats");
+      System.err.println ("*** Error creating relation for SM_Boats");
       Runtime.getRuntime().exit(1);
     }
     
-    //creating the boats relation
+    //creating the SM_Boats relation
     AttrType [] Rtypes = new AttrType[3];
     Rtypes[0] = new AttrType (AttrType.attrInteger);
     Rtypes[1] = new AttrType (AttrType.attrInteger);
@@ -315,11 +316,11 @@ class SM_JoinsDriver implements GlobalConst {
     
     size = t.size();
     
-    // inserting the tuple into file "boats"
+    // inserting the tuple into file "SM_Boats"
     //RID             rid;
     f = null;
     try {
-      f = new Heapfile("reserves.in");
+      f = new Heapfile("SM_Reserves.in");
     }
     catch (Exception e) {
       System.err.println("*** error in Heapfile constructor ***");
@@ -337,11 +338,11 @@ class SM_JoinsDriver implements GlobalConst {
       e.printStackTrace();
     }
     
-    for (int i=0; i<numreserves; i++) {
+    for (int i=0; i<numSM_Reserves; i++) {
       try {
-	t.setIntFld(1, ((Reserves)reserves.elementAt(i)).sid);
-	t.setIntFld(2, ((Reserves)reserves.elementAt(i)).bid);
-	t.setStrFld(3, ((Reserves)reserves.elementAt(i)).date);
+	t.setIntFld(1, ((SM_Reserves)SM_Reserves.elementAt(i)).sid);
+	t.setIntFld(2, ((SM_Reserves)SM_Reserves.elementAt(i)).bid);
+	t.setStrFld(3, ((SM_Reserves)SM_Reserves.elementAt(i)).date);
 
       }
       catch (Exception e) {
@@ -351,7 +352,7 @@ class SM_JoinsDriver implements GlobalConst {
       }      
       
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -361,7 +362,7 @@ class SM_JoinsDriver implements GlobalConst {
     }
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error creating relation for reserves");
+      System.err.println ("*** Error creating relation for SM_Reserves");
       Runtime.getRuntime().exit(1);
     }
     
@@ -527,12 +528,12 @@ class SM_JoinsDriver implements GlobalConst {
     System.out.print("**********************Query1 strating *********************\n");
     boolean status = OK;
     
-    // Sailors, Boats, Reserves Queries.
-    System.out.print ("Query: Find the names of sailors who have reserved "
+    // SM_Sailors, SM_Boats, SM_Reserves Queries.
+    System.out.print ("Query: Find the names of SM_Sailors who have reserved "
 		      + "boat number 1.\n"
 		      + "       and print out the date of reservation.\n\n"
 		      + "  SELECT S.sname, R.date\n"
-		      + "  FROM   Sailors S, Reserves R\n"
+		      + "  FROM   SM_Sailors S, SM_Reserves R\n"
 		      + "  WHERE  S.sid = R.sid AND R.bid = 1\n\n");
     
     System.out.print ("\n(Tests FileScan, Projection, and Sort-Merge Join)\n");
@@ -568,7 +569,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     FileScan am = null;
     try {
-      am  = new FileScan("sailors.in", Stypes, Ssizes, 
+      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes,
 				  (short)4, (short)4,
 				  Sprojection, null);
     }
@@ -579,7 +580,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
     
@@ -597,7 +598,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     FileScan am2 = null;
     try {
-      am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
+      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes,
 				  (short)3, (short) 3,
 				  Rprojection, null);
     }
@@ -608,7 +609,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for reserves");
+      System.err.println ("*** Error setting up scan for SM_Reserves");
       Runtime.getRuntime().exit(1);
     }
    
@@ -694,12 +695,12 @@ class SM_JoinsDriver implements GlobalConst {
     System.out.print("**********************Query3 strating *********************\n"); 
     boolean status = OK;
 
-        // Sailors, Boats, Reserves Queries.
+        // SM_Sailors, SM_Boats, SM_Reserves Queries.
  
     System.out.print 
-      ( "Query: Find the names of sailors who have reserved a boat.\n\n"
+      ( "Query: Find the names of SM_Sailors who have reserved a boat.\n\n"
 	+ "  SELECT S.sname\n"
-	+ "  FROM   Sailors S, Reserves R\n"
+	+ "  FROM   SM_Sailors S, SM_Reserves R\n"
 	+ "  WHERE  S.sid = R.sid\n\n"
 	+ "(Tests FileScan, Projection, and SortMerge Join.)\n\n");
     
@@ -741,7 +742,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     iterator.Iterator am = null;
     try {
-      am  = new FileScan("sailors.in", Stypes, Ssizes,
+      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes,
 				  (short)4, (short) 4,
 				  Sprojection, null);
     }
@@ -752,7 +753,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
 
@@ -764,7 +765,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     iterator.Iterator am2 = null;
     try {
-      am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
+      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes,
 				  (short)3, (short)3,
 				  Rprojection, null);
     }
@@ -775,7 +776,7 @@ class SM_JoinsDriver implements GlobalConst {
     
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for reserves");
+      System.err.println ("*** Error setting up scan for SM_Reserves");
       Runtime.getRuntime().exit(1);
     }
 
@@ -839,7 +840,7 @@ class SM_JoinsDriver implements GlobalConst {
     
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
   }
@@ -848,13 +849,13 @@ class SM_JoinsDriver implements GlobalConst {
      System.out.print("**********************Query4 strating *********************\n");
     boolean status = OK;
 
-    // Sailors, Boats, Reserves Queries.
+    // SM_Sailors, SM_Boats, SM_Reserves Queries.
  
     System.out.print 
-      ("Query: Find the names of sailors who have reserved a boat\n"
+      ("Query: Find the names of SM_Sailors who have reserved a boat\n"
        + "       and print each name once.\n\n"
        + "  SELECT DISTINCT S.sname\n"
-       + "  FROM   Sailors S, Reserves R\n"
+       + "  FROM   SM_Sailors S, SM_Reserves R\n"
        + "  WHERE  S.sid = R.sid\n\n"
        + "(Tests FileScan, Projection, Sort-Merge Join and "
        + "Duplication elimination.)\n\n");
@@ -897,7 +898,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     iterator.Iterator am = null;
     try {
-      am  = new FileScan("sailors.in", Stypes, Ssizes,
+      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes,
 				  (short)4, (short) 4,
 				  Sprojection, null);
     }
@@ -908,7 +909,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
 
@@ -920,7 +921,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     iterator.Iterator am2 = null;
     try {
-      am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
+      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes,
 				  (short)3, (short)3,
 				  Rprojection, null);
     }
@@ -931,7 +932,7 @@ class SM_JoinsDriver implements GlobalConst {
     
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for reserves");
+      System.err.println ("*** Error setting up scan for SM_Reserves");
       Runtime.getRuntime().exit(1);
     }
 
@@ -1004,7 +1005,7 @@ class SM_JoinsDriver implements GlobalConst {
    System.out.println ("\n");  
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
  }
@@ -1012,15 +1013,15 @@ class SM_JoinsDriver implements GlobalConst {
    public void Query5() {
    System.out.print("**********************Query5 strating *********************\n");  
     boolean status = OK;
-        // Sailors, Boats, Reserves Queries.
+        // SM_Sailors, SM_Boats, SM_Reserves Queries.
  
     System.out.print 
-      ("Query: Find the names of old sailors or sailors with "
+      ("Query: Find the names of old SM_Sailors or SM_Sailors with "
        + "a rating less\n       than 7, who have reserved a boat, "
        + "(perhaps to increase the\n       amount they have to "
        + "pay to make a reservation).\n\n"
        + "  SELECT S.sname, S.rating, S.age\n"
-       + "  FROM   Sailors S, Reserves R\n"
+       + "  FROM   SM_Sailors S, SM_Reserves R\n"
        + "  WHERE  S.sid = R.sid and (S.age > 40 || S.rating < 7)\n\n"
        + "(Tests FileScan, Multiple Selection, Projection, "
        + "and Sort-Merge Join.)\n\n");
@@ -1080,7 +1081,7 @@ class SM_JoinsDriver implements GlobalConst {
 
     iterator.Iterator am = null;
     try {
-      am  = new FileScan("sailors.in", Stypes, Ssizes, 
+      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes,
 				  (short)4, (short)4,
 				  Sprojection, null);
     }
@@ -1091,13 +1092,13 @@ class SM_JoinsDriver implements GlobalConst {
     
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for sailors");
+      System.err.println ("*** Error setting up scan for SM_Sailors");
       Runtime.getRuntime().exit(1);
     }
 
     iterator.Iterator am2 = null;
     try {
-      am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
+      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes,
 			 (short)3, (short)3,
 			 Rprojection, null);
     }
@@ -1108,7 +1109,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     if (status != OK) {
       //bail out
-      System.err.println ("*** Error setting up scan for reserves");
+      System.err.println ("*** Error setting up scan for SM_Reserves");
       Runtime.getRuntime().exit(1);
     }
  

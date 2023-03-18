@@ -105,7 +105,7 @@ public class DuplElim extends Iterator
    *@exception JoinsException some join exception
    *@exception IndexException exception from super class    
    *@exception IOException I/O errors
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception TupleUtilsException exception from using tuple utilities
@@ -120,7 +120,7 @@ public class DuplElim extends Iterator
     throws IOException,
 	   JoinsException ,
 	   IndexException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException, 
 	   PageNotReadException,
 	   TupleUtilsException, 
@@ -143,7 +143,7 @@ public class DuplElim extends Iterator
 	  return null;
 	} 
 	TempTuple2.tupleCopy(t);
-      } while (TupleUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
+      } while (MapUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
       
       // Now copy the the TempTuple2 (new o/p tuple) into TempTuple1.
       TempTuple1.tupleCopy(TempTuple2);

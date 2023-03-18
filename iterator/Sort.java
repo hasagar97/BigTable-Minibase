@@ -4,7 +4,11 @@ import java.io.*;
 
 import BigT.Map;
 import global.*;
+import bufmgr.*;
+import diskmgr.*;
 import heap.*;
+import index.*;
+import chainexception.*;
 
 /**
  * The Sort class sorts a file. All necessary information are passed as 
@@ -209,7 +213,7 @@ public class Sort extends Iterator implements GlobalConst
       if (cur_node == null) break; 
       p_elems_curr_Q --;
       
-      comp_res = TupleUtils.CompareTupleWithValue(sortFldType, cur_node.tuple, _sort_fld, lastElem);  // need tuple_utils.java
+      comp_res = MapUtils.CompareTupleWithValue(sortFldType, cur_node.tuple, _sort_fld, lastElem);  // need tuple_utils.java
       
       if ((comp_res < 0 && order.tupleOrder == TupleOrder.Ascending) || (comp_res > 0 && order.tupleOrder == TupleOrder.Descending)) {
 	// doesn't fit in current run, put into the other queue
@@ -224,7 +228,7 @@ public class Sort extends Iterator implements GlobalConst
       else {
 	// set lastElem to have the value of the current tuple,
 	// need tuple_utils.java
-	TupleUtils.SetValue(lastElem, cur_node.tuple, _sort_fld, sortFldType);
+	MapUtils.SetValue(lastElem, cur_node.tuple, _sort_fld, sortFldType);
 	// write tuple to output file, need io_bufs.java, type cast???
 	//	System.out.println("Putting tuple into run " + (run_num + 1)); 
 	//	cur_node.tuple.print(_in);

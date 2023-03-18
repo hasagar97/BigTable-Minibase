@@ -8,11 +8,12 @@ package catalog;
 
 import java.io.*;
 
+import BigT.Map;
 import bufmgr.*;
 import global.*;
 import heap.*;
 import diskmgr.*;
-
+import index.*;
 public class RelCatalog extends Heapfile
   implements  GlobalConst, Catalogglobal
 {
@@ -300,7 +301,7 @@ public class RelCatalog extends Heapfile
       }
       
       try {
-	insertMap(tuple.getTupleByteArray());
+	insertMap(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	System.err.println ("insertRecord"+e2);

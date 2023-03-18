@@ -60,13 +60,13 @@ public class Scan implements GlobalConst{
      * and initializes its private data members from the private
      * data member from hf
      *
-     * @exception InvalidTupleSizeException Invalid tuple size
+     * @exception InvalidMapSizeException Invalid tuple size
      * @exception IOException I/O errors
      *
      * @param hf A HeapFile object
      */
   public Scan(Heapfile hf) 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   {
 	init(hf);
@@ -76,14 +76,14 @@ public class Scan implements GlobalConst{
   
   /** Retrieve the next record in a sequential scan
    *
-   * @exception InvalidTupleSizeException Invalid tuple size
+   * @exception InvalidMapSizeException Invalid tuple size
    * @exception IOException I/O errors
    *
    * @param rid Record ID of the record
    * @return the Tuple of the retrieved record.
    */
   public BigT.Map getNext(RID rid)
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   {
     BigT.Map recptrtuple = null;
@@ -117,14 +117,14 @@ public class Scan implements GlobalConst{
 
     /** Position the scan cursor to the record with the given rid.
      * 
-     * @exception InvalidTupleSizeException Invalid tuple size
+     * @exception InvalidMapSizeException Invalid tuple size
      * @exception IOException I/O errors
      * @param rid Record ID of the given record
      * @return 	true if successful, 
      *			false otherwise.
      */
   public boolean position(RID rid) 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   { 
     RID    nxtrid = new RID();
@@ -183,13 +183,13 @@ public class Scan implements GlobalConst{
 
     /** Do all the constructor work
      *
-     * @exception InvalidTupleSizeException Invalid tuple size
+     * @exception InvalidMapSizeException Invalid tuple size
      * @exception IOException I/O errors
      *
      * @param hf A HeapFile object
      */
     private void init(Heapfile hf) 
-      throws InvalidTupleSizeException,
+      throws InvalidMapSizeException,
 	     IOException
   {
 	_hf = hf;
@@ -240,13 +240,13 @@ public class Scan implements GlobalConst{
  
  
   /** Move to the first data page in the file. 
-   * @exception InvalidTupleSizeException Invalid tuple size
+   * @exception InvalidMapSizeException Invalid tuple size
    * @exception IOException I/O errors
    * @return true if successful
    *         false otherwise
    */
   private boolean firstDataPage() 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   {
     DataPageInfo dpinfo;
@@ -396,7 +396,7 @@ public class Scan implements GlobalConst{
    *			false if unsuccessful
    */
   private boolean nextDataPage() 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   {
     DataPageInfo dpinfo;
@@ -592,7 +592,7 @@ public class Scan implements GlobalConst{
    * Also returns the RID of the (new) current record.
    */
   private boolean mvNext(RID rid) 
-    throws InvalidTupleSizeException,
+    throws InvalidMapSizeException,
 	   IOException
   {
     RID nextrid;

@@ -2,7 +2,10 @@ package tests;
 
 import java.io.*;
 
+import BigT.Map;
 import global.*;
+import bufmgr.*;
+import diskmgr.*;
 import heap.*;
 import iterator.*;
 
@@ -175,7 +178,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -334,7 +337,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -508,7 +511,7 @@ class SORTDriver extends TestDriver
       }
 
       try {
-	rid = f.insertMap(t.returnTupleByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -786,8 +789,8 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid1 = f1.insertMap(t.returnTupleByteArray());
-	rid2 = f2.insertMap(t.returnTupleByteArray());
+	rid1 = f1.insertMap(t.returnMapByteArray());
+	rid2 = f2.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;

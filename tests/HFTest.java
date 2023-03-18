@@ -4,6 +4,8 @@ import java.io.*;
 import java.lang.*;
 
 import heap.*;
+import bufmgr.*;
+import diskmgr.*;
 import global.*;
 import chainexception.*;
 
@@ -113,7 +115,6 @@ public boolean runTests () {
 
     if ( status == OK ) {
       System.out.println ("  - Add " + choice + " records to the file\n");
-
       for (int i =0; (i < choice) && (status == OK); i++) {
 	//fixed length record
 	DummyRecord rec = new DummyRecord(reclen);
@@ -833,7 +834,7 @@ class DummyRecord  {
   public DummyRecord(BigT.Map _atuple)
 	throws java.io.IOException{   
     data = new byte[_atuple.getLength()];
-    data = _atuple.getTupleByteArray();
+    data = _atuple.getMapByteArray();
     setRecLen(_atuple.getLength());
     
     setIntRec (data);

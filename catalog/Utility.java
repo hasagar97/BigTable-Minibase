@@ -8,8 +8,10 @@ package catalog;
 
 import java.io.*;
 
+import BigT.Map;
 import global.*;
 import heap.*;
+import diskmgr.*;
 import btree.*;
 
 public class Utility implements Catalogglobal{
@@ -201,7 +203,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
 
 // INSERT INTO DATAFILE
-	heap.insertMap(tuple.getTupleByteArray());
+	heap.insertMap(tuple.getMapByteArray());
 
 // NOW INSERT INTO EACH INDEX FOR RELATION
 
