@@ -116,6 +116,7 @@ public class Map implements GlobalConst{
         this.map_length = fromMap.getLength();
         this.fldCnt = fromMap.noOfFlds();
         this.fldOffset = fromMap.copyFldOffset();
+//        System.out.println("Number fo fields:"+fldCnt);
 
 //        removing older implementation
 //        this.map = new byte[fromMap.map_length];
@@ -239,7 +240,7 @@ public class Map implements GlobalConst{
 
 
     public void setFldCnt(short count){
-        //System.out.println("setFldCnt");
+        System.out.println("setFldCnt:"+count);
         this.fldCnt = count;
     }
 
