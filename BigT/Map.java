@@ -5,537 +5,308 @@ package BigT;
 import java.io.*;
 import java.lang.*;
 import global.*;
-import heap.FieldNumberOutOfBoundException;
-import heap.InvalidTupleSizeException;
-import heap.InvalidTypeException;
 
 
 public class Map implements GlobalConst{
+    /**
+     * Maximum size of any tuple
+     */
+    public static final int max_size = MINIBASE_PAGESIZE;
+
+    /**
+     * a byte array to hold data, along with it's own offset and size
+     */
+    private byte [] map;
+
+    /**
+     * start position of this map in data[]
+     */
+    private int map_offset;
+
+    /**
+     * length of this tuple
+     */
+    private int map_length;
+
+    /**
+     * private field
+     * Number of fields in this tuple
+     */
+    private short fldCnt;
+
+    /**
+     * private field
+     * Array of offsets of the fields
+     */
+
+    private short [] fldOffset;
 
 
- /** 
-  * Maximum size of any tuple
-  */
-  public static final int max_size = MINIBASE_PAGESIZE;
+    /**
+        Variables for map data structure
+     */
 
- /** 
-   * a byte array to hold data
-   */
-  private byte [] data;
+    public static final int MAX_FIELD_COUNT = 4;
+    public static final int MAX_SIZE = MINIBASE_PAGESIZE;
+    public static final int MAXROWLABELSIZE = 16;
+    public static final int MAXCOLUMNLABELSIZE = 16;
+    public static final int MAXVALUESIZE = 16;
 
-  /**
-   * start position of this tuple in data[]
-   */
-  private int tuple_offset;
 
-  /**
-   * length of this tuple
-   */
-  private int tuple_length;
 
-  /** 
-   * private field
-   * Number of fields in this tuple
-   */
-  private short fldCnt;
 
-  /** 
-   * private field
-   * Array of offsets of the fields
-   */
- 
-  private short [] fldOffset; 
-
-   /**
-    * Class constructor
-    * Creat a new tuple with length = max_size,tuple offset = 0.
+    /*
+      Class constructor create a new map with the appropriate size.
     */
-
-  public Map()
-  {
-       // Creat a new tuple
-       data = new byte[max_size];
-       tuple_offset = 0;
-       tuple_length = max_size;
-  }
-   
-   /** Constructor
-    * @param atuple a byte array which contains the tuple
-    * @param offset the offset of the tuple in the byte array
-    * @param length the length of the tuple
-    */
-
-   public Map(byte [] atuple, int offset, int length)
-   {
-      data = atuple;
-      tuple_offset = offset;
-      tuple_length = length;
-    //  fldCnt = getShortValue(offset, data);
-   }
-   
-   /** Constructor(used as tuple copy)
-    * @param fromTuple   a byte array which contains the tuple
-    * 
-    */
-   public Map(Map fromTuple)
-   {
-       data = fromTuple.getTupleByteArray();
-       tuple_length = fromTuple.getLength();
-       tuple_offset = 0;
-       fldCnt = fromTuple.noOfFlds(); 
-       fldOffset = fromTuple.copyFldOffset(); 
-   }
-
-   /**  
-    * Class constructor
-    * Creat a new tuple with length = size,tuple offset = 0.
-    */
- 
-  public Map(int size)
-  {
-       // Creat a new tuple
-       data = new byte[size];
-       tuple_offset = 0;
-       tuple_length = size;     
-  }
-   
-   /** Copy a tuple to the current tuple position
-    *  you must make sure the tuple lengths must be equal
-    * @param fromTuple the tuple being copied
-    */
-   public void tupleCopy(Map fromTuple)
-   {
-       byte [] temparray = fromTuple.getTupleByteArray();
-       System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);   
-//       fldCnt = fromTuple.noOfFlds(); 
-//       fldOffset = fromTuple.copyFldOffset(); 
-   }
-
-   /** This is used when you don't want to use the constructor
-    * @param atuple  a byte array which contains the tuple
-    * @param offset the offset of the tuple in the byte array
-    * @param length the length of the tuple
-    */
-
-   public void tupleInit(byte [] atuple, int offset, int length)
-   {
-      data = atuple;
-      tuple_offset = offset;
-      tuple_length = length;
-   }
-
- /**
-  * Set a tuple with the given tuple length and offset
-  * @param	record	a byte array contains the tuple
-  * @param	offset  the offset of the tuple ( =0 by default)
-  * @param	length	the length of the tuple
-  */
- public void tupleSet(byte [] record, int offset, int length)  
-  {
-      System.arraycopy(record, offset, data, 0, length);
-      tuple_offset = 0;
-      tuple_length = length;
-  }
-  
- /** get the length of a tuple, call this method if you did not 
-  *  call setHdr () before
-  * @return 	length of this tuple in bytes
-  */   
-  public int getLength()
-   {
-      return tuple_length;
-   }
-
-/** get the length of a tuple, call this method if you did 
-  *  call setHdr () before
-  * @return     size of this tuple in bytes
-  */
-  public short size()
-   {
-      return ((short) (fldOffset[fldCnt] - tuple_offset));
-   }
- 
-   /** get the offset of a tuple
-    *  @return offset of the tuple in byte array
-    */   
-   public int getOffset()
-   {
-      return tuple_offset;
-   }   
-   
-   /** Copy the tuple byte array out
-    *  @return  byte[], a byte array contains the tuple
-    *		the length of byte[] = length of the tuple
-    */
-    
-   public byte [] getTupleByteArray() 
-   {
-       byte [] tuplecopy = new byte [tuple_length];
-       System.arraycopy(data, tuple_offset, tuplecopy, 0, tuple_length);
-       return tuplecopy;
-   }
-   
-   /** return the data byte array 
-    *  @return  data byte array 		
-    */
-    
-   public byte [] returnTupleByteArray()
-   {
-       return data;
-   }
-   
-   /**
-    * Convert this field into integer 
-    * 
-    * @param	fldNo	the field number
-    * @return		the converted integer if success
-    *			
-    * @exception   IOException I/O errors
-    * @exception FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-
-  public int getIntFld(int fldNo) 
-  	throws IOException, FieldNumberOutOfBoundException
-  {           
-    int val;
-    if ( (fldNo > 0) && (fldNo <= fldCnt))
-     {
-      val = Convert.getIntValue(fldOffset[fldNo -1], data);
-      return val;
-     }
-    else 
-     throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-  }
-    
-   /**
-    * Convert this field in to float
-    *
-    * @param    fldNo   the field number
-    * @return           the converted float number  if success
-    *			
-    * @exception   IOException I/O errors
-    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-
-    public float getFloFld(int fldNo) 
-    	throws IOException, FieldNumberOutOfBoundException
-     {
-	float val;
-      if ( (fldNo > 0) && (fldNo <= fldCnt))
-       {
-        val = Convert.getFloValue(fldOffset[fldNo -1], data);
-        return val;
-       }
-      else 
-       throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-     }
-
-
-   /**
-    * Convert this field into String
-    *
-    * @param    fldNo   the field number
-    * @return           the converted string if success
-    *			
-    * @exception   IOException I/O errors
-    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-
-   public String getStrFld(int fldNo) 
-   	throws IOException, FieldNumberOutOfBoundException 
-   { 
-         String val;
-    if ( (fldNo > 0) && (fldNo <= fldCnt))      
-     {
-        val = Convert.getStrValue(fldOffset[fldNo -1], data, 
-		fldOffset[fldNo] - fldOffset[fldNo -1]); //strlen+2
-        return val;
-     }
-    else 
-     throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-  }
- 
-   /**
-    * Convert this field into a character
-    *
-    * @param    fldNo   the field number
-    * @return           the character if success
-    *			
-    * @exception   IOException I/O errors
-    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-
-   public char getCharFld(int fldNo) 
-   	throws IOException, FieldNumberOutOfBoundException 
-    {   
-       char val;
-      if ( (fldNo > 0) && (fldNo <= fldCnt))      
-       {
-        val = Convert.getCharValue(fldOffset[fldNo -1], data);
-        return val;
-       }
-      else 
-       throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
- 
-    }
-
-  /**
-   * Set this field to integer value
-   *
-   * @param	fldNo	the field number
-   * @param	val	the integer value
-   * @exception   IOException I/O errors
-   * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-   */
-
-  public Map setIntFld(int fldNo, int val)
-  	throws IOException, FieldNumberOutOfBoundException
-  { 
-    if ( (fldNo > 0) && (fldNo <= fldCnt))
-     {
-	Convert.setIntValue (val, fldOffset[fldNo -1], data);
-	return this;
-     }
-    else 
-     throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND"); 
-  }
-
-  /**
-   * Set this field to float value
-   *
-   * @param     fldNo   the field number
-   * @param     val     the float value
-   * @exception   IOException I/O errors
-   * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-   */
-
-  public Map setFloFld(int fldNo, float val)
-  	throws IOException, FieldNumberOutOfBoundException
-  { 
-   if ( (fldNo > 0) && (fldNo <= fldCnt))
+    public Map()
     {
-     Convert.setFloValue (val, fldOffset[fldNo -1], data);
-     return this;
-    }
-    else  
-     throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND"); 
-     
-  }
-
-  /**
-   * Set this field to String value
-   *
-   * @param     fldNo   the field number
-   * @param     val     the string value
-   * @exception   IOException I/O errors
-   * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-   */
-
-   public Map setStrFld(int fldNo, String val)
-		throws IOException, FieldNumberOutOfBoundException  
-   {
-     if ( (fldNo > 0) && (fldNo <= fldCnt))        
-      {
-         Convert.setStrValue (val, fldOffset[fldNo -1], data);
-         return this;
-      }
-     else 
-       throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        this.map = new byte[MAX_SIZE];
+        this.map_offset = 0;
+        this.map_length = this.map.length;
     }
 
-
-   /**
-    * setHdr will set the header of this tuple.   
-    *
-    * @param	numFlds	  number of fields
-    * @param	types[]	  contains the types that will be in this tuple
-    * @param	strSizes[]      contains the sizes of the string 
-    *				
-    * @exception IOException I/O errors
-    * @exception InvalidTypeException Invalid tupe type
-    * @exception InvalidTupleSizeException Tuple size too big
-    *
+    /*
+      Construct a map from a byte array.
     */
+    public Map(byte[] amap, int offset)
+    {
+        this.map = amap;
+        this.map_offset = offset;
+        // [TODO] should the field offset be initialised with data?
+        // [todo] should the offset count be set here?
+        this.map_length = this.map.length;
+    }
 
-public void setHdr (short numFlds,  AttrType types[], short strSizes[])
- throws IOException, InvalidTypeException, InvalidTupleSizeException		
-{
-  if((numFlds +2)*2 > max_size)
-    throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
-  
-  fldCnt = numFlds;
-  Convert.setShortValue(numFlds, tuple_offset, data);
-  fldOffset = new short[numFlds+1];
-  int pos = tuple_offset+2;  // start position for fldOffset[]
-  
-  //sizeof short =2  +2: array siaze = numFlds +1 (0 - numFilds) and
-  //another 1 for fldCnt
-  fldOffset[0] = (short) ((numFlds +2) * 2 + tuple_offset);   
-   
-  Convert.setShortValue(fldOffset[0], pos, data);
-  pos +=2;
-  short strCount =0;
-  short incr;
-  int i;
+    /*
+      Construct a map from another map through copy.
+    */
+    public Map(Map fromMap)
+    {
+        this.map = fromMap.getMapByteArray();
+        // todo should the map offset be copied?
+        this.map_offset = 0;
+        this.map_length = fromMap.getLength();
+        this.fldCnt = fromMap.noOfFlds();
+        this.fldOffset = fromMap.copyFldOffset();
 
-  for (i=1; i<numFlds; i++)
-  {
-    switch(types[i-1].attrType) {
-    
-   case AttrType.attrInteger:
-     incr = 4;
-     break;
+//        removing older implementation
+//        this.map = new byte[fromMap.map_length];
+//        System.arraycopy(fromMap.map, fromMap.map_offset, this.map, 0, fromMap.map_length);
+//        this.map_offset = 0;
+//        this.map_length = this.map.length;
+    }
 
-   case AttrType.attrReal:
-     incr =4;
-     break;
+    /*
+      Construct a map from another map through copy with given offset and len.
+    */
+    public Map(byte [] fromMap,int offset,int size)
+    {
+        this.map = fromMap;
+//        System.arraycopy(fromMap.map, fromMap.offset, this.map, 0, fromMap.size);
+        this.map_offset = offset;
+        this.map_length = size;
+        // [TODO] should the field offset be initialised with data?
+        // [todo] should the offset count be set here?
+    }
 
-   case AttrType.attrString:
-     incr = (short) (strSizes[strCount] +2);  //strlen in bytes = strlen +2
-     strCount++;
-     break;       
- 
-   default:
-    throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
-   }
-  fldOffset[i]  = (short) (fldOffset[i-1] + incr);
-  Convert.setShortValue(fldOffset[i], pos, data);
-  pos +=2;
- 
-}
- switch(types[numFlds -1].attrType) {
+    /** Copy the tuple byte array out
+     *  @return  byte[], a byte array contains the tuple
+     *		the length of byte[] = length of the tuple
+     */
 
-   case AttrType.attrInteger:
-     incr = 4;
-     break;
+    public byte [] getTupleByteArray(){
+        byte [] tuplecopy = new byte [this.map_length];
+        System.arraycopy(this.map, this.map_offset, tuplecopy, 0, this.map_length);
+        return tuplecopy;
+    }
 
-   case AttrType.attrReal:
-     incr =4;
-     break;
+    /*
+      Copy the map to byte array out.
+    */
+    public byte[] getMapByteArray()
+    {
+        byte[] out = new byte[map_length];
+        System.arraycopy(map, map_offset, out, 0, map_length);
+        return out;
+    }
 
-   case AttrType.attrString:
-     incr =(short) ( strSizes[strCount] +2);  //strlen in bytes = strlen +2
-     break;
+    /** return the data byte array
+     *  @return  data byte array
+     */
 
-   default:
-    throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
-   }
+    public byte [] returnTupleByteArray()
+    {
+        return this.map;
+    }
 
-  fldOffset[numFlds] = (short) (fldOffset[i-1] + incr);
-  Convert.setShortValue(fldOffset[numFlds], pos, data);
-  
-  tuple_length = fldOffset[numFlds] - tuple_offset;
 
-  if(tuple_length > max_size)
-   throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
-}
-     
-  
-  /**
-   * Returns number of fields in this tuple
-   *
-   * @return the number of fields in this tuple
-   *
-   */
+    /** get the offset of a tuple
+     *  @return offset of the tuple in byte array
+     */
+    public int getOffset()
+    {
+        return this.map_offset;
+    }
 
-  public short noOfFlds() 
-   {
-     return fldCnt;
-   }
+    /***
+      Returns the row label.
+    */
+    public java.lang.String getRowLabel()
+    {
+        return new String(map, map_offset, MAXROWLABELSIZE).trim();
+    }
 
-  /**
-   * Makes a copy of the fldOffset array
-   *
-   * @return a copy of the fldOffset arrray
-   *
-   */
+    /**
+      Returns the column label.
+    */
+    public java.lang.String getColumnLabel()
+    {
+        return new String(map, map_offset + MAXROWLABELSIZE, MAXCOLUMNLABELSIZE).trim();
+    }
+//
+    /**
+      Returns the timestamp.
+    */
+    public int getTimeStamp() throws IOException {
+        return Convert.getIntValue(map_offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE, map);
+    }
 
-  public short[] copyFldOffset() 
-   {
-     short[] newFldOffset = new short[fldCnt + 1];
-     for (int i=0; i<=fldCnt; i++) {
-       newFldOffset[i] = fldOffset[i];
-     }
-     
-     return newFldOffset;
-   }
+    /**
+      Returns the Length.
+    */
+    public int getLength()
+    {
+        return this.map_length;
+    }
 
- /**
-  * Print out the tuple
-  * @param type  the types in the tuple
-  * @Exception IOException I/O exception
-  */
- public void print(AttrType type[])
-    throws IOException 
- {
-  int i, val;
-  float fval;
-  String sval;
+    /**
+     * Returns number of fields in this tuple
+     *
+     * @return the number of fields in this tuple
+     *
+     */
 
-  System.out.print("[");
-  for (i=0; i< fldCnt-1; i++)
-   {
-    switch(type[i].attrType) {
+    public short noOfFlds()
+    {
+        return fldCnt;
+    }
 
-   case AttrType.attrInteger:
-     val = Convert.getIntValue(fldOffset[i], data);
-     System.out.print(val);
-     break;
+    /**
+     * Makes a copy of the fldOffset array
+     *
+     * @return a copy of the fldOffset arrray
+     *
+     */
 
-   case AttrType.attrReal:
-     fval = Convert.getFloValue(fldOffset[i], data);
-     System.out.print(fval);
-     break;
+    public short[] copyFldOffset()
+    {
+        short[] newFldOffset = new short[fldCnt + 1];
+        for (int i=0; i<=fldCnt; i++) {
+            newFldOffset[i] = fldOffset[i];
+        }
 
-   case AttrType.attrString:
-     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-     System.out.print(sval);
-     break;
-  
-   case AttrType.attrNull:
-   case AttrType.attrSymbol:
-     break;
-   }
-   System.out.print(", ");
- } 
- 
- switch(type[fldCnt-1].attrType) {
+        return newFldOffset;
+    }
 
-   case AttrType.attrInteger:
-     val = Convert.getIntValue(fldOffset[i], data);
-     System.out.print(val);
-     break;
+    /*
+      Returns the value.
+    */
+    public java.lang.String getValue()
+    {
+        return new String(map, map_offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE + 4, MAXVALUESIZE).trim();
+    }
 
-   case AttrType.attrReal:
-     fval = Convert.getFloValue(fldOffset[i], data);
-     System.out.print(fval);
-     break;
+    /*
+      Set the row label.
+    */
+    public Map setRowLabel(java.lang.String val) throws IOException {
+        Convert.setStrValue(val, map_offset, map);
+        return this;
+    }
 
-   case AttrType.attrString:
-     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-     System.out.print(sval);
-     break;
+    /*
+      Set the column label.
+    */
+    public Map setColumnLabel(java.lang.String val) throws IOException {
+        Convert.setStrValue(val, map_offset + MAXROWLABELSIZE, map);
+        return this;
+    }
 
-   case AttrType.attrNull:
-   case AttrType.attrSymbol:
-     break;
-   }
-   System.out.println("]");
 
- }
+    /*
+      Set the timestamp.
+    */
+    public Map setTimeStamp(int val) throws IOException {
+        Convert.setIntValue(val, map_offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE, map);
+        return this;
+    }
 
-  /**
-   * private method
-   * Padding must be used when storing different types.
-   * 
-   * @param	offset
-   * @param type   the type of tuple
-   * @return short typle
-   */
+    /*
+      Set the value.
+    */
+    public Map setValue(java.lang.String val) throws IOException {
+        Convert.setStrValue(val, map_offset + MAXROWLABELSIZE + MAXCOLUMNLABELSIZE + 4, map);
+        return this;
+    }
 
-  private short pad(short offset, AttrType type)
-   {
-      return 0;
-   }
-}
 
+
+    /*
+      Print out the map.
+    */
+    public void print() throws IOException {
+        System.out.println(getRowLabel() + " " + getColumnLabel() + " " + getTimeStamp() + " " + getValue());
+
+    }
+
+    public void tupleCopy(Map fromTuple)
+    {
+        byte [] temparray = fromTuple.getTupleByteArray();
+        System.arraycopy(temparray, 0, this.map, this.map_offset, this.map_length);
+//       fldCnt = fromTuple.noOfFlds();
+//       fldOffset = fromTuple.copyFldOffset();
+    }
+
+
+    /*
+      Get the length of the tuple
+    */
+    public int size()
+    {
+        return map_length;
+    }
+
+    /*
+      Copy the given map
+    */
+    public Map mapCopy(Map fromMap)
+    {
+        System.arraycopy(fromMap.map, fromMap.map_offset, this.map, this.map_offset, fromMap.map_length);
+        this.map_length = fromMap.map_length;
+        return this;
+    }
+
+    /*
+      This is used when you don’t want to use the constructor.
+    */
+    public Map mapInit(byte[] amap, int offset)
+    {
+        this.map = amap;
+        this.map_offset = offset;
+        this.map_length = this.map.length;
+        return this;
+    }
+
+    /*
+      Set a map with the given byte array and offset.
+      After creating this map construct, remove the heap.
+      Tuple completely from the minibase and modify all
+      related code to use BigT.Map instead; that is, your
+      version of minibase will not store tuples anymore.
+    */
+    public Map mapSet(byte[] frommap, int offset)
+    {
+        System.arraycopy(frommap, offset, this.map, this.map_offset, this.map_length);
+        return this;
+    }
+} // end of Map

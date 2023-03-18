@@ -1,5 +1,4 @@
 package index;
-import BigT.Map;
 import global.*;
 import btree.*;
 import iterator.*;
@@ -63,7 +62,7 @@ public class IndexScan extends Iterator {
     Jtuple = new BigT.Map();
     
     try {
-      ts_sizes = TupleUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
+      ts_sizes = MapUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
     }
     catch (TupleUtilsException e) {
       throw new IndexException(e, "IndexScan.java: TupleUtilsException caught from TupleUtils.setup_op_tuple()");

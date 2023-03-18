@@ -1,7 +1,6 @@
 package iterator;
    
 
-import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -98,7 +97,7 @@ public class NestedLoopsJoins  extends Iterator
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	t_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
+	t_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
 					   in1, len_in1, in2, len_in2,
 					   t1_str_sizes, t2_str_sizes,
 					   proj_list, nOutFlds);

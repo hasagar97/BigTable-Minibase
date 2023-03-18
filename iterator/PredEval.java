@@ -1,6 +1,5 @@
 package iterator;
 
-import BigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -129,7 +128,7 @@ public class PredEval
 	      
 	      // Got the arguments, now perform a comparison.
 	      try {
-		comp_res = TupleUtils.CompareTupleWithTuple(comparison_type, tuple1, fld1, tuple2, fld2);
+		comp_res = MapUtils.CompareMapWithMap(comparison_type, tuple1, fld1, tuple2, fld2);
 	      }catch (TupleUtilsException e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }

@@ -1,6 +1,5 @@
 package iterator;
 
-import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -143,7 +142,7 @@ public class DuplElim extends Iterator
 	  return null;
 	} 
 	TempTuple2.tupleCopy(t);
-      } while (TupleUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
+      } while (MapUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
       
       // Now copy the the TempTuple2 (new o/p tuple) into TempTuple1.
       TempTuple1.tupleCopy(TempTuple2);
