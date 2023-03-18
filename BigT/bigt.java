@@ -14,6 +14,7 @@ import global.*;
 
 public class BigT extends HeapFile{
   private int m_strategy;
+  private BTreeFile m_defaultindex = null;
   private IndexFile m_indexfile1 = null;
   private IndexFile m_indexfile2 = null;
 
@@ -25,11 +26,12 @@ public class BigT extends HeapFile{
   public BigT(java.lang.String name, int type) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
     super(name);
     m_strategy = type;
+    BTreeFile m_defaultindex = new BTreeFile(name + "_row_index");
 
     switch (m_strategy) {
       case 1:
         // one btree to index row labels
-        m_indexfile1 = new BTreeFile(name + "_row_index");
+        // already created by m_defaultindex
         break;
       case 2:
         // one btree to index column labels
@@ -58,7 +60,23 @@ public class BigT extends HeapFile{
   */
     public void deleteBigt ()
     {
-      m_hfile.deleteFile();
+      if (m_defaultindex != null)
+      {
+        m_defaultindex.close();
+        m_defaultindex.destroyFile();
+      }
+      if (m_indexfile1 != null)
+      {
+        m_indexfile1.close();
+        m_indexfile1.destroyFile();
+      }
+      if (m_indexfile2 != null)
+      {
+        m_indexfile2.close();
+        m_indexfile2.destroyFile();
+      }
+
+      super.deleteFile();
     }
 
   /*
@@ -66,7 +84,7 @@ public class BigT extends HeapFile{
   */
     public int getMapCnt ()
     {
-      return m_hfile.getMapCnt();
+      return super.getMapCnt();
     }
 
   /*
@@ -74,7 +92,26 @@ public class BigT extends HeapFile{
   */
     public int getRowCnt ()
     {
-      return m_row_set.size();
+      int count = 0;
+
+      if (m_defaultindex != null)
+      {
+        BTFileScan scan = m_defaultindex.new_scan(null, null);
+        KeyDataEntry next = scan.get_next();
+
+        if (next != null)
+        {
+          count += 1;
+
+          while(next != null)
+          {
+            next = scan.get_next();
+            count += 1;
+          }
+        }
+      }
+
+      return count;
     }
 
   /*
@@ -108,12 +145,12 @@ public class BigT extends HeapFile{
         case 1:
           // one btree to index row labels
           key = new StringKey(map.getRowLabel());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          if(operation == 0) m_defaultindex.insert(key, mid);
+          else if(operation == 1) m_defaultindex.Delete(key, mid);
           else {
             if(isRowAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
           }
           break;
@@ -181,56 +218,33 @@ public class BigT extends HeapFile{
       }
     }
 
-    private boolean checkDropMap ( int row_hash, int column_hash, int timestamp)
+    private RID checkDropMap ( Map map, RID mid)
     {
-      boolean drop = false;
+      java.lang.String rowFilter = map.getRowLabel();
+      java.lang.String columnFilter = map.getColumnLabel();
+      Stream scan = new Stream(this, 6, rowFilter, columnFilter, null);
+      Map current_map = map;
+      RID oldest = mid;
+      int timestamp_count = 0;
 
-      if (timestamp_map.containsKey(row_hash)) {
-        Map<Integer, Object> col_map = timestamp_map.get(row_hash);
+      while(current_map != null)
+      {
+        timestamp_count += 1;
+        current_map = scan.getNext(mid);
 
-        if (col_map.containsKey(column_hash)) {
-          Set<Integer> timestamp_set = col_map.get(column_hash);
-
-          if (timestamp_set.size() >= 3) {
-            drop = true;
-            Integer lowest = timestamp;
-            timestamp_set.add(timestamp);
-
-            Iterator<Integer> it = timestamp_set.iterator();
-
-            while (it.hasNext()) {
-              if (it.next() < lowest) {
-                lowest = it.next();
-              }
-            }
-
-            timestamp_set.remove(lowest);
-          }
-        } else {
-          Set<Integer> timestamp_set = new HashSet<Integer>();
-          Map<Integer, Object> col_map = new HashMap<Integer, Object>();
-
-          timestamp_set.add(timestamp);
-          col_map.put(column_hash, timestamp_set);
-          timestamp_map.put(row_hash, col_map);
+        if (current_map.getTimeStamp() < map.getTimeStamp())
+        {
+          oldest = mid;
         }
-      } else {
-        Set<Integer> timestamp_set = new HashSet<Integer>();
-        Map<Integer, Object> col_map = new HashMap<Integer, Object>();
-
-        timestamp_set.add(timestamp);
-        col_map.put(column_hash, timestamp_set);
-        timestamp_map.put(row_hash, col_map);
       }
 
-      return drop;
-    }
+      if (timestamp_count < 3)
+      {
+        oldest = null;
+      }
 
-  private MID getOldest()
-  {
-    // TODO
-    return new MID();
-  }
+      return oldest;
+    }
   
   /*
     Insert a map into the big table and returns an MID.
@@ -252,7 +266,7 @@ public class BigT extends HeapFile{
       Map map = Map(mapPtr, 0);
 
       // Change insertRecord in heapfile to insertMap
-      RID mid = insertMap(mapPtr);
+      RID mid = super.insertMap(mapPtr);
 
       // Index the Map
       updateIndexFiles(map, mid, 1);
@@ -273,7 +287,7 @@ public class BigT extends HeapFile{
     }
 
     public Boolean deleteMap(RID mid) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
-      Boolean deleteSuccess = deleteMap(mid); // can methods in higher class, override methods in base class and still call them ?
+      Boolean deleteSuccess = super.deleteMap(mid);
       if(deleteSuccess) {
         Map map = getMap(mid) // getRecord from heapfile
         updateIndexFiles(map, mid, 1);
