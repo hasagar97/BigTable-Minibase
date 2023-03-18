@@ -162,9 +162,37 @@ class bigtDriver extends TestDriver
       System.err.println("FAIL - Row count 3 did not match entries\n");
       status = FAIL;
     }
-    if (col_count != 10)
+    if (col_count != 11)
     {
       System.err.println("FAIL - Column count 3 did not match entries\n");
+      status = FAIL;
+    }
+
+    // Use a stream to make sure there are no more than 3 instances of a row/col combination 
+    // and that the instance with the oldest timestamp was dropped
+    Stream stream = testclass.open(6, "test0", "test1", null);
+    int count = 0;
+    RID mid;
+
+    while (test_map != null)
+    {
+      test_map = stream.get_next(mid);
+
+      if (test_map != null)
+      {
+        count += 1;
+
+        if (test_map.getTimeStamp() == 0)
+        {
+            System.err.println("FAIL - Map with oldest timestamp was not dropped\n");
+            status = FAIL;
+        }
+      }
+    }
+
+    if (count > 3)
+    {
+      System.err.println("FAIL - Count shows Map with oldest timestamp was not dropped\n");
       status = FAIL;
     }
     

@@ -89,60 +89,69 @@ public class BigT extends Heapfile
 
   /*
     Returns the number of distinct labels in the big table
-    type 1 - gets row labels
-    type 2 - gets column labels
+    type 1 - gets row labels count
+    type 2 - gets column labels count
+    default - gets row labels count
   */
     private int getCnt(int type)
     {
       int count = 0;
-      BTreeFile temp_index = new BTreeFile("temp_index");
-      StringKey temp_key;
-      Map current_map;
-      BTFileScan scan;
-      KeyDataEntry next;
+      Stream stream;
+      RID next_MID;
+      Map next;
+      java.lang.String label = null;
+      java.lang.String next_label;
 
-      if (temp_index != null)
-      {
-        // Scan all the entries in our default index
-        scan = m_defaultindex.new_scan(null, null);
-        next = scan.get_next();
-
-        while(next != null)
-        {
-          current_map = super.getMap((RID)next.data);
-
-          // Insert scanned index entries into temporary index file
-          switch (type) {
+      switch (type) {
             case 1:
-              temp_key = new StringKey(current_map.getRowLabel());
+              // Want to stream entries by ordered row label
+              stream = new Stream(this, 3, null, null, null);
               break;
             case 2:
-              temp_key = new StringKey(current_map.getColumnLabel());
+              // Want to stream entries by ordered column label
+              stream = new Stream(this, 4, null, null, null);
               break;
             default:
-              temp_key = new StringKey(current_map.getRowLabel());
+              // Want to stream entries by ordered row label
+              stream = new Stream(this, 3, null, null, null);
               break;
-          }
-
-          temp_index.insert(temp_key, (RID)next.data);
-          next = scan.get_next();
-        }
       }
 
-      // Count the entries in the temporary index file
-      if (temp_index != null)
+      // Scan all the entries in our default index
+      next = stream.get_next(next_MID);
+
+      while(next != null)
       {
-        scan = temp_index.new_scan(null, null);
-        next = scan.get_next();
-
-        while(next != null)
-        {
-            count += 1;
-            next = scan.get_next();
+        switch (type) {
+          case 1:
+            next_label = next.getRowLabel();
+            break;
+          case 2:
+            next_label = next.getColumnLabel();
+            break;
+          default:
+            next_label = next.getRowLabel();
+            break;
         }
-      }
 
-      temp_index.destroyFile();
+        if (label != null)
+        {
+          // Label changed. Count and update checked label.
+          if (next_label != label)
+          {
+            count += 1;
+            label = next_label;
+          }
+        }
+        else
+        {
+          // First unique label
+          count += 1;
+          label = next_label;
+        }
+
+        next = scan.get_next();
+      }
 
       return count;
     }
