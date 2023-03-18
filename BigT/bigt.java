@@ -17,6 +17,7 @@ public class BigT extends Heapfile
   private BTreeFile m_defaultindex = null;
   private BTreeFile m_indexfile1 = null;
   private BTreeFile m_indexfile2 = null;
+  
   /* 
     Initializes the big table
   	name - name of the table
@@ -150,7 +151,7 @@ public class BigT extends Heapfile
           label = next_label;
         }
 
-        next = scan.get_next();
+        next = stream.get_next(next_MID);
       }
 
       return count;
@@ -220,7 +221,7 @@ public class BigT extends Heapfile
           // one btree to index column label and row label (combined key) and
           // one btree to index timestamps
           key1 = new StringKey(map.getColumnLabel() + map.getRowLabel());
-          key2 = new StringKey(Interger.toString(map.getTimeStamp()));
+          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
           if(operation == 0) {
             m_defaultindex.insert(key1, mid);
             m_indexfile2.insert(key2, mid);
@@ -243,7 +244,7 @@ public class BigT extends Heapfile
           // one btree to index row label and value (combined key) and
           // one btree to index timestamps
           key1 = new StringKey(map.getRowLabel() + map.getValue());
-          key2 = new StringKey(Interger.toString(map.getTimeStamp()));
+          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
           if(operation == 0) {
             m_indexfile1.insert(key1, mid);
             m_indexfile2.insert(key2, mid);
@@ -406,11 +407,6 @@ public class BigT extends Heapfile
     public int getStrategy ()
     {
       return m_strategy;
-    }
-
-    public int getIndexFile ()
-    {
-      return m_indexfile;
     }
 } // end of bigt
 
