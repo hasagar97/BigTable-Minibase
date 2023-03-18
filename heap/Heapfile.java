@@ -2,7 +2,9 @@ package heap;
 
 import java.io.*;
 
+import BigT.Map;
 import diskmgr.*;
+import bufmgr.*;
 import global.*;
 
 /**  This heapfile implementation is directory-based. We maintain a

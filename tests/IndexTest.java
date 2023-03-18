@@ -2,7 +2,10 @@ package tests;
 
 import java.io.*;
 
+import BigT.Map;
 import global.*;
+import bufmgr.*;
+import diskmgr.*;
 import heap.*;
 import iterator.*;
 import index.*;

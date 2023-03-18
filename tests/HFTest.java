@@ -3,7 +3,10 @@ package tests;
 import java.io.*;
 import java.lang.*;
 
+import BigT.Map;
 import heap.*;
+import bufmgr.*;
+import diskmgr.*;
 import global.*;
 import chainexception.*;
 
@@ -113,7 +116,6 @@ public boolean runTests () {
 
     if ( status == OK ) {
       System.out.println ("  - Add " + choice + " records to the file\n");
-
       for (int i =0; (i < choice) && (status == OK); i++) {
 	//fixed length record
 	DummyRecord rec = new DummyRecord(reclen);

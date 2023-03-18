@@ -390,7 +390,7 @@ public class Map implements GlobalConst{
     */
     public void print() throws IOException {
         System.out.println("{row_lable:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
-        + getTimeStamp() + " ,value:" + getValue()+"}");
+                + getTimeStamp() + " ,value:" + getValue()+"}");
 
     }
 

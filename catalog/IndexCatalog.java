@@ -8,6 +8,7 @@ package catalog;
 
 import java.io.*;
 
+import BigT.Map;
 import global.*;
 import heap.*;
 import bufmgr.*;

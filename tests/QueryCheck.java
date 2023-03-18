@@ -1,10 +1,13 @@
 package tests;
 
+import java.io.*;
 import java.lang.*;
 import java.util.*;
 
+import BigT.Map;
 import global.*;
 import iterator.*;
+import heap.*;
 
 //Set set the structures needed
 //enum Order{UNSORT,SORT};

@@ -8,11 +8,12 @@ package catalog;
 
 import java.io.*;
 
+import BigT.Map;
 import bufmgr.*;
 import global.*;
 import heap.*;
 import diskmgr.*;
-
+import index.*;
 public class RelCatalog extends Heapfile
   implements  GlobalConst, Catalogglobal
 {
