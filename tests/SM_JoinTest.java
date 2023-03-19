@@ -39,6 +39,7 @@ class SM_Boats {
   public String bname;
   public String color;
 
+
   public SM_Boats (int _bid, String _bname, String _color) {
     bid   = _bid;
     bname = _bname;
