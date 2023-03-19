@@ -47,7 +47,7 @@ test:
 	make clean; cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge
 	
 testphase2:
-	make clean; cd tests; make bigttest
+	make clean; cd tests; make phase2Test
 
 clean:
 	\rm -f $(CLASSPATH)/*.class *~ \#* core $(JARFILES) TRACE

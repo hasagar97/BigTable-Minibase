@@ -73,12 +73,6 @@ public class BigT extends Heapfile
       // Destroy the index files
       if (m_defaultindex != null)
       {
-      	try {
-          m_defaultindex.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close default index\n");
-        }
         try {
           m_defaultindex.destroyFile();
         }
@@ -89,12 +83,6 @@ public class BigT extends Heapfile
       if (m_indexfile1 != null)
       {
         try {
-          m_indexfile1.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close indexfile1\n");
-        }
-        try {
           m_indexfile1.destroyFile();
         }
         catch (Exception e) {
@@ -103,12 +91,6 @@ public class BigT extends Heapfile
       }
       if (m_indexfile2 != null)
       {
-        try {
-          m_indexfile2.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close indexfile2\n");
-        }
         try {
           m_indexfile2.destroyFile();
         }

@@ -33,15 +33,15 @@ public class Phase2Test {
 
     public static void main(String[] args) throws Exception {
 
-//        Shell shell = new Shell();
-//        shell.run();
+        //Shell shell = new Shell();
+        //shell.run();
 
         String dbpath = "phase2.test.db";
         SystemDefs sysdef = new SystemDefs( dbpath, 0 ,5000,"Clock");
 
-        Heapfile f = new Heapfile("test2db_3");
+        
         BigT bigtable = new BigT("test2db_3", 3);
-
+	bigtable.deleteBigt();
         update_test(bigtable);
 //
         System.out.println("Printing BTree Index");
@@ -59,17 +59,18 @@ public class Phase2Test {
             LeafData leafData = (LeafData) ret.data;
             RID id = leafData.getData();
             try {
+            System.out.println("Entry " + id);
 //                printRID(id);
-                Map out = f.getMap(id);
-                out.print();
-                System.out.println(out.getValue());
+                //Map out = f.getMap(id);
+                //out.print();
+                //System.out.println(out.getValue());
 //                System.out.println(new String(out.getMapByteArray(), StandardCharsets.UTF_8));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        System.out.println("Printing HeapFile");
+        /*System.out.println("Printing HeapFile");
         Scan heapScan = f.openScan();
         RID id = new RID(new PageId(5), 0);
         while (true) {
@@ -77,6 +78,6 @@ public class Phase2Test {
             if(temp == null) break;
             temp.print();
         }
-        heapScan.closescan();
+        heapScan.closescan();*/
     }
 }
