@@ -30,7 +30,7 @@ public class IndexScan extends Iterator {
    * @param indexOnly whether the answer requires only the key or the tuple
    * @exception IndexException error from the lower layer
    * @exception InvalidTypeException tuple type not valid
-   * @exception InvalidTupleSizeException tuple size not valid
+   * @exception InvalidMapSizeException tuple size not valid
    * @exception UnknownIndexTypeException index type unknown
    * @exception IOException from the lower layer
    */
@@ -49,7 +49,7 @@ public class IndexScan extends Iterator {
 	   ) 
     throws IndexException, 
 	   InvalidTypeException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   UnknownIndexTypeException,
 	   IOException
   {
@@ -63,7 +63,7 @@ public class IndexScan extends Iterator {
     Jtuple = new BigT.Map();
     
     try {
-      ts_sizes = TupleUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
+      ts_sizes = MapUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
     }
     catch (TupleUtilsException e) {
       throw new IndexException(e, "IndexScan.java: TupleUtilsException caught from TupleUtils.setup_op_tuple()");
@@ -206,7 +206,7 @@ public class IndexScan extends Iterator {
       // not index_only, need to return the whole tuple
       rid = ((LeafData)nextentry.data).getData();
       try {
-	tuple1 = f.getRecord(rid);
+	tuple1 = f.getMap(rid);
       }
       catch (Exception e) {
 	throw new IndexException(e, "IndexScan.java: getRecord failed");

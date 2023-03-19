@@ -27,7 +27,7 @@ public abstract class Iterator implements Flags {
    *@exception IOException I/O errors
    *@exception JoinsException some join exception
    *@exception IndexException exception from super class    
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception TupleUtilsException exception from using tuple utilities
@@ -42,7 +42,7 @@ public abstract class Iterator implements Flags {
     throws IOException,
 	   JoinsException ,
 	   IndexException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException, 
 	   PageNotReadException,
 	   TupleUtilsException, 

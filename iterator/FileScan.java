@@ -64,7 +64,7 @@ public class FileScan extends  Iterator
       Jtuple =  new BigT.Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size;
-      ts_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
+      ts_size = MapUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
       
       OutputFilter = outFilter;
       perm_mat = proj_list;
@@ -106,7 +106,7 @@ public class FileScan extends  Iterator
    *@return the result tuple
    *@exception JoinsException some join exception
    *@exception IOException I/O errors
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception PredEvalException exception from PredEval class
@@ -117,7 +117,7 @@ public class FileScan extends  Iterator
   public BigT.Map get_next()
     throws JoinsException,
 	   IOException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException,
 	   PageNotReadException, 
 	   PredEvalException,

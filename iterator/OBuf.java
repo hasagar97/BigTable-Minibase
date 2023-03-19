@@ -1,5 +1,4 @@
 package iterator;
-import BigT.Map;
 import heap.*;
 import global.*;
 
@@ -60,7 +59,7 @@ public class OBuf implements GlobalConst{
     {
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
       BigT.Map tuple_ptr = new BigT.Map(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
       
@@ -108,7 +107,7 @@ public class OBuf implements GlobalConst{
 		  {
 		    System.arraycopy(_bufs[count],t_size*i,tempbuf,0,t_size);
 		    try {
-		      rid =  _temp_fd.insertRecord(tempbuf);
+		      rid =  _temp_fd.insertMap(tempbuf);
 		    }
 		    catch (Exception e){
 		      throw e;
@@ -119,7 +118,7 @@ public class OBuf implements GlobalConst{
 		  {       
 		    System.arraycopy(_bufs[count],t_size*i,tempbuf,0,t_size);
 		    try {
-		      rid =  _temp_fd.insertRecord(tempbuf);
+		      rid =  _temp_fd.insertMap(tempbuf);
 		    }
 		    catch (Exception e){
 		      throw e;

@@ -312,7 +312,7 @@ public class AttrCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertMap(tuple.getTupleByteArray());
       }
       catch (Exception e2) {
 	throw new AttrCatalogException(e2, "insertRecord failed");
@@ -364,7 +364,7 @@ public class AttrCatalog extends Heapfile
 	     && record.attrName.equalsIgnoreCase(attrName)==true )
 	  {
 	    try {
-	      deleteRecord(rid);
+	      deleteMap(rid);
 	    }
 	    catch (Exception e3) {
 	      throw new AttrCatalogException(e3, "deleteRecord failed");

@@ -1,11 +1,13 @@
 package tests;
 
+import java.io.*;
 import java.lang.*;
 import java.util.*;
 
 import BigT.Map;
 import global.*;
 import iterator.*;
+import heap.*;
 
 //Set set the structures needed
 //enum Order{UNSORT,SORT};
@@ -451,7 +453,7 @@ public class QueryCheck {
       // mygroup[curGroup].mytuple[count].print(types);
 
       try {
-	TupleUtils tUtil = new TupleUtils();
+	MapUtils tUtil = new MapUtils();
 	if(tUtil.Equal(mygroup[curGroup].mytuple[count],t,types,(int)columnum)) {
 	  MarkTuple(curGroup, count);
 	}
@@ -471,7 +473,7 @@ public class QueryCheck {
       // look for tuple t inside curGroup
       for( int i=0; i<mygroup[curGroup].len; i++ ) {
 	try {
-	  TupleUtils tUtil = new TupleUtils();
+	  MapUtils tUtil = new MapUtils();
 	  if((mygroup[curGroup].mark[i] == 0) && 
 	     (tUtil.Equal(mygroup[curGroup].mytuple[i],t,types,(int)columnum))) {// found
 	    MarkTuple(curGroup, i);
@@ -618,7 +620,7 @@ public class QueryCheck {
       if(gmark[i] == 0) {
 	for( int j=0; j<mygroup[i].len; j++) {
 	  try {
-	    TupleUtils tUtil = new TupleUtils();
+	    MapUtils tUtil = new MapUtils();
 	    if((mygroup[i].mark[j] == 0) && 
 	       ( tUtil.Equal(mygroup[i].mytuple[j],t,types,(int)columnum))) {
 	      t_num[0] = j;

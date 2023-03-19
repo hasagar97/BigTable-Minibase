@@ -342,7 +342,7 @@ public class IndexCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertMap(tuple.getMapByteArray());
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e, "insertRecord() failed");
@@ -393,7 +393,7 @@ public class IndexCatalog extends Heapfile
 	     && (record.accessType == accessType))
 	    {
 	      try {
-		deleteRecord(rid);  //  FOUND -  DELETE        
+		deleteMap(rid);  //  FOUND -  DELETE
 	      }
 	      catch (Exception e){
 		throw new IndexCatalogException(e, "deleteRecord() failed");

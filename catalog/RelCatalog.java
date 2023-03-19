@@ -13,7 +13,7 @@ import bufmgr.*;
 import global.*;
 import heap.*;
 import diskmgr.*;
-
+import index.*;
 public class RelCatalog extends Heapfile
   implements  GlobalConst, Catalogglobal
 {
@@ -301,7 +301,7 @@ public class RelCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertMap(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	System.err.println ("insertRecord"+e2);
@@ -347,7 +347,7 @@ public class RelCatalog extends Heapfile
 	
 	if (record.relName.equalsIgnoreCase(relation)==true) {
 	  try {
-	    deleteRecord(rid);
+	    deleteMap(rid);
 	  }
 	  catch (Exception e3) {
 	    System.err.println ("deleteRecord"+e3);
