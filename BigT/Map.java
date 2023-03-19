@@ -33,6 +33,10 @@ public class Map implements GlobalConst{
     private static short VALUE_LABEL_SIZE = 20;
 
 
+    public static int MAX_STR_SIZE = 20;
+
+
+
 
     /**
      * Maximum size of any tuple
