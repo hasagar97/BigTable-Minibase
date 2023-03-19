@@ -3,3 +3,4 @@ tests/*.db
 .idea/*
 **.iml
 jdk.txt
+.idea/**/workspace.xml
