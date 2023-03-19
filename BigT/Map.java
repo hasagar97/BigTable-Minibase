@@ -27,16 +27,21 @@ public class Map implements GlobalConst{
      * Number of fields in this tuple
      */
 
-    private short ROW_LABEL_SIZE = 20;
-    private short COLUMN_LABEL_SIZE = 20;
-    private short TIMESTAMP_LABEL_SIZE = 4;
-    private short VALUE_LABEL_SIZE = 20;
+    private static short ROW_LABEL_SIZE = 20;
+    private static short COLUMN_LABEL_SIZE = 20;
+    private static short TIMESTAMP_LABEL_SIZE = 4;
+    private static short VALUE_LABEL_SIZE = 20;
+
+
+    public static int MAX_STR_SIZE = 20;
+
+
 
 
     /**
      * Maximum size of any tuple
      */
-    public final int max_size = ROW_LABEL_SIZE + COLUMN_LABEL_SIZE
+    public static final int max_size = ROW_LABEL_SIZE + COLUMN_LABEL_SIZE
             +TIMESTAMP_LABEL_SIZE + VALUE_LABEL_SIZE;
 
 
@@ -132,7 +137,10 @@ public class Map implements GlobalConst{
     /*
       Set the row label.
     */
-    public Map setRowLabel(java.lang.String val) throws IOException {
+    public Map setRowLabel(java.lang.String val) throws IOException, InvalidFieldSize {
+        if(val.length() > ROW_LABEL_SIZE)
+            throw new InvalidFieldSize(null,"MAP: INVALID FIELD SIZE, expected maximum of "
+                    +ROW_LABEL_SIZE+" , recieved"+val.length());
         Convert.setStrValue(val, map_offset, map);
         return this;
     }
@@ -140,7 +148,10 @@ public class Map implements GlobalConst{
     /*
       Set the column label.
     */
-    public Map setColumnLabel(java.lang.String val) throws IOException {
+    public Map setColumnLabel(java.lang.String val) throws IOException, InvalidFieldSize {
+        if(val.length() > COLUMN_LABEL_SIZE)
+            throw new InvalidFieldSize(null,"MAP: INVALID FIELD SIZE, expected maximum of "
+                    +COLUMN_LABEL_SIZE+" , recieved"+val.length());
         Convert.setStrValue(val, map_offset+ROW_LABEL_SIZE, map);
         return this;
     }
@@ -156,7 +167,10 @@ public class Map implements GlobalConst{
     /*
       Set the value.
     */
-    public Map setValue(java.lang.String val) throws IOException {
+    public Map setValue(java.lang.String val) throws IOException, InvalidFieldSize {
+        if(val.length() > VALUE_LABEL_SIZE)
+            throw new InvalidFieldSize(null,"MAP: INVALID FIELD SIZE, expected maximum of "
+                    +VALUE_LABEL_SIZE+" , recieved"+val.length());
         Convert.setStrValue(val, map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE+TIMESTAMP_LABEL_SIZE, map);
         return this;
     }
@@ -182,7 +196,7 @@ public class Map implements GlobalConst{
      */
     public int getOffset()
     {
-        
+
         return this.map_offset;
     }
 

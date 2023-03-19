@@ -20,8 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b578b2c-78df-4744-acb5-074796781d6d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/BigT/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iterator/MapUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/iterator/MapUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iterator/Sort.java" beforeDir="false" afterPath="$PROJECT_DIR$/iterator/Sort.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,5 +70,15 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="93" y="93" width="1350" height="630" key="DiffContextDialog" timestamp="1679211267906">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="93" y="93" width="1350" height="630" key="DiffContextDialog/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679211267906" />
+    <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup" timestamp="1679209387693">
+      <screen x="-1920" y="0" width="1920" height="1032" />
+    </state>
+    <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@-1920.0.1920.1032" timestamp="1679209387693" />
   </component>
 </project>
