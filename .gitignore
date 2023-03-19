@@ -2,3 +2,4 @@ tests/*.db
 **/*.class
 .idea/*
 **.iml
+.idea/**/workspace.xml
