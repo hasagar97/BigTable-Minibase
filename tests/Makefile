@@ -79,10 +79,18 @@ phase2:Phase2Test.java
 phase2Test: phase2
 	$(JAVA) tests.Phase2Test
 
-phase2Sorting: 
+phase2Sorting:
 	$(JAVAC) phase2SortingTest.java
 
 phase2SortingTest : phase2Sorting
 	$(JAVA) tests.phase2SortingTest
-	
+
+# test bigt
+
+bigtTest:bigtTest.java
+	$(JAVAC) TestDriver.java bigtTest.java
+
+bigttest: bigtTest
+	$(JAVA) tests.bigtTest
+
 
