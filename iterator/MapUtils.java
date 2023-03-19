@@ -350,34 +350,34 @@ public class MapUtils
       short [] sizesT1 = new short [len_in1];
       int i, count = 0;
       
-//      for (i = 0; i < len_in1; i++)
-//        if (in1[i].attrType == AttrType.attrString)
-//	  sizesT1[i] = t1_str_sizes[count++];
+     for (i = 0; i < len_in1; i++)
+       if (in1[i].attrType == AttrType.attrString)
+	  sizesT1[i] = t1_str_sizes[count++];
       
       int n_strs = BigT.Map.MAX_STR_SIZE;
-//      for (i = 0; i < nOutFlds; i++)
-//	{
-//	  if (proj_list[i].relation.key == RelSpec.outer)
-//            res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
-//
-//	  else throw new InvalidRelation("Invalid relation -innerRel");
-//	}
-//
-//      // Now construct the res_str_sizes array.
-//      for (i = 0; i < nOutFlds; i++)
-//	{
-//	  if (proj_list[i].relation.key == RelSpec.outer
-//	      && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
-//	    n_strs++;
-//	}
+     for (i = 0; i < nOutFlds; i++)
+	{
+	  if (proj_list[i].relation.key == RelSpec.outer)
+           res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
+
+	  else throw new InvalidRelation("Invalid relation -innerRel");
+	}
+
+     // Now construct the res_str_sizes array.
+     for (i = 0; i < nOutFlds; i++)
+	{
+	  if (proj_list[i].relation.key == RelSpec.outer
+	      && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
+	    n_strs++;
+	}
 //
       short[] res_str_sizes = new short [n_strs];
       count         = 0;
-//      for (i = 0; i < nOutFlds; i++) {
-//	if (proj_list[i].relation.key ==RelSpec.outer
-//	    && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
-//	  res_str_sizes[count++] = sizesT1[proj_list[i].offset-1];
-//      }
+     for (i = 0; i < nOutFlds; i++) {
+	if (proj_list[i].relation.key ==RelSpec.outer
+	    && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
+	  res_str_sizes[count++] = sizesT1[proj_list[i].offset-1];
+     }
      
       try {
 	Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);

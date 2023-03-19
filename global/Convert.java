@@ -3,7 +3,7 @@
 package global;
 
 import java.io.*;
-import java.lang.*;
+import java.util.*;
 
 public class Convert{
  
@@ -123,6 +123,28 @@ public class Convert{
       instr = new DataInputStream(in);
       value = instr.readUTF();
       return value;
+    }
+
+    public static String getMapStrValue (int position, byte []data, int length)
+    throws java.io.IOException
+    {
+      try{
+      byte[] lengthBytes = new byte[2];
+      lengthBytes[0] = (byte) ((data.length >> 8) & 0xFF);
+      lengthBytes[1] = (byte) (data.length & 0xFF);
+
+    // Combine the length bytes and the UTF-8 bytes into a single byte array
+      byte[] c_LengthBytes = new byte[lengthBytes.length + data.length];
+      System.arraycopy(lengthBytes, 0, c_LengthBytes, 0, lengthBytes.length);
+      System.arraycopy(data, 0, c_LengthBytes, lengthBytes.length, data.length);
+
+      DataInputStream dis = new DataInputStream(new ByteArrayInputStream(c_LengthBytes));
+      String readStr = dis.readUTF();
+      return readStr;
+      }catch(Exception e){
+          System.out.println("Error!!!!");
+      }
+      return "";
     }
   
   /**
@@ -268,9 +290,26 @@ public class Convert{
    // valid contents of the buffer have been copied into it
    byte []B = ((ByteArrayOutputStream) out).toByteArray();
    
-   int sz =outstr.size();  
+   int sz =Math.min(outstr.size(), 64);  
    // copies the contents of this byte array into data[]
-   System.arraycopy (B, 0, data, position, sz);
+   System.arraycopy (Arrays.copyOfRange(B, 0, 64), 0, data, position, sz);
+   
+ }
+
+ public static void setStrMapValue (String value, int position, byte []data)
+        throws java.io.IOException
+ {
+   OutputStream out = new ByteArrayOutputStream();
+   DataOutputStream outstr = new DataOutputStream (out);
+   
+   outstr.writeBytes(value);
+   byte[] bytes = out.toByteArray();
+
+// get the smaller size between the length of bytes and 64 bytes
+int sz = Math.min(bytes.length, 64);
+
+// copy the first 64 bytes of bytes into data[] at the given position
+System.arraycopy(bytes, 0, data, position, sz);
    
  }
   

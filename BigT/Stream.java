@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ArrayList;
 import global.*;
 import BigT.*;
-//import java.util.Map;
 
 import iterator.FileScan;
 import iterator.CondExpr;
@@ -22,7 +21,7 @@ public class Stream {
   private int orderType;
   private CondExpr[] filters = new CondExpr[100];
   private boolean isOpen;
-  private Sort sortedStream;
+  private FileScan sortedStream;
 
   public Stream(String bigTable, int orderType, 
   		java.lang.String rowFilter, 
@@ -38,9 +37,9 @@ public class Stream {
     List<CondExpr> column = this.processFilter(columnFilter, 2);
     List<CondExpr> value = this.processFilter(valueFilter, 4);
 
-    filters.addAll(row);
-    filters.addAll(column);
-    filters.addAll(value);
+    // filters.addAll(row);
+    // filters.addAll(column);
+    // filters.addAll(value);
 
     FldSpec[] projection = new FldSpec[4];
     RelSpec rel = new RelSpec(RelSpec.outer);
@@ -53,14 +52,14 @@ public class Stream {
     try {
       AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
       short len_in = 4;      
-      short [] str_sizes = {(short)25, (short)25, (short)25};
+      short [] str_sizes = {(short)25, (short)25, (short)25, (short)25};
       int n_out_flds = 4;
       FldSpec[] proj_list = null;
       this.filters = filters.toArray(new CondExpr[100]);
       
-      FileScan iterator = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, projection, this.filters);
+      this.sortedStream = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, projection, this.filters);
 
-      this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
+      // this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
         e.printStackTrace();

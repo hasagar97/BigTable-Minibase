@@ -29,16 +29,17 @@ public class Map implements GlobalConst{
      * Number of fields in this tuple
      */
 
-    private static short ROW_LABEL_SIZE = 20;
-    private static short COLUMN_LABEL_SIZE = 20;
-    private static short TIMESTAMP_LABEL_SIZE = 4;
-    private static short VALUE_LABEL_SIZE = 20;
+    public static short ROW_LABEL_SIZE = 20;
+    public static short COLUMN_LABEL_SIZE = 20;
+    public static short TIMESTAMP_LABEL_SIZE = 4;
+    public static short VALUE_LABEL_SIZE = 20;
 
 
     public static int MAX_STR_SIZE = 20;
 
 
-
+    public int[] fldOffset = {map_offset,map_offset+ROW_LABEL_SIZE,ROW_LABEL_SIZE+COLUMN_LABEL_SIZE, map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE+TIMESTAMP_LABEL_SIZE};
+    public int fldCnt = 4;
 
     /**
      * Maximum size of any tuple
@@ -60,8 +61,11 @@ public class Map implements GlobalConst{
     */
     public Map(byte[] amap, int offset)
     {
-        this.map = amap;
-        this.map_offset = offset;
+        this.map = new byte[max_size];
+        System.arraycopy(amap, offset, this.map, 0, amap.length - offset);
+        this.map_offset = 0;
+        // this.map = amap;
+        // this.map_offset = offset;
     }
 
     /*
@@ -78,9 +82,14 @@ public class Map implements GlobalConst{
       Construct a map from another map through copy with given offset and len.
     */
     public Map(byte [] fromMap,int offset,int size) {
-        this.map = fromMap;
-        this.map_offset = offset;
+        this.map = new byte[max_size];
+        System.out.println("offset: "+offset+" , size:"+size+ " length og byte array:"+fromMap.length);
+        System.arraycopy(fromMap, offset, this.map, 0,  Math.min(max_size,fromMap.length-offset));
+        this.map_offset = 0;
+        // this.map = fromMap;
+        // this.map_offset = offset;
     }
+
 
 
     /*
@@ -203,7 +212,7 @@ public class Map implements GlobalConst{
       Print out the map.
     */
     public void print() throws IOException {
-        System.out.println("{row_label:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
+        System.out.println("HEREEEE {row_label:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
                 + getTimeStamp() + " ,value:" + getValue()+"}");
     }
 
@@ -246,7 +255,7 @@ public class Map implements GlobalConst{
     */
     public Map mapSet(byte[] frommap, int offset)
     {
-        System.arraycopy(frommap, offset, this.map, 0, max_size);
+        System.arraycopy(frommap, offset, this.map, 0, frommap.length - offset);
         // reseting map_offset to 0
         this.map_offset = 0;
         return this;
@@ -262,7 +271,7 @@ public class Map implements GlobalConst{
     */
     public Map mapSet(byte[] frommap, int offset,int size)
     {
-        System.arraycopy(frommap, offset, this.map, 0, max_size);
+        System.arraycopy(frommap, offset, this.map, 0, Math.min(max_size,frommap.length-offset));
         // reseting map_offset to 0
         this.map_offset = 0;
         return this;
@@ -308,16 +317,15 @@ public class Map implements GlobalConst{
     public float getFloFld(int fldNo)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        //System.out.println("getFloFld(int fldNo)");
-//        float val;
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            val = Convert.getFloValue(fldOffset[fldNo -1], map);
-//            return val;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return (float) 0.0;
+       //System.out.println("getFloFld(int fldNo)");
+       float val;
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           val = Convert.getFloValue(fldOffset[fldNo -1], map);
+           return val;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
 
@@ -334,17 +342,17 @@ public class Map implements GlobalConst{
     public String getStrFld(int fldNo)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        //System.out.println("getStrFld(int fldNo)");
-//        String val;
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            val = Convert.getStrValue(fldOffset[fldNo -1], map,
-//                    fldOffset[fldNo] - fldOffset[fldNo -1]); //strlen+2
-//            return val;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return "Dummy String";
+       System.out.println("getStrFld(int fldNo)");
+       System.out.println("first field offset "+fldOffset[fldNo -1]+" map"+ map +" size  "+ (fldOffset[fldNo] - fldOffset[fldNo -1]) + " map length " +map.length);
+       String val;
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           val = Convert.getMapStrValue(0, map,
+                   20); //strlen+2
+           return val;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
     /**
@@ -360,17 +368,15 @@ public class Map implements GlobalConst{
     public char getCharFld(int fldNo)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        //System.out.println("getCharFld(int fldNo)");
-//        char val;
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            val = Convert.getCharValue(fldOffset[fldNo -1], map);
-//            return val;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return 'c';
-
+       //System.out.println("getCharFld(int fldNo)");
+       char val;
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           val = Convert.getCharValue(fldOffset[fldNo -1], map);
+           return val;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
     /**
@@ -385,15 +391,14 @@ public class Map implements GlobalConst{
     public Map setIntFld(int fldNo, int val)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        //System.out.println("setIntFld(int fldNo, int val)");
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            Convert.setIntValue (val, fldOffset[fldNo -1], map);
-//            return this;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return this;
+       //System.out.println("setIntFld(int fldNo, int val)");
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           Convert.setIntValue (val, fldOffset[fldNo -1], map);
+           return this;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
     /**
@@ -408,16 +413,14 @@ public class Map implements GlobalConst{
     public Map setFloFld(int fldNo, float val)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        //System.out.println("setFloFld(int fldNo, float val)");
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            Convert.setFloValue (val, fldOffset[fldNo -1], map);
-//            return this;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return this;
-
+       //System.out.println("setFloFld(int fldNo, float val)");
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           Convert.setFloValue (val, fldOffset[fldNo -1], map);
+           return this;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
     /**
@@ -432,15 +435,15 @@ public class Map implements GlobalConst{
     public Map setStrFld(int fldNo, String val)
             throws IOException, FieldNumberOutOfBoundException
     {
-        //System.out.println("setStrFld(int fldNo, String val)");
-//        if ( (fldNo > 0) && (fldNo <= fldCnt))
-//        {
-//            Convert.setStrValue (val, fldOffset[fldNo -1], map);
-//            return this;
-//        }
-//        else
-//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-        return this;
+        System.out.println("setStrFld(int fldNo, String val) fldno :"+fldNo+ "val:" + val);
+        System.out.println("Map size:"+map.length+" offset : "+map_offset+ "field offset"+ fldOffset[fldNo -1]);
+       if ( (fldNo > 0) && (fldNo <= fldCnt))
+       {
+           Convert.setStrMapValue (val, fldOffset[fldNo -1], map);
+           return this;
+       }
+       else
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
 
 
