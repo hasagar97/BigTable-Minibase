@@ -2,6 +2,8 @@ package BigT;
 
 import java.io.*;
 import java.lang.*;
+import java.nio.charset.StandardCharsets;
+
 import global.*;
 import iterator.*;
 import heap.*;
@@ -79,18 +81,16 @@ public class Map implements GlobalConst{
     /*
       Returns the row label.
     */
-    public java.lang.String getRowLabel()
-    {
-        return new String(map, map_offset,ROW_LABEL_SIZE);
+    public java.lang.String getRowLabel() throws IOException {
+        return Convert.getStrValue(map_offset, map,ROW_LABEL_SIZE);
 //        return "";
     }
 
     /*
       Returns the column label.
     */
-    public java.lang.String getColumnLabel()
-    {
-        return new String(map, map_offset+ROW_LABEL_SIZE,COLUMN_LABEL_SIZE);
+    public java.lang.String getColumnLabel() throws IOException {
+        return Convert.getStrValue(map_offset+ROW_LABEL_SIZE, map, COLUMN_LABEL_SIZE);
 //        return "";
     }
 
@@ -124,9 +124,8 @@ public class Map implements GlobalConst{
     /*
       Returns the value.
     */
-    public java.lang.String getValue()
-    {
-        return new String(map, map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE+TIMESTAMP_LABEL_SIZE,VALUE_LABEL_SIZE);
+    public java.lang.String getValue() throws IOException {
+        return Convert.getStrValue(map_offset + ROW_LABEL_SIZE + COLUMN_LABEL_SIZE + TIMESTAMP_LABEL_SIZE, map, VALUE_LABEL_SIZE);
     }
 
     /*

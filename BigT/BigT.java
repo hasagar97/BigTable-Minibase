@@ -32,8 +32,8 @@ public class BigT extends Heapfile
     
     try
     {
-      BTreeFile m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, MAXINDEXNAME, 1);
-
+      m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
+      System.out.println("Index name = " + name + "_row_col_index");
       switch (m_strategy) {
         case 1:
           // one btree to index row labels
@@ -146,99 +146,126 @@ public class BigT extends Heapfile
     type 2 - gets column labels count
     default - gets row labels count
   */
-    private int getCnt(int type)
-    {
-      int count = 0;
-      Stream stream = null;
-      RID next_MID = null;
-      Map next = null;
-      java.lang.String label = null;
-      java.lang.String next_label = null;
-
-      switch (type) {
-            case 1:
-              // Want to stream entries by ordered row label
-              stream = new Stream(this, 3, null, null, null);
-              break;
-            case 2:
-              // Want to stream entries by ordered column label
-              stream = new Stream(this, 4, null, null, null);
-              break;
-            default:
-              // Want to stream entries by ordered row label
-              stream = new Stream(this, 3, null, null, null);
-              break;
-      }
-
-      // Scan all the entries in our default index
-      next = stream.getNext(next_MID);
-
-      while(next != null)
-      {
-        switch (type) {
-          case 1:
-            try {
-              next_label = next.getRowLabel();
-            }
-            catch (Exception e) {
-              System.err.println("Failed to get row label from map\n");
-            }
-            break;
-          case 2:
-            try {
-              next_label = next.getColumnLabel();
-            }
-            catch (Exception e) {
-              System.err.println("Failed to get column label from map\n");
-            }
-            break;
-          default:
-            try {
-              next_label = next.getRowLabel();
-            }
-            catch (Exception e) {
-              System.err.println("Failed to get row label from map\n");
-            }
-            break;
-        }
-
-        if (label != null)
-        {
-          // Label changed. Count and update checked label.
-          if (next_label != label)
-          {
-            count += 1;
-            label = next_label;
-          }
-        }
-        else
-        {
-          // First unique label
-          count += 1;
-          label = next_label;
-        }
-
-        next = stream.getNext(next_MID);
-      }
-
-      return count;
-    }
+//    private int getCnt(int type)
+//    {
+//      int count = 0;
+//      Stream stream = null;
+//      RID next_MID = null;
+//      Map next = null;
+//      java.lang.String label = null;
+//      java.lang.String next_label = null;
+//
+//      switch (type) {
+//            case 1:
+//              // Want to stream entries by ordered row label
+//              stream = new Stream(this, 3, null, null, null);
+//              break;
+//            case 2:
+//              // Want to stream entries by ordered column label
+//              stream = new Stream(this, 4, null, null, null);
+//              break;
+//            default:
+//              // Want to stream entries by ordered row label
+//              stream = new Stream(this, 3, null, null, null);
+//              break;
+//      }
+//
+//      // Scan all the entries in our default index
+//      next = stream.getNext(next_MID);
+//
+//      while(next != null)
+//      {
+//        switch (type) {
+//          case 1:
+//            try {
+//              next_label = next.getRowLabel();
+//            }
+//            catch (Exception e) {
+//              System.err.println("Failed to get row label from map\n");
+//            }
+//            break;
+//          case 2:
+//            try {
+//              next_label = next.getColumnLabel();
+//            }
+//            catch (Exception e) {
+//              System.err.println("Failed to get column label from map\n");
+//            }
+//            break;
+//          default:
+//            try {
+//              next_label = next.getRowLabel();
+//            }
+//            catch (Exception e) {
+//              System.err.println("Failed to get row label from map\n");
+//            }
+//            break;
+//        }
+//
+//        if (label != null)
+//        {
+//          // Label changed. Count and update checked label.
+//          if (next_label != label)
+//          {
+//            count += 1;
+//            label = next_label;
+//          }
+//        }
+//        else
+//        {
+//          // First unique label
+//          count += 1;
+//          label = next_label;
+//        }
+//
+//        next = stream.getNext(next_MID);
+//      }
+//
+//      return count;
+//    }
 
   /*
     Returns the number of distinct row labels in the big table
   */
-    public int getRowCnt()
-    {
-      return getCnt(1);
-    }
+//    public int getRowCnt()
+//    {
+//      return getCnt(1);
+//    }
 
   /*
     Returns the number of distinct column labels in the big table
   */
-    public int getColumnCnt()
-    {
-      return getCnt(2);
-    }
+//    public int getColumnCnt()
+//    {
+//      return getCnt(2);
+//    }
+
+//  private void printBTreeKey() throws IteratorException, ConstructPageException, KeyNotMatchException, PinPageException, IOException, UnpinPageException, ScanIteratorException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
+//    BTFileScan scan = m_defaultindex.new_scan(new StringKey("NetherlanJaguar"), new StringKey("NetherlanJaguar"));
+//        while(true) {
+//            KeyDataEntry ret = scan.get_next();
+//            if(ret == null) {
+//                System.out.println("NULL");
+//                break;
+//            }
+//            System.out.println("In Scan");
+//            System.out.println(ret.key);
+//            System.out.println(ret.data);
+//            LeafData leafData = (LeafData) ret.data;
+//            RID id = leafData.getData();
+//            try {
+////                printRID(id);
+////                Map out = super.getMap(id);
+////                System.out.println(out);
+////                System.out.println(out.getValue());
+////                System.out.println(new String(out.getMapByteArray(), StandardCharsets.UTF_8));
+//            } catch (Exception e) {
+//                scan.DestroyBTreeFileScan();
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        scan.DestroyBTreeFileScan();
+//  }
 
     private void updateIndexFiles(Map map, RID mid, int operation) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
       updateIndexFiles(map, mid, operation, false, false, false, false);
@@ -287,14 +314,17 @@ public class BigT extends Heapfile
         case 3:
           // one btree to index column label and row label (combined key) and
           // one btree to index timestamps
-          key1 = new StringKey(map.getColumnLabel() + map.getRowLabel());
+          key1 = new StringKey(map.getRowLabel() + map.getColumnLabel());
           key2 = new StringKey(Integer.toString(map.getTimeStamp()));
           if(operation == 0) {
+//            System.out.println("Inserting key1 into row_col_index = " + key1);
             m_defaultindex.insert(key1, mid);
-            m_indexfile2.insert(key2, mid);
+            m_indexfile1.insert(key2, mid);
           } else if(operation == 1) {
-            m_defaultindex.Delete(key1, mid);
-            m_indexfile2.Delete(key2, mid);
+//            System.out.println("Deleting MID from (key1)row_col_index = " + mid.pageNo.pid + " " + mid.slotNo);
+            Boolean didDeleteFromRowCol = m_defaultindex.Delete(key1, mid);
+//            System.out.println("Deleted from Row Col = " + didDeleteFromRowCol);
+            m_indexfile1.Delete(key2, mid);
           } else {
             if(isRowAffected || isColAffected) {
               if(operation == 2) m_defaultindex.insert(key1, mid);
@@ -302,8 +332,8 @@ public class BigT extends Heapfile
             }
 
             if(isTimestampAffected) {
-              if(operation == 2) m_indexfile2.insert(key2, mid);
-              else if(operation == 3) m_indexfile2.Delete(key2, mid);
+              if(operation == 2) m_indexfile1.insert(key2, mid);
+              else if(operation == 3) m_indexfile1.Delete(key2, mid);
             }
           }
           break;
@@ -336,8 +366,7 @@ public class BigT extends Heapfile
       }
     }
 
-    private RID checkDropMap ( Map map, RID mid)
-    {
+    private RID checkDropMap ( Map map, RID mid) throws IOException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
       StringKey key = null;
       BTFileScan scan = null;
       Map current_map = null;
@@ -348,7 +377,7 @@ public class BigT extends Heapfile
       KeyDataEntry current_entry = null;
       
       try {
-        key = new StringKey(map.getRowLabel() + map.getValue());
+        key = new StringKey(map.getRowLabel() + map.getColumnLabel());
       }
       catch (Exception e) {
         System.err.println("Failed to create new StringKey in checkDropMap\n");
@@ -388,7 +417,10 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           try {
+            System.out.println("MAP = " + current_map.getValue());
             current_entry = scan.get_next();
+
+            if(current_entry == null) break;
             current_mid = ((LeafData) current_entry.data).getData();
             current_map = super.getMap(current_mid);
             timestamp_count += 1;
@@ -399,16 +431,18 @@ public class BigT extends Heapfile
             }
           }
           catch (Exception e) {
+            e.printStackTrace();
              System.err.println("Failed to process next Map in checkDropMap\n");
           }
         }
       }
 
-      if (timestamp_count < 3)
+      if (timestamp_count <= 3)
       {
         oldest = null;
       }
 
+      scan.DestroyBTreeFileScan();
       return oldest;
     }
   
@@ -436,21 +470,29 @@ public class BigT extends Heapfile
         mid = super.insertMap(mapPtr);
 
         // Index the Map
-        updateIndexFiles(map, mid, 1);
+        updateIndexFiles(map, mid, 0);
 
-        // Check whether to drop the map
+//        // Check whether to drop the map
         RID oldestMapID = checkDropMap(map, mid);
 
         if(oldestMapID != null) {
+          System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
           Map oldestMap = super.getMap(oldestMapID);
 
           updateIndexFiles(oldestMap, oldestMapID, 1);
 
+
           // Change deleteRecord in heapfile to deleteMap
-          super.deleteMap(oldestMapID);
+          Boolean didDelete = super.deleteMap(oldestMapID);
+          System.out.println("Map deleted in heap = " + didDelete);
+          SystemDefs.JavabaseBM.softFlushAll();
         }
+//        System.out.println("Printing BTree");
+//        printBTreeKey();
+//        System.out.println("Done!");
       }
       catch (Exception e) {
+        e.printStackTrace();
         System.err.println("Failed to insert Map in BigT class\n");
       }
 
@@ -535,13 +577,13 @@ public class BigT extends Heapfile
 	4, then results are first ordered in column label, then time stamp
 	6, then results are ordered in time stamp
   */
-    public Stream openStream ( int orderType,
-    java.lang.String rowFilter,
-    java.lang.String columnFilter,
-    java.lang.String valueFilter)
-    {
-      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
-    }
+//    public Stream openStream ( int orderType,
+//    java.lang.String rowFilter,
+//    java.lang.String columnFilter,
+//    java.lang.String valueFilter)
+//    {
+//      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
+//    }
 
     public int getStrategy ()
     {
