@@ -25,6 +25,7 @@ public class Phase2Test {
         System.out.println(mp.getTimeStamp());
         mp.setValue("value tsint");
         System.out.println(mp.getValue());
+        mp.print();
 //        String dbpath = "phase2.test3.db";
 //        SystemDefs sysdef = new SystemDefs( dbpath, 5000 ,5000,"Clock");
 //        Heapfile f = new Heapfile("first_table3");

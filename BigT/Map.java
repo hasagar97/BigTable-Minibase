@@ -25,7 +25,7 @@ public class Map implements  GlobalConst{
     /**
      * length of this tuple
      */
-    private int map_length;
+//    private int map_length;
 
     /**
      * private field
@@ -51,7 +51,6 @@ public class Map implements  GlobalConst{
     public Map()
     {
         this.map = new byte[max_size];
-//        this.size = this.map.length;
     }
 
     /*
@@ -61,7 +60,6 @@ public class Map implements  GlobalConst{
     {
         this.map = amap;
         this.map_offset = offset;
-        this.map_length = this.map.length;
     }
 
     /*
@@ -69,28 +67,17 @@ public class Map implements  GlobalConst{
     */
     public Map(Map fromMap)
     {
-        this.map = new byte[fromMap.map_length];
-        System.arraycopy(fromMap.map, fromMap.map_offset, this.map, 0, fromMap.map_length);
+        this.map = new byte[max_size];
+        System.arraycopy(fromMap.map, fromMap.map_offset, this.map, 0, fromMap.max_size);
         this.map_offset = 0;
-//        this.map_length = this.map.length;
     }
 
     /*
       Construct a map from another map through copy with given offset and len.
     */
-    public Map(byte [] fromMap,int offset,int size) throws IOException {
-//        System.out.println("from byte array,"+fromMap+" , offset:"+offset+",size"+size);
+    public Map(byte [] fromMap,int offset,int size) {
         this.map = fromMap;
-//        System.arraycopy(fromMap.map, fromMap.offset, this.map, 0, fromMap.size);
         this.map_offset = offset;
-        // TODO throw error on wring size, on wrong size of byte array
-//        this.map_length = size;
-//        setFldCnt(Convert.getShortValue(offset,this.map));
-
-
-        System.out.println("Map created with offset: "+offset+" \n");
-        // [TODO] should the field offset be initialised with data?
-        // [todo] should the offset count be set here?
     }
 
 
@@ -120,6 +107,21 @@ public class Map implements  GlobalConst{
     }
 
 
+    /*
+      Class constructor create a new map with the appropriate size.
+    */
+    public Map(int size)
+    {
+        // ignoring the size provided and creating a map with fixed size
+        this.map = new byte[max_size];
+//        //System.out.println("Map(size)");
+//        this.map = new byte[size];
+//        this.map_offset = 0;
+//        this.map_length = this.map.length;
+//        this.fldCnt=4;
+    }
+
+
     public int getLength(){
         return max_size;
     }
@@ -136,9 +138,6 @@ public class Map implements  GlobalConst{
       Set the row label.
     */
     public Map setRowLabel(java.lang.String val) throws IOException {
-//        if(val.length() > ROW_LABEL_SIZE) {
-//            throw CorruptedFieldNo();
-//        }
         Convert.setStrValue(val, map_offset, map);
         return this;
     }
@@ -149,7 +148,6 @@ public class Map implements  GlobalConst{
     public Map setColumnLabel(java.lang.String val) throws IOException {
         Convert.setStrValue(val, map_offset+ROW_LABEL_SIZE, map);
         return this;
-//        return new Map();
     }
 
     /*
@@ -158,7 +156,6 @@ public class Map implements  GlobalConst{
     public Map setTimeStamp(int val) throws IOException {
         Convert.setIntValue(val, map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE, map);
         return this;
-//        return new Map();
     }
 
     /*
@@ -175,16 +172,31 @@ public class Map implements  GlobalConst{
     public byte[] getMapByteArray()
     {
         byte [] mapcopy = new byte [max_size];
-        System.arraycopy(this.map, this.map_offset, mapcopy, 0, this.map_length);
+        System.arraycopy(this.map, this.map_offset, mapcopy, 0, this.max_size);
         return mapcopy;
+    }
+
+
+    public byte [] returnMapByteArray()
+    {
+        return this.map;
+    }
+
+    /** get the offset of a tuple
+     *  @return offset of the tuple in byte array
+     */
+    public int getOffset()
+    {
+        
+        return this.map_offset;
     }
 
     /*
       Print out the map.
     */
-    public void print()
-    {
-
+    public void print() throws IOException {
+        System.out.println("{row_lable:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
+                + getTimeStamp() + " ,value:" + getValue()+"}");
     }
 
     /*
@@ -192,7 +204,7 @@ public class Map implements  GlobalConst{
     */
     public int size()
     {
-        return 0;
+        return max_size;
     }
 
     /*
@@ -200,7 +212,9 @@ public class Map implements  GlobalConst{
     */
     public Map mapCopy(Map fromMap)
     {
-        return new Map();
+        byte [] temparray = fromMap.getMapByteArray();
+        System.arraycopy(temparray, 0, this.map, this.map_offset, max_size);
+        return this;
     }
 
     /*
@@ -208,8 +222,12 @@ public class Map implements  GlobalConst{
     */
     public Map mapInit(byte[] amap, int offset)
     {
-        return new Map();
+        this.map = amap;
+        this.map_offset = offset;
+        return this;
     }
+
+
 
     /*
       Set a map with the given byte array and offset.
@@ -220,6 +238,25 @@ public class Map implements  GlobalConst{
     */
     public Map mapSet(byte[] frommap, int offset)
     {
-        return new Map();
+        System.arraycopy(frommap, offset, this.map, 0, max_size);
+        // reseting map_offset to 0
+        this.map_offset = 0;
+        return this;
+    }
+
+
+    /*
+      Set a map with the given byte array and offset and length.
+      After creating this map construct, remove the heap.
+      Tuple completely from the minibase and modify all
+      related code to use BigT.Map instead; that is, your
+      version of minibase will not store tuples anymore.
+    */
+    public Map mapSet(byte[] frommap, int offset,int size)
+    {
+        System.arraycopy(frommap, offset, this.map, 0, max_size);
+        // reseting map_offset to 0
+        this.map_offset = 0;
+        return this;
     }
 } // end of Map
