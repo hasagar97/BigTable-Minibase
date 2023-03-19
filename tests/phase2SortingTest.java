@@ -6,6 +6,8 @@ import global.SystemDefs;
 import heap.*;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class phase2SortingTest {
     static void printRID(RID rid) {
@@ -37,14 +39,14 @@ public class phase2SortingTest {
         }
         
 
-        BigT.Stream s = new BigT.Stream("first_table5", 1, "*", "*", "*");
+        BigT.Stream s = new BigT.Stream("first_table5", 1, "[0,3]", "*", "*");
 
         while (true) {
             try {
                 BigT.Map item = s.getNext();
                 if(item == null) break;
                 System.out.println("In Scan");
-                System.out.println(item);
+                System.out.println(new String(item.getMapByteArray(), StandardCharsets.UTF_8));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

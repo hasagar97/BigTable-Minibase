@@ -42,6 +42,13 @@ public class Stream {
     filters.addAll(column);
     filters.addAll(value);
 
+    FldSpec[] projection = new FldSpec[4];
+    RelSpec rel = new RelSpec(RelSpec.outer);
+    projection[0] = new FldSpec(rel, 1);
+    projection[1] = new FldSpec(rel, 2);
+    projection[2] = new FldSpec(rel, 3);
+    projection[3] = new FldSpec(rel, 4);
+
     this.isOpen = true;
     try {
       AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
@@ -51,7 +58,7 @@ public class Stream {
       FldSpec[] proj_list = null;
       this.filters = filters.toArray(new CondExpr[100]);
       
-      FileScan iterator = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, null, this.filters);
+      FileScan iterator = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, projection, this.filters);
 
       this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
     } catch (Exception e) {
