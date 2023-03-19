@@ -13,7 +13,7 @@ public class phase2SortingTest {
         System.out.println("Slot No = " + rid.slotNo + " Page No = " + rid.pageNo.pid);
     }
 
-    public static void main(String[] args) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, SpaceNotAvailableException, InvalidSlotNumberException, InvalidTupleSizeException {
+    public static void main(String[] args) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, SpaceNotAvailableException, InvalidSlotNumberException {
         String dbpath = "phase2.test3.db";
         SystemDefs sysdef = new SystemDefs( dbpath, 5000 ,5000,"Clock");
         Heapfile f = new Heapfile("first_table5");
@@ -24,16 +24,20 @@ public class phase2SortingTest {
         byte[] data4 = "Hello World 4!".getBytes();
         byte[] data5 = "Hello World 5!".getBytes();
         byte[] data6 = "Hello World 6!".getBytes();
+        try {
+            f.insertMap(data);
+            f.insertMap(data1);
+            f.insertMap(data2);
+            f.insertMap(data3);
+            f.insertMap(data4);
+            f.insertMap(data5);
+            f.insertMap(data6);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        
 
-        f.insertRecord(data);
-        f.insertRecord(data1);
-        f.insertRecord(data2);
-        f.insertRecord(data3);
-        f.insertRecord(data4);
-        f.insertRecord(data5);
-        f.insertRecord(data6);
-
-        BigT.Stream s = new BigT.Stream("first_table5", 1, "[0-5]", "*", "*");
+        BigT.Stream s = new BigT.Stream("first_table5", 1, "*", "*", "*");
 
         while (true) {
             try {
