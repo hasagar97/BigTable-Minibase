@@ -100,6 +100,11 @@ public class Map implements  GlobalConst{
         return Convert.getIntValue(map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE,map);
     }
 
+
+    public int getLength(){
+        return max_size;
+    }
+
     /*
       Returns the value.
     */
