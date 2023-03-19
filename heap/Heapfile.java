@@ -800,7 +800,7 @@ public class Heapfile implements Filetype,  GlobalConst {
 	}
 
       // new copy of this record fits in old space;
-      amap.tupleCopy(newtuple);
+      amap.mapCopy(newtuple);
       unpinPage(currentDataPageId, true /* = DIRTY */);
       
       unpinPage(currentDirPageId, false /*undirty*/);
