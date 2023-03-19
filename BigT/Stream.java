@@ -52,7 +52,7 @@ public class Stream {
       FileScan iterator = new FileScan(bigTable.getName(), attrtypearr, s1_sizes, len_in, n_out_flds, null, filters);
 
       short [] str_sizes = {2048};
-      this.sortedStream = new Sort(attrtypearr,len_in,str_sizes,iterator, this.orderType, new TupleOrder(0), len_in, 10);
+      this.sortedStream = new Sort(attrtypearr, len_in, str_sizes, iterator, this.orderType, new TupleOrder(0), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
         e.printStackTrace();
