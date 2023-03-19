@@ -312,7 +312,7 @@ public class AttrCatalog extends Heapfile
       }
       
       try {
-	insertMap(tuple.getTupleByteArray());
+	insertMap(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	throw new AttrCatalogException(e2, "insertRecord failed");
