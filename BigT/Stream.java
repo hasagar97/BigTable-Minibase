@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import global.*;
 import BigT.*;
-import java.util.Map;
+//import java.util.Map;
 
 import iterator.FileScan;
 import iterator.CondExpr;
@@ -124,14 +124,14 @@ public class Stream {
   /*
     Retrieve the next map in the stream.
   */
-  public BigT.Map getNext()
+  public Map getNext()
   {
     if (!this.isOpen || this.sortedStream == null) {
       System.err.println("*** Error: Stream is closed ***");
       return null;
     }
     try {
-      BigT.Map nextMapItem = this.sortedStream.get_next();
+      Map nextMapItem = (Map) this.sortedStream.get_next();
       if (nextMapItem == null) {
         System.out.println("*** All items from DB fetched ***");
       }

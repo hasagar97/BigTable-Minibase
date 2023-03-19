@@ -9,6 +9,7 @@ import bufmgr.BufMgrException;
 import diskmgr.PCounter;
 import global.SystemDefs;
 import heap.*;
+import iterator.InvalidFieldSize;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,7 +28,7 @@ public class Batchinsert {
         pCounter.initialize();
     }
 
-    public void run() throws IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException {
+    public void run() throws IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException, InvalidFieldSize {
         BufferedReader reader = new BufferedReader(new FileReader(data_file_path));
         String line;
         while((line = reader.readLine()) != null) {
