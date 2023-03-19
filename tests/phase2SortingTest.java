@@ -46,7 +46,7 @@ public class phase2SortingTest {
                 Map item = s.getNext();
                 if(item == null) break;
                 System.out.println("In Scan");
-                System.out.println(new String(item.getMapByteArray(), StandardCharsets.UTF_8));
+                item.print();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
