@@ -1,11 +1,18 @@
 package BigT;
 
 import java.io.*;
-import java.lang.*;
+import java.util.List;
+import java.util.ArrayList;
 import global.*;
 import BigT.*;
 import java.util.Map;
-import global.AttrOperator;
+
+import iterator.FileScan;
+import iterator.CondExpr;
+import iterator.Sort;
+import iterator.FldSpec;
+import iterator.RelSpec;
+import iterator.Iterator;
 
 public class Stream {
   /*
@@ -16,10 +23,8 @@ public class Stream {
   private List<CondExpr> filters;
   private boolean isOpen;
   private Sort sortedStream;
-  private Scan scan;
-  CondExpr[] condExprs;
 
-  public Stream(bigt bigTable, int orderType, 
+  public Stream(BigTable bigTable, int orderType, 
   		java.lang.String rowFilter, 
   		java.lang.String columnFilter, 
   		java.lang.String valueFilter)
@@ -28,18 +33,26 @@ public class Stream {
     this.bigTable = bigTable;
     this.orderType = orderType;
 
-    CondExpr rowFilter = processFilter(rowFilter, 1);
-    CondExpr columnFilter = processFilter(columnFilter, 2);
-    CondExpr valueFilter = processFilter(valueFilter, 4);
+    List<CondExpr> row = this.processFilter(rowFilter, 1);
+    List<CondExpr> column = this.processFilter(columnFilter, 2);
+    List<CondExpr> value = this.processFilter(valueFilter, 4);
 
-    this.filters.add(rowFilter);
-    this.filters.add(columnFilter);
-    this.filters.add(valueFilter);
+    this.filters.addAll(row);
+    this.filters.addAll(column);
+    this.filters.addAll(value);
 
     this.isOpen = true;
     try {
-      FileScanMap iterator = new FileScan(bigTable.getName(), null, filters);
-      this.sortedStream = new Sort(null, null, null, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), null);
+      AttrType attrtype = new AttrType(0);
+      AttrType[] attrtypearr = {attrtype};
+      short s1_sizes = 2048; 
+      short len_in = 2048;              
+      int n_out_flds = 1;
+      FldSpec[] proj_list = null;
+      FileScan iterator = new FileScan(bigTable.getName(), attrtypearr, s1_sizes, len_in, n_out_flds, null, filters);
+
+      short [] str_sizes = {2048};
+      this.sortedStream = new Sort(attrtypearr,len_in,str_sizes,iterator, this.orderType, new TupleOrder(0), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
         e.printStackTrace();
@@ -49,12 +62,12 @@ public class Stream {
   /*
     Closes the stream object.
   */
-  private List<CondExpr> processFilter(filter, fldNum) {
-    str = str.replaceAll("\\[|\\]", ""); // remove square brackets
+  private List<CondExpr> processFilter(String filter, int fldNum) {
+    String str = filter.replaceAll("\\[|\\]", ""); // remove square brackets
     String[] parts = str.split(","); // split into two parts
     List<CondExpr> result = new ArrayList<CondExpr>();
 
-    if (parts.length() == 2) {
+    if (parts.length == 2) {
       String num1 = parts[0].trim();
       String num2 = parts[1].trim();
       CondExpr expr1 = new CondExpr();
@@ -74,8 +87,8 @@ public class Stream {
       result.add(expr1);
       result.add(expr2);
     }
-    else if (parts.length() == 1) {
-      String pattern = Integer.parseInt(parts[0].trim());
+    else if (parts.length == 1) {
+      String pattern = parts[0].trim();
       if (pattern == "*") {
         // return [];
       } else {
@@ -85,14 +98,14 @@ public class Stream {
     else {
       System.err.println("*** Error in one of the filters, no filtering applied***");
     }
-    return result
+    return result;
   }
 
   public void closestream()
   {
     if (this.isOpen) {
         try {
-            this.scan.closescan();
+            this.sortedStream.close();
             this.isOpen = false;
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,7 +116,7 @@ public class Stream {
   /*
     Retrieve the next map in the stream.
   */
-  public Map getNext(MID mid)
+  public BigT.Map getNext(MID mid)
   {
     if (!this.isOpen) {
       System.err.println("*** Error: Stream is closed ***");

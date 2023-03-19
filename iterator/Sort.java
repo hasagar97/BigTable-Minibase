@@ -557,7 +557,7 @@ public class Sort extends Iterator implements GlobalConst
   public Sort(AttrType[] in,         
 	      short      len_in,             
 	      short[]    str_sizes,
-	      Iterator   am,                 
+	      FileScan   am,                 
 	      int        sort_fld,          
 	      TupleOrder sort_order,     
 	      int        sort_fld_len,  
