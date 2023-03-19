@@ -79,24 +79,52 @@ class bigtDriver extends TestDriver
     System.out.println("------------------------ TEST 1 --------------------------");
     
     boolean status = OK;
-    Map test_map;
+    Map test_map = null;
+    BigT testclass = null;
+    int row_count = 0;
+    int col_count = 0;
     
-    // Create the bigT class
-    bigt testclass = new bigt("test", 1);
-
-    // Insert some test maps
-    for (int i = 0; i < 10; i++)
+    try
     {
-      test_map = Map();
-      test_map.setRowLabel("test"+i);
-      test_map.setColumnLabel("test"+(i+1));
-      test_map.setTimeStamp(i);
-      testclass.insertMap(test_map.getMapByteArray());
+      // Create the bigT class
+      testclass = new BigT("test", 5);
+    }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to create BigT instance\n");
+      status = FAIL;
     }
 
-    // Check row/col counts are correct
-    int row_count = testclass.getRowCnt();
-    int col_count = testclass.getColumnCnt();
+    try
+    {
+      // Insert some test maps
+      for (int i = 0; i < 10; i++)
+      {
+        test_map = new Map();
+        test_map.setRowLabel("test"+i);
+        test_map.setColumnLabel("test"+(i+1));
+        test_map.setTimeStamp(i);
+        testclass.insertMap(test_map.getMapByteArray());
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      System.err.println("FAIL - Failed to insert maps\n");
+      status = FAIL;
+    }
+
+    try
+    {
+      // Check row/col counts are correct
+      row_count = testclass.getRowCnt();
+      col_count = testclass.getColumnCnt();
+    }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to get row/col counts\n");
+      status = FAIL;
+    }
 
     if (row_count != 10)
     {
@@ -109,28 +137,46 @@ class bigtDriver extends TestDriver
       status = FAIL;
     }
 
-    // Insert some duplicate maps
-    for (int i = 0; i < 3; i++)
+    try
     {
-      test_map = Map();
-      test_map.setRowLabel("test"+i);
-      test_map.setColumnLabel("test"+(i+1));
-      test_map.setTimeStamp(i+5);
-      testclass.insertMap(test_map.getMapByteArray());
-      test_map.setTimeStamp(i+6);
+      // Insert some duplicate maps
+      for (int i = 0; i < 3; i++)
+      {
+        test_map = new Map();
+        test_map.setRowLabel("test"+i);
+        test_map.setColumnLabel("test"+(i+1));
+        test_map.setTimeStamp(i+5);
+        testclass.insertMap(test_map.getMapByteArray());
+        test_map.setTimeStamp(i+6);
+        testclass.insertMap(test_map.getMapByteArray());
+      }
+
+      // Insert one new map with duplicate label but new column
+      test_map = new Map();
+      test_map.setRowLabel("test"+0);
+      test_map.setColumnLabel("test"+11);
+      test_map.setTimeStamp(15);
       testclass.insertMap(test_map.getMapByteArray());
     }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to insert maps\n");
+      status = FAIL;
+    }
 
-    // Insert one new map with duplicate label but new column
-    test_map = Map();
-    test_map.setRowLabel("test"+0);
-    test_map.setColumnLabel("test"+11);
-    test_map.setTimeStamp(15);
-    testclass.insertMap(test_map.getMapByteArray());
+    
+    try
+    {
+      // Check row/col counts are correct
+      row_count = testclass.getRowCnt();
+      col_count = testclass.getColumnCnt();
+    }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to get row/col counts\n");
+      status = FAIL;
+    }
 
-    // Check row/col counts are still correct
-    int row_count = testclass.getRowCnt();
-    int col_count = testclass.getColumnCnt();
 
     if (row_count != 10)
     {
@@ -143,19 +189,35 @@ class bigtDriver extends TestDriver
       status = FAIL;
     }
 
-    // Insert some duplicate maps that should force older maps to drop
-    for (int i = 0; i < 3; i++)
+    try
     {
-      test_map = Map();
-      test_map.setRowLabel("test"+i);
-      test_map.setColumnLabel("test"+(i+1));
-      test_map.setTimeStamp(i+8);
-      testclass.insertMap(test_map.getMapByteArray());
+      // Insert some duplicate maps that should force older maps to drop
+      for (int i = 0; i < 3; i++)
+      {
+        test_map = new Map();
+        test_map.setRowLabel("test"+i);
+        test_map.setColumnLabel("test"+(i+1));
+        test_map.setTimeStamp(i+8);
+        testclass.insertMap(test_map.getMapByteArray());
+      }
+      }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to insert maps\n");
+      status = FAIL;
     }
 
-    // Check row/col counts are still correct
-    int row_count = testclass.getRowCnt();
-    int col_count = testclass.getColumnCnt();
+    try
+    {
+      // Check row/col counts are correct
+      row_count = testclass.getRowCnt();
+      col_count = testclass.getColumnCnt();
+    }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to get row/col counts\n");
+      status = FAIL;
+    }
 
     if (row_count != 10)
     {
@@ -170,24 +232,33 @@ class bigtDriver extends TestDriver
 
     // Use a stream to make sure there are no more than 3 instances of a row/col combination 
     // and that the instance with the oldest timestamp was dropped
-    Stream stream = testclass.open(6, "test0", "test1", null);
     int count = 0;
-    RID mid;
-
-    while (test_map != null)
+    
+    try
     {
-      test_map = stream.get_next(mid);
+      Stream stream = testclass.openStream(6, "test0", "test1", null);
+      RID mid = null;
 
-      if (test_map != null)
+      while (test_map != null)
       {
-        count += 1;
+        test_map = stream.getNext(mid);
 
-        if (test_map.getTimeStamp() == 0)
+        if (test_map != null)
         {
+          count += 1;
+
+          if (test_map.getTimeStamp() == 0)
+          {
             System.err.println("FAIL - Map with oldest timestamp was not dropped\n");
             status = FAIL;
+          }
         }
       }
+    }
+    catch (Exception e)
+    {
+      System.err.println("FAIL - Failed to get run stream\n");
+      status = FAIL;
     }
 
     if (count > 3)
