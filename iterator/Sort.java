@@ -695,7 +695,7 @@ public class Sort extends Iterator implements GlobalConst
     
     output_tuple = delete_min();
     if (output_tuple != null){
-      op_buf.tupleCopy(output_tuple);
+      op_buf.mapCopy(output_tuple);
       return op_buf; 
     }
     else 

@@ -27,16 +27,16 @@ public class Map implements GlobalConst{
      * Number of fields in this tuple
      */
 
-    private short ROW_LABEL_SIZE = 20;
-    private short COLUMN_LABEL_SIZE = 20;
-    private short TIMESTAMP_LABEL_SIZE = 4;
-    private short VALUE_LABEL_SIZE = 20;
+    static private short ROW_LABEL_SIZE = 20;
+    static private short COLUMN_LABEL_SIZE = 20;
+    static private short TIMESTAMP_LABEL_SIZE = 4;
+    static private short VALUE_LABEL_SIZE = 20;
 
 
     /**
      * Maximum size of any tuple
      */
-    public final int max_size = ROW_LABEL_SIZE + COLUMN_LABEL_SIZE
+    static public final int max_size = ROW_LABEL_SIZE + COLUMN_LABEL_SIZE
             +TIMESTAMP_LABEL_SIZE + VALUE_LABEL_SIZE;
 
 
