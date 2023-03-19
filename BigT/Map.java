@@ -76,6 +76,25 @@ public class Map implements  GlobalConst{
     }
 
     /*
+      Construct a map from another map through copy with given offset and len.
+    */
+    public Map(byte [] fromMap,int offset,int size) throws IOException {
+//        System.out.println("from byte array,"+fromMap+" , offset:"+offset+",size"+size);
+        this.map = fromMap;
+//        System.arraycopy(fromMap.map, fromMap.offset, this.map, 0, fromMap.size);
+        this.map_offset = offset;
+        // TODO throw error on wring size, on wrong size of byte array
+//        this.map_length = size;
+//        setFldCnt(Convert.getShortValue(offset,this.map));
+
+
+        System.out.println("Map created with offset: "+offset+" \n");
+        // [TODO] should the field offset be initialised with data?
+        // [todo] should the offset count be set here?
+    }
+
+
+    /*
       Returns the row label.
     */
     public java.lang.String getRowLabel()
