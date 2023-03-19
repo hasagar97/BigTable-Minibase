@@ -18,13 +18,13 @@ public class Stream {
   /*
     Initialize a stream of maps on bigtable.
   */
-  private BigTable bigTable;
+  private String bigTable;
   private int orderType;
-  private List<CondExpr> filters;
+  private CondExpr[] filters = new CondExpr[100];
   private boolean isOpen;
   private Sort sortedStream;
 
-  public Stream(BigTable bigTable, int orderType, 
+  public Stream(String bigTable, int orderType, 
   		java.lang.String rowFilter, 
   		java.lang.String columnFilter, 
   		java.lang.String valueFilter)
@@ -33,25 +33,28 @@ public class Stream {
     this.bigTable = bigTable;
     this.orderType = orderType;
 
+    List<CondExpr> filters = new ArrayList<CondExpr>();
     List<CondExpr> row = this.processFilter(rowFilter, 1);
     List<CondExpr> column = this.processFilter(columnFilter, 2);
     List<CondExpr> value = this.processFilter(valueFilter, 4);
 
-    this.filters.addAll(row);
-    this.filters.addAll(column);
-    this.filters.addAll(value);
+    filters.addAll(row);
+    filters.addAll(column);
+    filters.addAll(value);
 
     this.isOpen = true;
     try {
       AttrType attrtype = new AttrType(0);
       AttrType[] attrtypearr = {attrtype};
       short s1_sizes = 2048; 
-      short len_in = 2048;              
+      short len_in = 2048;      
+      short [] str_sizes = {2048};
       int n_out_flds = 1;
       FldSpec[] proj_list = null;
-      FileScan iterator = new FileScan(bigTable.getName(), attrtypearr, s1_sizes, len_in, n_out_flds, null, filters);
+      this.filters = filters.toArray(new CondExpr[100]);
+      
+      FileScan iterator = new FileScan(this.bigTable, attrtypearr, str_sizes, len_in, n_out_flds, null, this.filters);
 
-      short [] str_sizes = {2048};
       this.sortedStream = new Sort(attrtypearr, len_in, str_sizes, iterator, this.orderType, new TupleOrder(0), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
@@ -107,7 +110,7 @@ public class Stream {
         try {
             this.sortedStream.close();
             this.isOpen = false;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -116,16 +119,21 @@ public class Stream {
   /*
     Retrieve the next map in the stream.
   */
-  public BigT.Map getNext(MID mid)
+  public BigT.Map getNext()
   {
     if (!this.isOpen) {
       System.err.println("*** Error: Stream is closed ***");
       return null;
     }
-    BigT.Map nextMapItem = this.sortedStream.get_next();
-    if (nextMapItem == null) {
-      System.out.println("*** All items from DB fetched ***");
+    try {
+      BigT.Map nextMapItem = this.sortedStream.get_next();
+      if (nextMapItem == null) {
+        System.out.println("*** All items from DB fetched ***");
+      }
+      return nextMapItem;
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    return nextMapItem;
+    return null;
   }
 } // end of Stream

@@ -78,5 +78,11 @@ phase2:Phase2Test.java
 
 phase2Test: phase2
 	$(JAVA) tests.Phase2Test
+
+phase2Sorting: 
+	$(JAVAC) phase2SortingTest.java
+
+phase2SortingTest : phase2Sorting
+	$(JAVA) tests.phase2SortingTest
 	
 
