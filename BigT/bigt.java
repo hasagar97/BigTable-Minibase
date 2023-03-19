@@ -5,10 +5,10 @@ import java.lang.*;
 import java.util.*;
 
 import global.*;
-import BigT.*;
 import btree.*;
 import heap.*;
-import global.*;
+import iterator.*;
+import BigT.*;
 
 
 public class BigT extends Heapfile 
@@ -282,7 +282,7 @@ public class BigT extends Heapfile
 
       if (current_entry != null)
       {
-        current_mid = (RID) current_entry.data;
+        current_mid = ((LeafData) current_entry.data).getData();
         current_map = super.getMap(current_mid);
         timestamp_count += 1;
         oldest = current_mid;
@@ -291,7 +291,7 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           current_entry = scan.get_next();
-          current_mid = (RID) current_entry.data;
+          current_mid = ((LeafData) current_entry.data).getData();
           current_map = super.getMap(current_mid);
           timestamp_count += 1;
 
@@ -327,7 +327,7 @@ public class BigT extends Heapfile
             LeafRedistributeException, KeyTooLongException, RecordNotFoundException,
             DeleteFashionException, KeyNotMatchException, RedistributeException,
             IndexSearchException {
-      Map map = Map(mapPtr, 0);
+      Map map = new Map(mapPtr, 0);
 
       // Change insertRecord in heapfile to insertMap
       RID mid = super.insertMap(mapPtr);
@@ -368,10 +368,27 @@ public class BigT extends Heapfile
 
       if(updateSuccess) {
         // find affected attributes
-        Boolean isRowAffected = MapUtils.compareMapWithMap(currentmap, newmap, 0);
-        Boolean isColAffected = MapUtils.compareMapWithMap(currentmap, newmap, 1);
-        Boolean isTimestampAffected = MapUtils.compareMapWithMap(currentmap, newmap, 2);
-        Boolean isValueAffected = MapUtils.compareMapWithMap(currentmap, newmap, 3);
+        Boolean isRowAffected = false;
+        Boolean isColAffected = false;
+        Boolean isTimestampAffected = false;
+        Boolean isValueAffected = false;
+        
+        if (MapUtils.CompareMapWithMap(currentmap, newmap, 0) != 0)
+        {
+       	  isRowAffected = true;
+        }
+        if (MapUtils.CompareMapWithMap(currentmap, newmap, 1) != 0)
+        {
+       	  isColAffected = true;
+        }
+        if (MapUtils.CompareMapWithMap(currentmap, newmap, 2) != 0)
+        {
+       	  isTimestampAffected = true;
+        }
+        if (MapUtils.CompareMapWithMap(currentmap, newmap, 3) != 0)
+        {
+       	  isValueAffected = true;
+        }
 
         // delete mid from those indexes
         updateIndexFiles(currentmap, mid, 3, isRowAffected, isColAffected, isTimestampAffected, isValueAffected);
