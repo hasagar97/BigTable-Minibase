@@ -44,18 +44,16 @@ public class Stream {
 
     this.isOpen = true;
     try {
-      AttrType attrtype = new AttrType(0);
-      AttrType[] attrtypearr = {attrtype};
-      short s1_sizes = 2048; 
-      short len_in = 2048;      
-      short [] str_sizes = {2048};
-      int n_out_flds = 1;
+      AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
+      short len_in = 4;      
+      short [] str_sizes = {(short)25, (short)25, (short)25};
+      int n_out_flds = 4;
       FldSpec[] proj_list = null;
       this.filters = filters.toArray(new CondExpr[100]);
       
-      FileScan iterator = new FileScan(this.bigTable, attrtypearr, str_sizes, len_in, n_out_flds, null, this.filters);
+      FileScan iterator = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, null, this.filters);
 
-      this.sortedStream = new Sort(attrtypearr, len_in, str_sizes, iterator, this.orderType, new TupleOrder(0), len_in, 10);
+      this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
         e.printStackTrace();
@@ -121,7 +119,7 @@ public class Stream {
   */
   public BigT.Map getNext()
   {
-    if (!this.isOpen) {
+    if (!this.isOpen || this.sortedStream == null) {
       System.err.println("*** Error: Stream is closed ***");
       return null;
     }
