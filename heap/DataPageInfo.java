@@ -27,7 +27,7 @@ class DataPageInfo implements GlobalConst{
     
   /** auxiliary fields of DataPageInfo */
 
-  public static final int size = 12;// size of DataPageInfo object in bytes
+  public static final int size = 64;// size of DataPageInfo object in bytes
 
   private byte [] data;  // a data buffer
   
@@ -46,7 +46,7 @@ class DataPageInfo implements GlobalConst{
    */
   public DataPageInfo()
   {  
-    data = new byte[12]; // size of datapageinfo
+    data = new byte[64]; // size of datapageinfo
     int availspace = 0;
     recct =0;
     pageId.pid = INVALID_PAGE;
@@ -77,11 +77,11 @@ class DataPageInfo implements GlobalConst{
        throws InvalidMapSizeException, IOException
   {   
      // need check _atuple size == this.size ?otherwise, throw new exception
-    if (_atuple.getLength()!=12){
-      throw new InvalidMapSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
-    }
+//    if (_atuple.getLength()!=12){
+//      throw new InvalidMapSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
+//    }
 
-    else{
+//    else{
       data = _atuple.returnMapByteArray();
       offset = _atuple.getOffset();
       
@@ -90,7 +90,7 @@ class DataPageInfo implements GlobalConst{
       pageId = new PageId();
       pageId.pid = Convert.getIntValue(offset+8, data);
       
-    }
+//    }
   }
   
   

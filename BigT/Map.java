@@ -254,4 +254,259 @@ public class Map implements GlobalConst{
         this.map_offset = 0;
         return this;
     }
+
+
+
+    /**
+     * Convert this field into integer
+     *
+     * @param fldNo the field number
+     * @return    the converted integer if success
+     *
+     * @exception   IOException I/O errors
+     * @exception FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public int getIntFld(int fldNo)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("getIntFld(int fldNo)");
+//        int val;
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            val = Convert.getIntValue(fldOffset[fldNo -1], map);
+//            return val;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return 0;
+    }
+
+    /**
+     * Convert this field in to float
+     *
+     * @param    fldNo   the field number
+     * @return           the converted float number  if success
+     *
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public float getFloFld(int fldNo)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("getFloFld(int fldNo)");
+//        float val;
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            val = Convert.getFloValue(fldOffset[fldNo -1], map);
+//            return val;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return (float) 0.0;
+    }
+
+
+    /**
+     * Convert this field into String
+     *
+     * @param    fldNo   the field number
+     * @return           the converted string if success
+     *
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public String getStrFld(int fldNo)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("getStrFld(int fldNo)");
+//        String val;
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            val = Convert.getStrValue(fldOffset[fldNo -1], map,
+//                    fldOffset[fldNo] - fldOffset[fldNo -1]); //strlen+2
+//            return val;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return "Dummy String";
+    }
+
+    /**
+     * Convert this field into a character
+     *
+     * @param    fldNo   the field number
+     * @return           the character if success
+     *
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public char getCharFld(int fldNo)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("getCharFld(int fldNo)");
+//        char val;
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            val = Convert.getCharValue(fldOffset[fldNo -1], map);
+//            return val;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return 'c';
+
+    }
+
+    /**
+     * Set this field to integer value
+     *
+     * @param fldNo the field number
+     * @param val the integer value
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public Map setIntFld(int fldNo, int val)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("setIntFld(int fldNo, int val)");
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            Convert.setIntValue (val, fldOffset[fldNo -1], map);
+//            return this;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return this;
+    }
+
+    /**
+     * Set this field to float value
+     *
+     * @param     fldNo   the field number
+     * @param     val     the float value
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public Map setFloFld(int fldNo, float val)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+//        //System.out.println("setFloFld(int fldNo, float val)");
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            Convert.setFloValue (val, fldOffset[fldNo -1], map);
+//            return this;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return this;
+
+    }
+
+    /**
+     * Set this field to String value
+     *
+     * @param     fldNo   the field number
+     * @param     val     the string value
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public Map setStrFld(int fldNo, String val)
+            throws IOException, FieldNumberOutOfBoundException
+    {
+        //System.out.println("setStrFld(int fldNo, String val)");
+//        if ( (fldNo > 0) && (fldNo <= fldCnt))
+//        {
+//            Convert.setStrValue (val, fldOffset[fldNo -1], map);
+//            return this;
+//        }
+//        else
+//            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+        return this;
+    }
+
+
+    public void setHdr (short numFlds,  AttrType types[], short strSizes[])
+            throws IOException, InvalidTypeException, InvalidMapSizeException
+    {
+//        //System.out.println("setHdr (short numFlds,  AttrType types[], short strSizes[])");
+//        if((numFlds +2)*2 > max_size)
+//            throw new InvalidMapSizeException(null, "TUPLE: TUPLE_TOOBIG_ERROR");
+//
+//        fldCnt = numFlds;
+//        Convert.setShortValue(numFlds, map_offset, map);
+//        fldOffset = new short[numFlds+1];
+//        int pos = map_offset+2;  // start position for fldOffset[]
+//
+//        //sizeof short =2  +2: array siaze = numFlds +1 (0 - numFilds) and
+//        //another 1 for fldCnt
+//        fldOffset[0] = (short) ((numFlds +2) * 2 + map_offset);
+//
+//        Convert.setShortValue(fldOffset[0], pos, map);
+//        pos +=2;
+//        short strCount =0;
+//        short incr;
+//        int i;
+//
+//        for (i=1; i<numFlds; i++)
+//        {
+//            switch(types[i-1].attrType) {
+//
+//                case AttrType.attrInteger:
+//                    incr = 4;
+//                    break;
+//
+//                case AttrType.attrReal:
+//                    incr =4;
+//                    break;
+//
+//                case AttrType.attrString:
+//                    incr = (short) (strSizes[strCount] +2);  //strlen in bytes = strlen +2
+//                    strCount++;
+//                    break;
+//
+//                default:
+//                    throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
+//            }
+//            fldOffset[i]  = (short) (fldOffset[i-1] + incr);
+//            Convert.setShortValue(fldOffset[i], pos, map);
+//            pos +=2;
+//
+//        }
+//        switch(types[numFlds -1].attrType) {
+//
+//            case AttrType.attrInteger:
+//                incr = 4;
+//                break;
+//
+//            case AttrType.attrReal:
+//                incr =4;
+//                break;
+//
+//            case AttrType.attrString:
+//                incr =(short) ( strSizes[strCount] +2);  //strlen in bytes = strlen +2
+//                break;
+//
+//            default:
+//                throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
+//        }
+//
+//        fldOffset[numFlds] = (short) (fldOffset[i-1] + incr);
+//        Convert.setShortValue(fldOffset[numFlds], pos, map);
+//
+//        map_length = fldOffset[numFlds] - map_offset;
+//
+//        if(map_length > max_size)
+//            throw new InvalidMapSizeException(null, "TUPLE: TUPLE_TOOBIG_ERROR");
+        return;
+    }
+
+
+
+
 } // end of Map
