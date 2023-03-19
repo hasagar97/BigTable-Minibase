@@ -203,7 +203,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
 
 // INSERT INTO DATAFILE
-	heap.insertRecord(tuple.getMapByteArray());
+	heap.insertMap(tuple.getMapByteArray());
 
 // NOW INSERT INTO EACH INDEX FOR RELATION
 

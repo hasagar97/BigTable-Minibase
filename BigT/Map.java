@@ -3,15 +3,10 @@ package BigT;
 import java.io.*;
 import java.lang.*;
 import global.*;
-import BigT.*;
-import iterator.CorruptedFieldNo;
+import iterator.*;
+import heap.*;
 
-
-public class Map implements  GlobalConst{
-
-
-
-
+public class Map implements GlobalConst{
     /**
      * a byte array to hold data, along with it's own offset and size
      */

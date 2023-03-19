@@ -175,7 +175,7 @@ class IndexDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -646,7 +646,7 @@ class IndexDriver extends TestDriver
       }
 
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;

@@ -178,7 +178,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -337,7 +337,7 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -511,7 +511,7 @@ class SORTDriver extends TestDriver
       }
 
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;
@@ -789,8 +789,8 @@ class SORTDriver extends TestDriver
       }
       
       try {
-	rid1 = f1.insertRecord(t.returnMapByteArray());
-	rid2 = f2.insertRecord(t.returnMapByteArray());
+	rid1 = f1.insertMap(t.returnMapByteArray());
+	rid2 = f2.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	status = FAIL;

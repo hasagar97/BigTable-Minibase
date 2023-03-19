@@ -213,7 +213,7 @@ class JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -284,7 +284,7 @@ class JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -354,7 +354,7 @@ class JoinsDriver implements GlobalConst {
       }      
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");

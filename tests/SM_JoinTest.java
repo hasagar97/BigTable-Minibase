@@ -211,7 +211,7 @@ class SM_JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -282,7 +282,7 @@ class SM_JoinsDriver implements GlobalConst {
       }
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -352,7 +352,7 @@ class SM_JoinsDriver implements GlobalConst {
       }      
       
       try {
-	rid = f.insertRecord(t.returnMapByteArray());
+	rid = f.insertMap(t.returnMapByteArray());
       }
       catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -569,7 +569,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     FileScan am = null;
     try {
-      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes, 
+      am  = new FileScan("SM_Sailors.in", Stypes, Ssizes,
 				  (short)4, (short)4,
 				  Sprojection, null);
     }
@@ -598,7 +598,7 @@ class SM_JoinsDriver implements GlobalConst {
  
     FileScan am2 = null;
     try {
-      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes, 
+      am2 = new FileScan("SM_Reserves.in", Rtypes, Rsizes,
 				  (short)3, (short) 3,
 				  Rprojection, null);
     }
