@@ -1,2 +1,3 @@
 tests/*.db
 **/*.class
+jdk.txt
