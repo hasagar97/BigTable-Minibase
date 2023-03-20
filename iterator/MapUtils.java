@@ -86,53 +86,54 @@ public class MapUtils
 										BigT.Map t2, int t2_fld_no)
 			throws IOException,
 			UnknowAttrType,
-			TupleUtilsException
-	{
-		int   t1_i,  t2_i;
-		float t1_r,  t2_r;
-		String t1_s, t2_s;
-
-		switch (fldType.attrType)
-		{
-			case AttrType.attrInteger:                // Compare two integers.
-				try {
-					t1_i = t1.getIntFld(t1_fld_no);
-					t2_i = t2.getIntFld(t2_fld_no);
-				}catch (FieldNumberOutOfBoundException e){
-					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-				}
-				if (t1_i == t2_i) return  0;
-				if (t1_i <  t2_i) return -1;
-				if (t1_i >  t2_i) return  1;
-
-			case AttrType.attrReal:                // Compare two floats
-				try {
-					t1_r = t1.getFloFld(t1_fld_no);
-					t2_r = t2.getFloFld(t2_fld_no);
-				}catch (FieldNumberOutOfBoundException e){
-					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-				}
-				if (t1_r == t2_r) return  0;
-				if (t1_r <  t2_r) return -1;
-				if (t1_r >  t2_r) return  1;
-
-			case AttrType.attrString:                // Compare two strings
-				try {
-					t1_s = t1.getStrFld(t1_fld_no);
-					t2_s = t2.getStrFld(t2_fld_no);
-				}catch (FieldNumberOutOfBoundException e){
-					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-				}
-
-				// Now handle the special case that is posed by the max_values for strings...
-				if(t1_s.compareTo( t2_s)>0)return 1;
-				if (t1_s.compareTo( t2_s)<0)return -1;
-				return 0;
-			default:
-
-				throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
-
-		}
+			TupleUtilsException, CorruptedFieldNo {
+		if(t1_fld_no != t2_fld_no) System.out.println("t1 fieldNo not equal to t2_filed nube rin CompareMapWithMap");
+		return CompareMapWithMap(t1,t2,t1_fld_no);
+//		int   t1_i,  t2_i;
+//		float t1_r,  t2_r;
+//		String t1_s, t2_s;
+//
+//		switch (fldType.attrType)
+//		{
+//			case AttrType.attrInteger:                // Compare two integers.
+//				try {
+//					t1_i = t1.getIntFld(t1_fld_no);
+//					t2_i = t2.getIntFld(t2_fld_no);
+//				}catch (FieldNumberOutOfBoundException e){
+//					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+//				}
+//				if (t1_i == t2_i) return  0;
+//				if (t1_i <  t2_i) return -1;
+//				if (t1_i >  t2_i) return  1;
+//
+//			case AttrType.attrReal:                // Compare two floats
+//				try {
+//					t1_r = t1.getFloFld(t1_fld_no);
+//					t2_r = t2.getFloFld(t2_fld_no);
+//				}catch (FieldNumberOutOfBoundException e){
+//					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+//				}
+//				if (t1_r == t2_r) return  0;
+//				if (t1_r <  t2_r) return -1;
+//				if (t1_r >  t2_r) return  1;
+//
+//			case AttrType.attrString:                // Compare two strings
+//				try {
+//					t1_s = t1.getStrFld(t1_fld_no);
+//					t2_s = t2.getStrFld(t2_fld_no);
+//				}catch (FieldNumberOutOfBoundException e){
+//					throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+//				}
+//
+//				// Now handle the special case that is posed by the max_values for strings...
+//				if(t1_s.compareTo( t2_s)>0)return 1;
+//				if (t1_s.compareTo( t2_s)<0)return -1;
+//				return 0;
+//			default:
+//
+//				throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
+//
+//		}
 	}
 
   /**
@@ -153,10 +154,9 @@ public class MapUtils
   public static int CompareTupleWithValue(AttrType fldType,
 										  BigT.Map t1, int t1_fld_no,
 										  BigT.Map value)
-    throws IOException,
-	   UnknowAttrType,
-	   TupleUtilsException
-    {
+		  throws IOException,
+		  UnknowAttrType,
+		  TupleUtilsException, CorruptedFieldNo {
       return CompareMapWithMap(fldType, t1, t1_fld_no, value, t1_fld_no);
     }
   
@@ -174,8 +174,7 @@ public class MapUtils
    */            
   
   public static boolean Equal(BigT.Map t1, BigT.Map t2, AttrType types[], int len)
-    throws IOException,UnknowAttrType,TupleUtilsException
-    {
+		  throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
       int i;
       
       for (i = 1; i <= len; i++)

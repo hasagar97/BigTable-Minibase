@@ -56,8 +56,7 @@ public class pnodeSplayPQ extends pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */
-  public void enq(pnode item) throws IOException, UnknowAttrType, TupleUtilsException 
-  {
+  public void enq(pnode item) throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
     count ++;
     pnodeSplayNode newnode = new pnodeSplayNode(item);
     pnodeSplayNode t = root;
