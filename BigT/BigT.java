@@ -55,7 +55,8 @@ public class BigT extends Heapfile
           m_indexfile2 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
         case 5:
-          // Our new index strategy
+          // one btree to index timestamp and value (combined key)
+          m_indexfile1 = new BTreeFile(name + "_timestamp_val_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
       }
     }
@@ -343,7 +344,16 @@ public class BigT extends Heapfile
           }
           break;
         case 5:
-          // Our new index strategy
+          // one btree to index timestamp + value combined labels
+          key = new StringKey(map.getTimeStamp() + map.getValue());
+          if(operation == 0) m_indexfile1.insert(key, mid);
+          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          else {
+            if(isRowAffected) {
+              if(operation == 2) m_indexfile1.insert(key, mid);
+              else if(operation == 3) m_indexfile1.Delete(key, mid);
+            }
+          }
           break;
       }
     }
