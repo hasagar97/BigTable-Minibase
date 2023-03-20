@@ -39,11 +39,11 @@ public class phase2SortingTest {
         }
         
 
-        Stream s = new Stream("first_table5", 1, "[0,3]", "*", "*");
+        Stream s = new Stream((BigT) f, , "[0,3]", "*", "*");
 
         while (true) {
             try {
-                Map item = s.getNext();
+                Map item = s.getNext(10);
                 if(item == null) break;
                 System.out.println("In Scan");
                 item.print();
