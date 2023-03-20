@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -21,9 +24,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1b578b2c-78df-4744-acb5-074796781d6d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BigT/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Map.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BigT/Stream.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Stream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dboperations/Batchinsert.java" beforeDir="false" afterPath="$PROJECT_DIR$/dboperations/Batchinsert.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dboperations/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/dboperations/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global/Convert.java" beforeDir="false" afterPath="$PROJECT_DIR$/global/Convert.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/phase2SortingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/phase2SortingTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,10 +95,11 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="93" y="93" width="1350" height="630" key="DiffContextDialog" timestamp="1679211267906">
-      <screen x="0" y="0" width="1536" height="816" />
+    <state x="116" y="118" width="1688" height="797" key="DiffContextDialog" timestamp="1679270688858">
+      <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="93" y="93" width="1350" height="630" key="DiffContextDialog/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679211267906" />
+    <state x="116" y="118" width="1688" height="797" key="DiffContextDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1679270688858" />
     <state width="1493" height="258" key="GridCell.Tab.0.bottom" timestamp="1679252453916">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
@@ -112,9 +116,10 @@
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state width="1493" height="258" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
-    <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup" timestamp="1679209387693">
-      <screen x="-1920" y="0" width="1920" height="1032" />
+    <state x="493" y="134" width="672" height="535" key="search.everywhere.popup" timestamp="1679271841651">
+      <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@-1920.0.1920.1032" timestamp="1679209387693" />
+    <state x="493" y="134" width="672" height="535" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679271841651" />
   </component>
 </project>

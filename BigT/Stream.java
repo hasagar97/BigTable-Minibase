@@ -21,7 +21,7 @@ public class Stream {
   private int orderType;
   private CondExpr[] filters = new CondExpr[100];
   private boolean isOpen;
-  private FileScan sortedStream;
+  private Sort sortedStream;
 
   public Stream(String bigTable, int orderType, 
   		java.lang.String rowFilter, 
@@ -57,9 +57,9 @@ public class Stream {
       FldSpec[] proj_list = null;
       this.filters = filters.toArray(new CondExpr[100]);
       
-      this.sortedStream = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, projection, this.filters);
+      FileScan iterator = new FileScan(this.bigTable, attrTypes, str_sizes, len_in, n_out_flds, projection, this.filters);
 
-      // this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
+       this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, this.orderType, new TupleOrder(TupleOrder.Ascending), len_in, 10);
     } catch (Exception e) {
         System.err.println("*** Error opening scan ***");
         e.printStackTrace();

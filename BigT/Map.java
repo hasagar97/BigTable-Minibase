@@ -83,7 +83,7 @@ public class Map implements GlobalConst{
     */
     public Map(byte [] fromMap,int offset,int size) {
         this.map = new byte[max_size];
-        System.out.println("offset: "+offset+" , size:"+size+ " length og byte array:"+fromMap.length);
+//        System.out.println("offset: "+offset+" , size:"+size+ " length og byte array:"+fromMap.length);
         System.arraycopy(fromMap, offset, this.map, 0,  Math.min(max_size,fromMap.length-offset));
         this.map_offset = 0;
         // this.map = fromMap;
@@ -96,7 +96,7 @@ public class Map implements GlobalConst{
       Returns the row label.
     */
     public java.lang.String getRowLabel() throws IOException {
-        return Convert.getStrValue(map_offset,map,ROW_LABEL_SIZE);
+        return Convert.getMapStrValue(map_offset,map,ROW_LABEL_SIZE);
 //        return "";
     }
 
@@ -104,7 +104,7 @@ public class Map implements GlobalConst{
       Returns the column label.
     */
     public java.lang.String getColumnLabel() throws IOException {
-        return Convert.getStrValue(map_offset+ROW_LABEL_SIZE,map,COLUMN_LABEL_SIZE);
+        return Convert.getMapStrValue(map_offset+ROW_LABEL_SIZE,map,COLUMN_LABEL_SIZE);
 //        return "";
     }
 
@@ -139,7 +139,7 @@ public class Map implements GlobalConst{
       Returns the value.
     */
     public java.lang.String getValue() throws IOException {
-        return Convert.getStrValue( map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE+TIMESTAMP_LABEL_SIZE,map,VALUE_LABEL_SIZE);
+        return Convert.getMapStrValue( map_offset+ROW_LABEL_SIZE+COLUMN_LABEL_SIZE+TIMESTAMP_LABEL_SIZE,map,VALUE_LABEL_SIZE);
     }
 
     /*
@@ -342,13 +342,15 @@ public class Map implements GlobalConst{
     public String getStrFld(int fldNo)
             throws IOException, FieldNumberOutOfBoundException
     {
-       System.out.println("getStrFld(int fldNo)");
-       System.out.println("first field offset "+fldOffset[fldNo -1]+" map"+ map +" size  "+ (fldOffset[fldNo] - fldOffset[fldNo -1]) + " map length " +map.length);
+//       System.out.println("getStrFld(int fldNo) "+fldNo);
+//       System.out.println("first field offset "+fldOffset[fldNo -1]+" map"+ map +" size  "+ (fldOffset[fldNo] - fldOffset[fldNo -1]) + " map length " +map.length);
        String val;
        if ( (fldNo > 0) && (fldNo <= fldCnt))
        {
-           val = Convert.getMapStrValue(0, map,
-                   20); //strlen+2
+           int length = VALUE_LABEL_SIZE;
+           if(fldNo !=fldCnt) length = fldOffset[fldNo] - fldOffset[fldNo -1];
+           val = Convert.getMapStrValue(fldOffset[fldNo -1], map,
+                   length); //strlen+2
            return val;
        }
        else
@@ -435,8 +437,8 @@ public class Map implements GlobalConst{
     public Map setStrFld(int fldNo, String val)
             throws IOException, FieldNumberOutOfBoundException
     {
-        System.out.println("setStrFld(int fldNo, String val) fldno :"+fldNo+ "val:" + val);
-        System.out.println("Map size:"+map.length+" offset : "+map_offset+ "field offset"+ fldOffset[fldNo -1]);
+//        System.out.println("setStrFld(int fldNo, String val) fldno :"+fldNo+ "val:" + val);
+//        System.out.println("Map size:"+map.length+" offset : "+map_offset+ " field offset"+ fldOffset[fldNo -1]);
        if ( (fldNo > 0) && (fldNo <= fldCnt))
        {
            Convert.setStrMapValue (val, fldOffset[fldNo -1], map);
