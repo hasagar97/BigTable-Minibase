@@ -477,7 +477,7 @@ public class BigT extends Heapfile
           // Change deleteRecord in heapfile to deleteMap
           Boolean didDelete = super.deleteMap(oldestMapID);
           System.out.println("Map deleted in heap = " + didDelete);
-          SystemDefs.JavabaseBM.softFlushAll();
+          //SystemDefs.JavabaseBM.softFlushAll();
         }
 //        System.out.println("Printing BTree");
 //        printBTreeKey();
