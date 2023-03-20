@@ -19,13 +19,13 @@ public class phase2SortingTest {
         String dbpath = "phase2.test3.db";
         SystemDefs sysdef = new SystemDefs( dbpath, 5000 ,5000,"Clock");
         Heapfile f = new Heapfile("first_table5");
-        byte[] data = "Hello World 3!".getBytes();
-        byte[] data1 = "Hello World 2!".getBytes();
-        byte[] data2 = "Hello World 4!".getBytes();
-        byte[] data3 = "Hello World 3!".getBytes();
-        byte[] data4 = "Hello World 4!".getBytes();
-        byte[] data5 = "Hello World 5!".getBytes();
-        byte[] data6 = "Hello World 6!".getBytes();
+        byte[] data = "3".getBytes();
+        byte[] data1 = "2".getBytes();
+        byte[] data2 = "4".getBytes();
+        byte[] data3 = "3".getBytes();
+        byte[] data4 = "4".getBytes();
+        byte[] data5 = "5".getBytes();
+        byte[] data6 = "6".getBytes();
         try {
             f.insertMap(data);
             f.insertMap(data1);

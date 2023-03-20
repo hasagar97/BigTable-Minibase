@@ -93,4 +93,10 @@ bigtTest:bigtTest.java
 bigttest: bigtTest
 	$(JAVA) tests.bigtTest
 
+phase2basic:
+	$(JAVAC) Phase2Basic.java
+
+Phase2Basic: phase2basic
+	$(JAVA) tests.Phase2Basic
+
 

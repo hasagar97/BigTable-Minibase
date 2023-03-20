@@ -279,18 +279,19 @@ public class Convert{
   /* creates a new data output stream to write data to
    * underlying output stream
    */
- 
+
    OutputStream out = new ByteArrayOutputStream();
    DataOutputStream outstr = new DataOutputStream (out);
-   
+
    // write the value to the output stream
-   
+
    outstr.writeUTF(value);
-   // creates a byte array with this output stream size and the 
+   // creates a byte array with this output stream size and the
    // valid contents of the buffer have been copied into it
    byte []B = ((ByteArrayOutputStream) out).toByteArray();
-   
-   int sz =Math.min(outstr.size(), 64);  
+
+   int sz =Math.min(outstr.size(), 64);
+//   System.out.println("the size for array copy in setStrValue sz:"+sz);
    // copies the contents of this byte array into data[]
    System.arraycopy (Arrays.copyOfRange(B, 0, 64), 0, data, position, sz);
    
