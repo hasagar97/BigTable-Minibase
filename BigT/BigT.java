@@ -407,6 +407,7 @@ public class BigT extends Heapfile
           current_map = super.getMap(current_mid);
         }
         catch (Exception e) {
+          e.printStackTrace();
           System.err.println("Failed to getMap from heapfile in checkDropMap\n");
         }
         
@@ -417,7 +418,7 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           try {
-            System.out.println("MAP = " + current_map.getValue());
+//            System.out.println("MAP = " + current_map.getValue());
             current_entry = scan.get_next();
 
             if(current_entry == null) break;
@@ -425,7 +426,7 @@ public class BigT extends Heapfile
             current_map = super.getMap(current_mid);
             timestamp_count += 1;
           
-            if (current_map.getTimeStamp() < oldest_map.getTimeStamp())
+            if (oldest_map == null || current_map.getTimeStamp() < oldest_map.getTimeStamp())
             {
               oldest = current_mid;
             }
@@ -468,6 +469,7 @@ public class BigT extends Heapfile
 
         // Change insertRecord in heapfile to insertMap
         mid = super.insertMap(mapPtr);
+        System.out.println("MID =  " + mid.pageNo.pid + " " + mid.slotNo);
 
         // Index the Map
         updateIndexFiles(map, mid, 0);

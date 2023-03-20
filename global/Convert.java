@@ -136,10 +136,10 @@ public class Convert{
     // Combine the length bytes and the UTF-8 bytes into a single byte array
       byte[] c_LengthBytes = new byte[lengthBytes.length + data.length];
       System.arraycopy(lengthBytes, 0, c_LengthBytes, 0, lengthBytes.length);
-      System.arraycopy(data, 0, c_LengthBytes, lengthBytes.length, data.length);
+      System.arraycopy(data, position+2, c_LengthBytes, lengthBytes.length, length-2);
 
       DataInputStream dis = new DataInputStream(new ByteArrayInputStream(c_LengthBytes));
-      String readStr = dis.readUTF();
+      String readStr = dis.readUTF().trim();
       return readStr;
       }catch(Exception e){
           System.out.println("Error!!!!");

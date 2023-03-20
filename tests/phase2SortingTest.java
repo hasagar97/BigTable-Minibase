@@ -39,17 +39,17 @@ public class phase2SortingTest {
         }
         
 
-        Stream s = new Stream((BigT) f, , "[0,3]", "*", "*");
-
-        while (true) {
-            try {
-                Map item = s.getNext(10);
-                if(item == null) break;
-                System.out.println("In Scan");
-                item.print();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        Stream s = new Stream((BigT) f, 1, "[0,3]", "*", "*");
+//
+//        while (true) {
+//            try {
+//                Map item = s.getNext();
+//                if(item == null) break;
+//                System.out.println("In Scan");
+//                item.print();
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 }

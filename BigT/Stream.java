@@ -23,8 +23,8 @@ public class Stream {
           FileScanMap iterator = new FileScanMap(bigtable);
           AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
           short len_in = 4;      
-          short [] str_sizes = {(short)20, (short)20, (short)20};
-          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 0, new TupleOrder(TupleOrder.Ascending), len_in, 10);
+          short [] str_sizes = {(short)20, (short)20, (short)4, (short)20};
+          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 1, new TupleOrder(TupleOrder.Ascending), len_in, 10);
         } catch (Exception e) {
           System.out.println(e);
         }
@@ -51,6 +51,7 @@ public class Stream {
           try {
             currentMap = this.sortedStream.get_next();            
           } catch (Exception e) {
+              e.printStackTrace();
             System.out.println(e);
           }
             if(currentMap == null) return null;
