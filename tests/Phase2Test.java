@@ -41,8 +41,19 @@ public class Phase2Test {
 
         
         BigT bigtable = new BigT("test2db_3", 3);
+	System.out.println("Row count: " + bigtable.getRowCnt());
+	System.out.println("Column count: " + bigtable.getColumnCnt());
+        Map map = new Map();
+        map.setRowLabel("Netherlan");
+        map.setColumnLabel("Test");
+        map.setTimeStamp(57);
+        map.setValue("505");
+        bigtable.insertMap(map.returnMapByteArray());
+        System.out.println("Row count: " + bigtable.getRowCnt());
+	System.out.println("Column count: " + bigtable.getColumnCnt());
 	bigtable.deleteBigt();
-        update_test(bigtable);
+	System.out.println("Row count: " + bigtable.getRowCnt());
+	System.out.println("Column count: " + bigtable.getColumnCnt());
 //
         System.out.println("Printing BTree Index");
         BTreeFile bTreeFile = new BTreeFile("test2db_3_row_col_index", 0, 20, 1);
