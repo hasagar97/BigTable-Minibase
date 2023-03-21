@@ -27,6 +27,7 @@ public class Shell {
         BigT bigtable = null;
         Boolean running = true;
         while(running) {
+            System.out.println();
             System.out.println("Enter Command: (BatchInsert) / (Query) / (exit)");
             String command = input.nextLine();
             String[] words = command.trim().split(" ");

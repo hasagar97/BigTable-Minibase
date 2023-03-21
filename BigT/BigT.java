@@ -384,7 +384,7 @@ public class BigT extends Heapfile
       }
       
       try {
-        System.out.println(key);
+        // System.out.println(key);
         scan = m_defaultindex.new_scan(key, key);
       }
       catch (Exception e) {
@@ -469,7 +469,7 @@ public class BigT extends Heapfile
 
         // Change insertRecord in heapfile to insertMap
         mid = super.insertMap(mapPtr);
-        System.out.println("MID =  " + mid.pageNo.pid + " " + mid.slotNo);
+        // System.out.println("MID =  " + mid.pageNo.pid + " " + mid.slotNo);
 
         // Index the Map
         updateIndexFiles(map, mid, 0);
@@ -478,7 +478,7 @@ public class BigT extends Heapfile
         RID oldestMapID = checkDropMap(map, mid);
 
         if(oldestMapID != null) {
-          System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
+          // System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
           Map oldestMap = super.getMap(oldestMapID);
 
           updateIndexFiles(oldestMap, oldestMapID, 1);

@@ -18,7 +18,7 @@ public class Phase2Basic {
 //        System.out.println(mp.getRowLabel());
         mp.print();
         mp.setColumnLabel("cols string");
-        System.out.println(mp.getColumnLabel());
+        // System.out.println(mp.getColumnLabel());
 //        mp.setTimeStamp(55);
 //        System.out.println(mp.getTimeStamp());
 //        mp.setValue("value string");

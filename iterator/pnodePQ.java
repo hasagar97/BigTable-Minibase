@@ -74,7 +74,13 @@ public abstract class pnodePQ
    */
   public int pnodeCMP(pnode a, pnode b)
           throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
-    int ans = MapUtils.CompareMapWithMap(fld_type, a.tuple, fld_no, b.tuple, fld_no);
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, fld_no, b.tuple);
+    return ans;
+  }
+
+  public int pnodeCMP(pnode a, pnode b, int orderType)
+          throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, orderType, b.tuple);
     return ans;
   }
 

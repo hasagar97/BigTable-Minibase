@@ -37,23 +37,27 @@ public class MapUtils
 	public static int CompareMapWithMap(BigT.Map t1,BigT.Map t2,int fieldNo)
 			throws IOException, CorruptedFieldNo
 	{
+    int result = -1;
 		if(fieldNo <0 || fieldNo > (MAX_FIELD_COUNT -1)){
 			throw new ConnectException("Field number not in range [0,"+(MAX_FIELD_COUNT -1));
 		}
 		else if(fieldNo == 0){
-			return t1.getRowLabel().compareTo(t2.getRowLabel());
+			result =  t1.getRowLabel().compareTo(t2.getRowLabel());
 		}
 		else if(fieldNo == 1){
-			return t1.getColumnLabel().compareTo(t2.getColumnLabel());
+			result = t1.getColumnLabel().compareTo(t2.getColumnLabel());
 		}
 		else if(fieldNo == 2){
-			return Integer.compare(t1.getTimeStamp(),t2.getTimeStamp());
+			result = Integer.compare(t1.getTimeStamp(),t2.getTimeStamp());
 		}
 		else if(fieldNo == 3){
 			// Special handling for value
-			return Integer.compare(t1.getValue().compareTo(t2.getValue()),0);
+			result = Integer.compare(t1.getValue().compareTo(t2.getValue()),0);
 		}
-		return -1;
+    if(result<0) result = -1;
+    else if(result>0) result = 1;
+
+		return result;
 	}
 
 
@@ -80,6 +84,50 @@ public class MapUtils
 	 */
 
 
+    /**
+     * This function compares a tuple with another tuple in respective field, and
+     *  returns:
+     *
+     *    0        if the two are equal,
+     *    1        if the tuple is greater,
+     *   -1        if the tuple is smaller,
+     *
+     *@param    fldType   the type of the field being compared.
+     *@param    t1        one tuple.
+     *@param    t2        another tuple.
+     *@param    order_priority the field numbers in the tuples to be compared.
+     *@exception UnknowAttrType don't know the attribute type
+     *@exception IOException some I/O fault
+     *@exception TupleUtilsException exception from this class
+     *@return   0        if the two are equal,
+     *          1        if the tuple is greater,
+     *         -1        if the tuple is smaller,
+     */
+
+
+
+    public static int CompareMapWithMap2(AttrType fldType,
+                                        BigT.Map t1, int[] order_priority,
+                                        BigT.Map t2)
+            throws IOException,
+            UnknowAttrType,
+            TupleUtilsException, CorruptedFieldNo {
+        // System.out.println("****************");
+        int[] res = new int[order_priority.length];
+        // return CompareMapWithMap(t1,t2,3);
+
+//        if (t1_fld_no != t2_fld_no) System.out.println("t1 fieldNo not equal to t2_filed nube rin CompareMapWithMap");
+        for(int i=0;i< order_priority.length ; i++){
+            int x = CompareMapWithMap(t1,t2,order_priority[i]);
+            // System.out.print("Res["+i+"] value is: "+x);
+            if(x!=0){
+                // System.out.println("found difference at:"+i+" at field index "+order_priority[i]+"\n****************");
+                return x;
+            }
+                
+        }
+        return 0;
+    }
 
 	public static int CompareMapWithMap(AttrType fldType,
 										BigT.Map t1, int t1_fld_no,
@@ -160,6 +208,41 @@ public class MapUtils
       return CompareMapWithMap(fldType, t1, t1_fld_no, value, t1_fld_no);
     }
   
+	public static int CompareTupleWithValueSort(AttrType fldType,
+										  BigT.Map t1, int order_type,
+										  BigT.Map value)
+		  throws IOException,
+		  UnknowAttrType,
+		  TupleUtilsException, CorruptedFieldNo {
+        // System.out.println("order Type is :"+order_type);
+			int [] order_priority;
+			switch (order_type) {
+				case 1:
+					order_priority = new int[]{0,1,2};
+					break;
+				case 2:
+					order_priority = new int[]{1,0,2};
+					break;
+				case 3:
+					order_priority = new int[]{0,2};
+					break;
+				case 4:
+					order_priority = new int[]{1,2};
+					break;
+				case 6:
+					order_priority = new int[]{2};
+					break;
+				default:
+					order_priority = new int[]{0,1,2};
+			}
+		
+      // for(int i=0;i<order_priority.length;i++){
+      //   System.out.println("order_priority: "+order_priority[i]);
+      // }
+      // System.out.print("\n");
+      // return CompareMapWithMap( t1, value, order_type);
+      return CompareMapWithMap2(fldType, t1, order_priority,value);
+    }
   /**
    *This function Compares two Tuple inn all fields 
    * @param t1 the first tuple

@@ -212,8 +212,8 @@ public class Map implements GlobalConst{
       Print out the map.
     */
     public void print() throws IOException {
-        System.out.println("HEREEEE {row_label:"+getRowLabel() + " ,column_label" + getColumnLabel() + " ,timestamp"
-                + getTimeStamp() + " ,value:" + getValue()+"}");
+        System.out.println("{ row_label: "+getRowLabel() + ", column_label: " + getColumnLabel() + ", timestamp: "
+                + getTimeStamp() + ", value: " + getValue()+" }");
     }
 
     /*

@@ -34,6 +34,7 @@ public class Sort extends Iterator implements GlobalConst
   private int         max_elems_in_heap;
   private int         sortFldLen;
   private int         tuple_size;
+  private int         odr_type = 1;
   
   private pnodeSplayPQ Q;
   private Heapfile[]   temp_files; 
@@ -144,8 +145,8 @@ public class Sort extends Iterator implements GlobalConst
   {
     BigT.Map tuple;
     pnode cur_node;
-    pnodeSplayPQ Q1 = new pnodeSplayPQ(_sort_fld, sortFldType, order);
-    pnodeSplayPQ Q2 = new pnodeSplayPQ(_sort_fld, sortFldType, order);
+    pnodeSplayPQ Q1 = new pnodeSplayPQ(odr_type, sortFldType, order);
+    pnodeSplayPQ Q2 = new pnodeSplayPQ(odr_type, sortFldType, order);
     pnodeSplayPQ pcurr_Q = Q1;
     pnodeSplayPQ pother_Q = Q2; 
     BigT.Map lastElem = new BigT.Map(tuple_size);  // need tuple.java
@@ -213,7 +214,7 @@ public class Sort extends Iterator implements GlobalConst
       if (cur_node == null) break; 
       p_elems_curr_Q --;
       
-      comp_res = MapUtils.CompareTupleWithValue(sortFldType, cur_node.tuple, _sort_fld, lastElem);  // need tuple_utils.java
+      comp_res = MapUtils.CompareTupleWithValueSort(sortFldType, cur_node.tuple, odr_type, lastElem);  // need tuple_utils.java
       
       if ((comp_res < 0 && order.tupleOrder == TupleOrder.Ascending) || (comp_res > 0 && order.tupleOrder == TupleOrder.Descending)) {
 	// doesn't fit in current run, put into the other queue
@@ -565,7 +566,8 @@ public class Sort extends Iterator implements GlobalConst
 	      int        sort_fld,          
 	      TupleOrder sort_order,     
 	      int        sort_fld_len,  
-	      int        n_pages      
+	      int        n_pages,
+        int        order_type      
 	      ) throws IOException, SortException
   {
     _in = new AttrType[len_in];
@@ -643,8 +645,8 @@ public class Sort extends Iterator implements GlobalConst
     
     max_elems_in_heap = 200;
     sortFldLen = sort_fld_len;
-    
-    Q = new pnodeSplayPQ(sort_fld, in[sort_fld - 1], order);
+    odr_type = order_type;
+    Q = new pnodeSplayPQ(order_type, in[sort_fld - 1], order);
 
     op_buf = new BigT.Map(tuple_size);   // need Tuple.java
     try {
