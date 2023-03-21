@@ -3,6 +3,7 @@ package iterator;
 
 import BigT.BigT;
 import BigT.Map;
+import global.PageId;
 import global.RID;
 import heap.Scan;
 

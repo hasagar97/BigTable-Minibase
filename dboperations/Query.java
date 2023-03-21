@@ -19,16 +19,14 @@ import heap.InvalidMapSizeException;
 import java.io.IOException;
 
 public class Query {
-    BigT bigtable;
     Stream stream;
     PCounter pCounter = new PCounter();
 
-    public Query(String BIGTABLENAME, int TYPE, int ORDERTYPE, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER, int NUMBUF) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException, InvalidMapSizeException {
+    public Query(BigT bigtable, int TYPE, int ORDERTYPE, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER, int NUMBUF) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException, InvalidMapSizeException {
 
         // check if this is safe
-        SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
+//        SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
-        bigtable = new BigT(BIGTABLENAME, TYPE);
         stream = new Stream(bigtable, 1, ROWFILTER, COLUMNFILTER, VALUEFILTER);
 //        stream = bigtable.openStream(ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);
 
@@ -36,8 +34,9 @@ public class Query {
     }
 
     public void run() throws IOException, InvalidMapSizeException {
+        RID id = new RID();
         while(true) {
-            Map map = stream.getNext(new RID(new PageId(5), 0));
+            Map map = stream.getNext(id);
             if(map != null) map.print(); // do we print the whole map or just the value ?
             else break;
         }

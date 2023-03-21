@@ -5,7 +5,7 @@ import BigT.Map;
 import btree.ConstructPageException;
 import btree.GetFileEntryException;
 import btree.PinPageException;
-import bufmgr.BufMgrException;
+import bufmgr.*;
 import diskmgr.PCounter;
 import global.SystemDefs;
 import heap.*;
@@ -20,23 +20,20 @@ public class Batchinsert {
     private BigT bigtable;
     PCounter pCounter = new PCounter();
 
-    public Batchinsert(String DATAFILENAME, int TYPE, String BIGTABLENAME) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
+    public Batchinsert(String DATAFILENAME, int TYPE, BigT bigtable) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
         this.data_file_path = DATAFILENAME;
-        System.out.println("BigTable name = " + BIGTABLENAME);
-        bigtable = new BigT(BIGTABLENAME, TYPE);
-
+        this.bigtable = bigtable;
         pCounter.initialize();
     }
 
-    public void run() throws IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException, InvalidFieldSize {
+    public void run() throws IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, ConstructPageException, GetFileEntryException, PinPageException {
         BufferedReader reader = new BufferedReader(new FileReader(data_file_path));
         String line;
         while((line = reader.readLine()) != null) {
             String[] mapAttributes = line.trim().split(",");
 
             // Create Map
-            byte[] mapPtr = new byte[64];
-            Map map = new Map(mapPtr, 0);
+            Map map = new Map();
             map.setRowLabel(mapAttributes[0]);
             map.setColumnLabel(mapAttributes[1]);
             map.setTimeStamp(Integer.valueOf(mapAttributes[2]));

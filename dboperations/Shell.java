@@ -3,13 +3,14 @@ package dboperations;
 import btree.ConstructPageException;
 import btree.GetFileEntryException;
 import btree.PinPageException;
-import bufmgr.BufMgrException;
+import bufmgr.*;
 import diskmgr.DiskMgrException;
 import diskmgr.FileIOException;
 import diskmgr.InvalidPageNumberException;
 import global.SystemDefs;
 import heap.*;
 import iterator.InvalidFieldSize;
+import BigT.BigT;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -19,11 +20,11 @@ public class Shell {
     private static int num_pages = 5000;
     private static int bufferpoolsize = 5000;
 
-    public static void run() throws BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize {
+    public static void run() throws BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException {
         new SystemDefs(dbpath, num_pages, bufferpoolsize, "Clock"); // creates a new db if num_pages > 0
 
         Scanner input = new Scanner(System.in);
-
+        BigT bigtable = null;
         Boolean running = true;
         while(running) {
             System.out.println("Enter Command: (BatchInsert) / (Query) / (exit)");
@@ -41,12 +42,9 @@ public class Shell {
                     TYPE = Integer.valueOf(words[2]);
 
                     BIGTABLENAME = BIGTABLENAME + "_" + String.valueOf(TYPE);
-
-                    Batchinsert batchinsert = new Batchinsert(DATAFILENAME, TYPE, BIGTABLENAME);
+                    bigtable = new BigT(BIGTABLENAME, TYPE);
+                    Batchinsert batchinsert = new Batchinsert(DATAFILENAME, TYPE, bigtable);
                     batchinsert.run();
-
-                    // This should persist all changes to the DB
-                    SystemDefs.JavabaseBM.softFlushAll();
 
                     break;
 
@@ -60,8 +58,8 @@ public class Shell {
                     NUMBUF = Integer.valueOf(words[7]);
 
                     BIGTABLENAME = BIGTABLENAME + "_" + String.valueOf(TYPE);
-
-                    Query query = new Query(BIGTABLENAME, TYPE, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER, NUMBUF);
+                    if(bigtable == null) bigtable = new BigT(BIGTABLENAME, TYPE);
+                    Query query = new Query(bigtable, TYPE, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER, NUMBUF);
                     query.run();
 
                     break;
@@ -80,7 +78,7 @@ public class Shell {
         SystemDefs.JavabaseDB.closeDB();
     }
 
-    public static void main(String[] args) throws IOException, BufMgrException, InvalidPageNumberException, FileIOException, DiskMgrException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidMapSizeException, InvalidSlotNumberException, InvalidFieldSize {
+    public static void main(String[] args) throws IOException, BufMgrException, InvalidPageNumberException, FileIOException, DiskMgrException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidMapSizeException, InvalidSlotNumberException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException {
         run();
     }
 }

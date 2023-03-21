@@ -15,17 +15,18 @@ public class Stream {
     Sort sortedStream;
 
     public Stream(BigT bigtable, int orderType, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER) throws InvalidMapSizeException, IOException {
-        scan = bigtable.openScan();
+//        scan = bigtable.openScan();
         rowFilter = processFilter(ROWFILTER);
         colFilter = processFilter(COLUMNFILTER);
         valFilter = processFilter(VALUEFILTER);
         try {
           FileScanMap iterator = new FileScanMap(bigtable);
           AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
-          short len_in = 4;      
+          short len_in = 4;
           short [] str_sizes = {(short)20, (short)20, (short)4, (short)20};
-          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 1, new TupleOrder(TupleOrder.Ascending), len_in, 10);
+          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 2, new TupleOrder(TupleOrder.Ascending), 20, 10);
         } catch (Exception e) {
+            e.printStackTrace();
           System.out.println(e);
         }
 
