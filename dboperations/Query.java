@@ -37,7 +37,10 @@ public class Query {
         RID id = new RID();
         while(true) {
             Map map = stream.getNext(id);
-            if(map != null) map.print(); // do we print the whole map or just the value ?
+            if(map != null) {
+                System.out.println();
+                map.print(); // do we print the whole map or just the value ?
+            }
             else break;
         }
         stream.close();

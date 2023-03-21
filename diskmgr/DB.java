@@ -152,8 +152,8 @@ public class DB implements GlobalConst {
     // Read the appropriate number of bytes.
     byte [] buffer = apage.getpage();  //new byte[MINIBASE_PAGESIZE];
     try{
-      fp.read(buffer);
       pCounter.readIncrement();
+      fp.read(buffer);
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");

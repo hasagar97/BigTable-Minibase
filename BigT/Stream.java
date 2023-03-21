@@ -9,10 +9,13 @@ import iterator.FileScanMap;
 import iterator.Sort;
 import java.io.IOException;
 
+import diskmgr.PCounter;
+
 public class Stream {
     Scan scan;
     String[] rowFilter, colFilter, valFilter;
     Sort sortedStream;
+    PCounter pc;
 
     public Stream(BigT bigtable, int orderType, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER) throws InvalidMapSizeException, IOException {
 //        scan = bigtable.openScan();
@@ -20,6 +23,8 @@ public class Stream {
         colFilter = processFilter(COLUMNFILTER);
         valFilter = processFilter(VALUEFILTER);
         try {
+          pc = new PCounter();
+          pc.initialize();
           FileScanMap iterator = new FileScanMap(bigtable);
           AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
           short len_in = 4;
@@ -75,7 +80,7 @@ public class Stream {
                     continue;
                 }
             }
-
+            pc.readIncrement();
             return currentMap;
         }
     }
