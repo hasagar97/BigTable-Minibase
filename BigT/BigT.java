@@ -376,7 +376,7 @@ public class BigT extends Heapfile
       }
       
       try {
-        System.out.println(key);
+        //System.out.println(key);
         scan = m_defaultindex.new_scan(key, key);
       }
       catch (Exception e) {
@@ -409,7 +409,7 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           try {
-            System.out.println("MAP = " + current_map.getValue());
+            //System.out.println("MAP = " + current_map.getValue());
             current_entry = scan.get_next();
 
             if(current_entry == null) break;
@@ -417,7 +417,7 @@ public class BigT extends Heapfile
             current_map = super.getMap(current_mid);
             timestamp_count += 1;
           
-            if (current_map.getTimeStamp() < oldest_map.getTimeStamp())
+            if (oldest_map == null || current_map.getTimeStamp() < oldest_map.getTimeStamp())
             {
               oldest = current_mid;
             }
