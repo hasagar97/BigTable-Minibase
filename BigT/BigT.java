@@ -55,7 +55,8 @@ public class BigT extends Heapfile
           m_indexfile2 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
         case 5:
-          // Our new index strategy
+          // one btree to index timestamp and value (combined key)
+          m_indexfile1 = new BTreeFile(name + "_column_val_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
       }
     }
@@ -73,12 +74,6 @@ public class BigT extends Heapfile
       // Destroy the index files
       if (m_defaultindex != null)
       {
-      	try {
-          m_defaultindex.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close default index\n");
-        }
         try {
           m_defaultindex.destroyFile();
         }
@@ -89,12 +84,6 @@ public class BigT extends Heapfile
       if (m_indexfile1 != null)
       {
         try {
-          m_indexfile1.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close indexfile1\n");
-        }
-        try {
           m_indexfile1.destroyFile();
         }
         catch (Exception e) {
@@ -103,12 +92,6 @@ public class BigT extends Heapfile
       }
       if (m_indexfile2 != null)
       {
-        try {
-          m_indexfile2.close();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to close indexfile2\n");
-        }
         try {
           m_indexfile2.destroyFile();
         }
@@ -146,99 +129,99 @@ public class BigT extends Heapfile
     type 2 - gets column labels count
     default - gets row labels count
   */
-//    private int getCnt(int type)
-//    {
-//      int count = 0;
-//      Stream stream = null;
-//      RID next_MID = null;
-//      Map next = null;
-//      java.lang.String label = null;
-//      java.lang.String next_label = null;
-//
-//      switch (type) {
-//            case 1:
-//              // Want to stream entries by ordered row label
-//              stream = new Stream(this, 3, null, null, null);
-//              break;
-//            case 2:
-//              // Want to stream entries by ordered column label
-//              stream = new Stream(this, 4, null, null, null);
-//              break;
-//            default:
-//              // Want to stream entries by ordered row label
-//              stream = new Stream(this, 3, null, null, null);
-//              break;
-//      }
-//
-//      // Scan all the entries in our default index
-//      next = stream.getNext(next_MID);
-//
-//      while(next != null)
-//      {
-//        switch (type) {
-//          case 1:
-//            try {
-//              next_label = next.getRowLabel();
-//            }
-//            catch (Exception e) {
-//              System.err.println("Failed to get row label from map\n");
-//            }
-//            break;
-//          case 2:
-//            try {
-//              next_label = next.getColumnLabel();
-//            }
-//            catch (Exception e) {
-//              System.err.println("Failed to get column label from map\n");
-//            }
-//            break;
-//          default:
-//            try {
-//              next_label = next.getRowLabel();
-//            }
-//            catch (Exception e) {
-//              System.err.println("Failed to get row label from map\n");
-//            }
-//            break;
-//        }
-//
-//        if (label != null)
-//        {
-//          // Label changed. Count and update checked label.
-//          if (next_label != label)
-//          {
-//            count += 1;
-//            label = next_label;
-//          }
-//        }
-//        else
-//        {
-//          // First unique label
-//          count += 1;
-//          label = next_label;
-//        }
-//
-//        next = stream.getNext(next_MID);
-//      }
-//
-//      return count;
-//    }
+    private int getCnt(int type) throws InvalidMapSizeException, IOException
+    {
+      int count = 0;
+      Stream stream = null;
+      RID next_MID = new RID();
+      Map next = null;
+      java.lang.String label = null;
+      java.lang.String next_label = null;
+
+      switch (type) {
+            case 1:
+              // Want to stream entries by ordered row label
+              stream = new Stream(this, 3, "*", "*", "*");
+              break;
+            case 2:
+              // Want to stream entries by ordered column label
+              stream = new Stream(this, 4, "*", "*", "*");
+              break;
+            default:
+              // Want to stream entries by ordered row label
+              stream = new Stream(this, 3, "*", "*", "*");
+              break;
+      }
+
+      // Scan all the entries in our default index
+      next = stream.getNext(next_MID);
+
+      while(next != null)
+      {
+        switch (type) {
+          case 1:
+            try {
+              next_label = next.getRowLabel();
+            }
+            catch (Exception e) {
+              System.err.println("Failed to get row label from map\n");
+            }
+            break;
+          case 2:
+            try {
+              next_label = next.getColumnLabel();
+            }
+            catch (Exception e) {
+              System.err.println("Failed to get column label from map\n");
+            }
+            break;
+          default:
+            try {
+              next_label = next.getRowLabel();
+            }
+            catch (Exception e) {
+              System.err.println("Failed to get row label from map\n");
+            }
+            break;
+        }
+
+        if (label != null)
+        {
+          // Label changed. Count and update checked label.
+          if (next_label.equals(label) == false)
+          {
+            count += 1;
+            label = next_label;
+          }
+        }
+        else
+        {
+          // First unique label
+          count += 1;
+          label = next_label;
+        }
+
+        next = stream.getNext(next_MID);
+      }
+
+      return count;
+    }
 
   /*
     Returns the number of distinct row labels in the big table
   */
-//    public int getRowCnt()
-//    {
-//      return getCnt(1);
-//    }
+    public int getRowCnt() throws InvalidMapSizeException, IOException
+    {
+      return getCnt(1);
+    }
 
   /*
     Returns the number of distinct column labels in the big table
   */
-//    public int getColumnCnt()
-//    {
-//      return getCnt(2);
-//    }
+    public int getColumnCnt() throws InvalidMapSizeException, IOException
+    {
+      return getCnt(2);
+    }
 
 //  private void printBTreeKey() throws IteratorException, ConstructPageException, KeyNotMatchException, PinPageException, IOException, UnpinPageException, ScanIteratorException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
 //    BTFileScan scan = m_defaultindex.new_scan(new StringKey("NetherlanJaguar"), new StringKey("NetherlanJaguar"));
@@ -361,7 +344,16 @@ public class BigT extends Heapfile
           }
           break;
         case 5:
-          // Our new index strategy
+          // one btree to index timestamp + value combined labels
+          key = new StringKey(map.getColumnLabel() + map.getValue());
+          if(operation == 0) m_indexfile1.insert(key, mid);
+          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          else {
+            if(isRowAffected) {
+              if(operation == 2) m_indexfile1.insert(key, mid);
+              else if(operation == 3) m_indexfile1.Delete(key, mid);
+            }
+          }
           break;
       }
     }
@@ -384,7 +376,7 @@ public class BigT extends Heapfile
       }
       
       try {
-        // System.out.println(key);
+        System.out.println(key);
         scan = m_defaultindex.new_scan(key, key);
       }
       catch (Exception e) {
@@ -407,7 +399,6 @@ public class BigT extends Heapfile
           current_map = super.getMap(current_mid);
         }
         catch (Exception e) {
-          e.printStackTrace();
           System.err.println("Failed to getMap from heapfile in checkDropMap\n");
         }
         
@@ -418,7 +409,7 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           try {
-//            System.out.println("MAP = " + current_map.getValue());
+            System.out.println("MAP = " + current_map.getValue());
             current_entry = scan.get_next();
 
             if(current_entry == null) break;
@@ -426,7 +417,7 @@ public class BigT extends Heapfile
             current_map = super.getMap(current_mid);
             timestamp_count += 1;
           
-            if (oldest_map == null || current_map.getTimeStamp() < oldest_map.getTimeStamp())
+            if (current_map.getTimeStamp() < oldest_map.getTimeStamp())
             {
               oldest = current_mid;
             }
@@ -469,7 +460,6 @@ public class BigT extends Heapfile
 
         // Change insertRecord in heapfile to insertMap
         mid = super.insertMap(mapPtr);
-        // System.out.println("MID =  " + mid.pageNo.pid + " " + mid.slotNo);
 
         // Index the Map
         updateIndexFiles(map, mid, 0);
@@ -478,7 +468,7 @@ public class BigT extends Heapfile
         RID oldestMapID = checkDropMap(map, mid);
 
         if(oldestMapID != null) {
-          // System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
+          System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
           Map oldestMap = super.getMap(oldestMapID);
 
           updateIndexFiles(oldestMap, oldestMapID, 1);
@@ -487,7 +477,7 @@ public class BigT extends Heapfile
           // Change deleteRecord in heapfile to deleteMap
           Boolean didDelete = super.deleteMap(oldestMapID);
           System.out.println("Map deleted in heap = " + didDelete);
-          SystemDefs.JavabaseBM.softFlushAll();
+          //SystemDefs.JavabaseBM.softFlushAll();
         }
 //        System.out.println("Printing BTree");
 //        printBTreeKey();
@@ -579,13 +569,13 @@ public class BigT extends Heapfile
 	4, then results are first ordered in column label, then time stamp
 	6, then results are ordered in time stamp
   */
-//    public Stream openStream ( int orderType,
-//    java.lang.String rowFilter,
-//    java.lang.String columnFilter,
-//    java.lang.String valueFilter)
-//    {
-//      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
-//    }
+    public Stream openStream ( int orderType,
+    java.lang.String rowFilter,
+    java.lang.String columnFilter,
+    java.lang.String valueFilter) throws InvalidMapSizeException, IOException
+    {
+      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
+    }
 
     public int getStrategy ()
     {
@@ -597,6 +587,7 @@ public class BigT extends Heapfile
       return m_name;
     }
 } // end of bigt
+
 
 
 

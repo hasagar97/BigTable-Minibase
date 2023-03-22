@@ -82,12 +82,8 @@ public class Map implements GlobalConst{
       Construct a map from another map through copy with given offset and len.
     */
     public Map(byte [] fromMap,int offset,int size) {
-        this.map = new byte[max_size];
-//        System.out.println("offset: "+offset+" , size:"+size+ " length og byte array:"+fromMap.length);
-        System.arraycopy(fromMap, offset, this.map, 0,  Math.min(max_size,fromMap.length-offset));
-        this.map_offset = 0;
-        // this.map = fromMap;
-        // this.map_offset = offset;
+        this.map = fromMap;
+        this.map_offset = offset;
     }
 
 
