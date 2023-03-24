@@ -22,10 +22,13 @@ public class Convert{
       DataInputStream instr;
       int value;
       byte tmp[] = new byte[4];
-      
-      // copy the value from data array out to a tmp byte array
-      System.arraycopy (data, position, tmp, 0, 4);
-      
+
+      try {
+        // copy the value from data array out to a tmp byte array
+        System.arraycopy(data, position, tmp, 0, 4);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       /* creates a new data input stream to read data from the
        * specified input stream
        */

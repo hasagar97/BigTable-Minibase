@@ -31,6 +31,7 @@ public class Query {
 //        stream = bigtable.openStream(ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);
 
         pCounter.initialize();
+        System.out.println("Initialized PCounter");
     }
 
     public void run() throws IOException, InvalidMapSizeException {
