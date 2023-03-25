@@ -15,10 +15,10 @@ import BigT.*;
 public class BigT extends Heapfile 
 {
   private java.lang.String m_name;
-  private int m_strategy;
-  private BTreeFile m_defaultindex = null;
-  private BTreeFile m_indexfile1 = null;
-  private BTreeFile m_indexfile2 = null;
+  public int m_strategy;
+  public BTreeFile m_defaultindex = null;
+  public BTreeFile m_indexfile1 = null;
+  public BTreeFile m_indexfile2 = null;
   
   /* 
     Initializes the big table
