@@ -32,31 +32,23 @@ public class BigT extends Heapfile
     
     try
     {
-      m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
+      m_defaultindex = null;
       System.out.println("Index name = " + name + "_row_col_index");
+
       switch (m_strategy) {
         case 1:
-          // one btree to index row labels
-          m_indexfile1 = new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
         case 2:
-          // one btree to index column labels
-          m_indexfile1 = new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1);
+          m_defaultindex = new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
         case 3:
-          // one btree to index column label and row label (combined key) and
-          // one btree to index timestamps
-          m_indexfile1 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
+          m_defaultindex = new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1);
           break;
         case 4:
-          // one btree to index row label and value (combined key) (default index file) and
-          // one btree to index timestamps
-          m_indexfile1 = new BTreeFile(name + "_row_val_index", AttrType.attrString, MAXINDEXNAME, 1);
-          m_indexfile2 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
+          m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
           break;
         case 5:
-          // one btree to index timestamp and value (combined key)
-          m_indexfile1 = new BTreeFile(name + "_column_val_index", AttrType.attrString, MAXINDEXNAME, 1);
+          m_defaultindex = new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
           break;
       }
     }
@@ -268,91 +260,61 @@ public class BigT extends Heapfile
             LeafRedistributeException, RecordNotFoundException, InsertRecException,
             DeleteFashionException, RedistributeException, FreePageException,
             IndexFullDeleteException {
-      StringKey key, key1, key2;
+      StringKey key;
       switch (m_strategy) {
-        case 1:
+        case 2:
           // one btree to index row labels
           key = new StringKey(map.getRowLabel());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          if(operation == 0) m_defaultindex.insert(key, mid);
+          else if(operation == 1) m_defaultindex.Delete(key, mid);
           else {
             if(isRowAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
-            }
-          }
-          break;
-        case 2:
-          // one btree to index column labels
-          key = new StringKey(map.getColumnLabel());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
-          else {
-            if(isColAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
           }
           break;
         case 3:
-          // one btree to index column label and row label (combined key) and
-          // one btree to index timestamps
-          key1 = new StringKey(map.getRowLabel() + map.getColumnLabel());
-          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
-          if(operation == 0) {
-//            System.out.println("Inserting key1 into row_col_index = " + key1);
-            m_defaultindex.insert(key1, mid);
-            m_indexfile1.insert(key2, mid);
-          } else if(operation == 1) {
-//            System.out.println("Deleting MID from (key1)row_col_index = " + mid.pageNo.pid + " " + mid.slotNo);
-            Boolean didDeleteFromRowCol = m_defaultindex.Delete(key1, mid);
-//            System.out.println("Deleted from Row Col = " + didDeleteFromRowCol);
-            m_indexfile1.Delete(key2, mid);
-          } else {
-            if(isRowAffected || isColAffected) {
-              if(operation == 2) m_defaultindex.insert(key1, mid);
-              else if(operation == 3) m_defaultindex.Delete(key1, mid);
-            }
-
-            if(isTimestampAffected) {
-              if(operation == 2) m_indexfile1.insert(key2, mid);
-              else if(operation == 3) m_indexfile1.Delete(key2, mid);
+          // one btree to index column labels
+          key = new StringKey(map.getColumnLabel());
+          if(operation == 0) m_defaultindex.insert(key, mid);
+          else if(operation == 1) m_defaultindex.Delete(key, mid);
+          else {
+            if(isColAffected) {
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
           }
           break;
         case 4:
-          // one btree to index row label and value (combined key) and
-          // one btree to index timestamps
-          key1 = new StringKey(map.getRowLabel() + map.getValue());
-          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
+          // one btree to index column label and row label (combined key) and
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
           if(operation == 0) {
-            m_indexfile1.insert(key1, mid);
-            m_indexfile2.insert(key2, mid);
-          } else if(operation == 1){
-            m_indexfile1.Delete(key1, mid);
-            m_indexfile2.Delete(key2, mid);
+//            System.out.println("Inserting key1 into row_col_index = " + key1);
+            m_defaultindex.insert(key, mid);
+          } else if(operation == 1) {
+//            System.out.println("Deleting MID from (key1)row_col_index = " + mid.pageNo.pid + " " + mid.slotNo);
+            Boolean didDeleteFromRowCol = m_defaultindex.Delete(key, mid);
           } else {
-            if(isRowAffected || isValueAffected) {
-              if(operation == 2) m_indexfile1.insert(key1, mid);
-              else if(operation == 3) m_indexfile1.Delete(key1, mid);
-            }
-
-            if(isTimestampAffected) {
-              if(operation == 2) m_indexfile2.insert(key2, mid);
-              else if(operation == 3) m_indexfile2.Delete(key2, mid);
+            if(isRowAffected || isColAffected) {
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
           }
           break;
         case 5:
-          // one btree to index timestamp + value combined labels
-          key = new StringKey(map.getColumnLabel() + map.getValue());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
-          else {
-            if(isRowAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
+          // one btree to index column label and value (combined key) and
+          key = new StringKey(map.getRowLabel() + map.getValue());
+          if(operation == 0) {
+            m_defaultindex.insert(key, mid);
+          } else if(operation == 1){
+            m_defaultindex.Delete(key, mid);
+          } else {
+            if(isRowAffected || isValueAffected) {
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
+
           }
           break;
       }
@@ -369,19 +331,30 @@ public class BigT extends Heapfile
       KeyDataEntry current_entry = null;
       
       try {
-        key = new StringKey(map.getRowLabel() + map.getColumnLabel());
-      }
-      catch (Exception e) {
-        System.err.println("Failed to create new StringKey in checkDropMap\n");
-      }
-      
-      try {
-        //System.out.println(key);
-        scan = m_defaultindex.new_scan(key, key);
+        switch (m_strategy) {
+            case 1:
+                scan = openStream(1, map.getRowLabel(), map.getColumnLabel(), "*");
+                break;
+            case 2:
+                key = new StringKey(map.getRowLabel());
+                scan = m_defaultindex.new_scan(key, key);
+                break;
+            case 3:
+                key = new StringKey(map.getColumnLabel());
+                scan = m_defaultindex.new_scan(key, key);
+                break;
+            case 4:
+                key = new StringKey(map.getRowLabel() + map.getColumnLabel());
+                scan = m_defaultindex.new_scan(key, key);
+                break;
+            case 5:
+                key = new StringKey(map.getRowLabel()); // TODO: How to do this with value?
+                scan = m_defaultindex.new_scan(key, key);
+                break;
       }
       catch (Exception e) {
         e.printStackTrace();
-        System.err.println("Failed to create new BTFileScan in checkDropMap\n");
+        System.err.println("Failed to create new Scan in checkDropMap\n");
       }
       
       try {
@@ -402,9 +375,12 @@ public class BigT extends Heapfile
           System.err.println("Failed to getMap from heapfile in checkDropMap\n");
         }
         
-        timestamp_count += 1;
-        oldest = current_mid;
-        oldest_map = current_map;
+        if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
+        {
+          timestamp_count += 1;
+          oldest = current_mid;
+          oldest_map = current_map;
+        }
 
         while(current_entry != null)
         {
@@ -415,11 +391,15 @@ public class BigT extends Heapfile
             if(current_entry == null) break;
             current_mid = ((LeafData) current_entry.data).getData();
             current_map = super.getMap(current_mid);
-            timestamp_count += 1;
-          
-            if (oldest_map == null || current_map.getTimeStamp() < oldest_map.getTimeStamp())
+
+            if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
             {
-              oldest = current_mid;
+              timestamp_count += 1;
+          
+              if ((oldest_map == null) || (current_map.getTimeStamp() < oldest_map.getTimeStamp()))
+              {
+                oldest = current_mid;
+              }
             }
           }
           catch (Exception e) {
