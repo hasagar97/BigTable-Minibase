@@ -22,46 +22,43 @@ public class FileScanMap extends Iterator {
             switch (this.bigtable.m_strategy) {
                 case 1:
                     if (rowFilter != null) {
-                        lo = rowFilter[0];
-                        hi = rowFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
+                        btScan = null;
                     }
                     break;
 
                 case 2:
-                    if (colFilter != null) {
-                        lo = colFilter[0];
-                        hi = colFilter[1];
+                    if (rowFilter != null) {
+                        lo = rowFilter[0];
+                        hi = rowFilter[1];
                         System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
+                        btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
                     }
                     break;
 
                 case 3:
-                    if (rowFilter != null && colFilter != null) {
-                        lo = rowFilter[0] + colFilter[0];
-                        hi = rowFilter[1] + colFilter[1];
+                    if (colFilter != null) {
+                        lo = colFilter[0];
+                        hi = colFilter[1];
                         System.out.println("Filters = " + lo + " " + hi);
                         btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
                     }
                     break;
 
                 case 4:
-                    if (rowFilter != null && valFilter != null) {
-                        lo = rowFilter[0] + valFilter[0];
-                        hi = rowFilter[1] + valFilter[1];
+                    if (colFilter != null && rowFilter != null) {
+                        lo = colFilter[0] + rowFilter[0];
+                        hi = colFilter[1] + rowFilter[1];
                         System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
+                        btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
                     }
                     break;
 
                 case 5:
-                    if (colFilter != null && valFilter != null) {
-                        lo = colFilter[0] + valFilter[0];
-                        hi = colFilter[1] + valFilter[1];
+                    if (rowFilter != null && valFilter != null) {
+                        lo = rowFilter[0] + valFilter[0];
+                        hi = rowFilter[1] + valFilter[1];
                         System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
+                        btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
                     }
             }
 
