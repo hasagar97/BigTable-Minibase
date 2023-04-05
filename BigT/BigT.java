@@ -349,8 +349,8 @@ public class BigT extends Heapfile
                 scan = m_defaultindex.new_scan(key, key);
                 break;
             case 5:
-                key = new StringKey(map.getRowLabel()); // TODO: How to do this with value?
-                scan = m_defaultindex.new_scan(key, key);
+                key = new StringKey(map.getRowLabel());
+                scan = m_defaultindex.new_scan(key, null);
                 break;
         }
       }
