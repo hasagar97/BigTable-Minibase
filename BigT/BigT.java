@@ -323,6 +323,7 @@ public class BigT extends Heapfile
     private RID checkDropMap ( Map map, RID mid) throws IOException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
       StringKey key = null;
       BTFileScan scan = null;
+      Stream stream = null;
       Map current_map = null;
       Map oldest_map = null;
       RID current_mid = null;
@@ -333,7 +334,7 @@ public class BigT extends Heapfile
       try {
         switch (m_strategy) {
             case 1:
-                scan = openStream(1, map.getRowLabel(), map.getColumnLabel(), "*");
+                stream = openStream(1, map.getRowLabel(), map.getColumnLabel(), "*");
                 break;
             case 2:
                 key = new StringKey(map.getRowLabel());
@@ -351,6 +352,7 @@ public class BigT extends Heapfile
                 key = new StringKey(map.getRowLabel()); // TODO: How to do this with value?
                 scan = m_defaultindex.new_scan(key, key);
                 break;
+        }
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -358,21 +360,30 @@ public class BigT extends Heapfile
       }
       
       try {
-        current_entry = scan.get_next();
+      	if (m_strategy == 1)
+      	{
+      	  current_map = stream.getNext(current_mid);
+      	}
+        else
+        {
+          current_entry = scan.get_next();
+        }
       }
       catch (Exception e) {
         System.err.println("Failed to get next entry in BTFileScan in checkDropMap\n");
       }
 
-      if (current_entry != null)
+      if ((current_entry != null) || (current_map != null))
       {
-        current_mid = ((LeafData) current_entry.data).getData();
-        
-        try {
-          current_map = super.getMap(current_mid);
-        }
-        catch (Exception e) {
-          System.err.println("Failed to getMap from heapfile in checkDropMap\n");
+        if (m_strategy != 1)
+      	{
+          current_mid = ((LeafData) current_entry.data).getData();
+          try {
+            current_map = super.getMap(current_mid);
+          }
+          catch (Exception e) {
+            System.err.println("Failed to getMap from heapfile in checkDropMap\n");
+          }
         }
         
         if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
@@ -386,11 +397,22 @@ public class BigT extends Heapfile
         {
           try {
             //System.out.println("MAP = " + current_map.getValue());
-            current_entry = scan.get_next();
+            if (m_strategy == 1)
+      	    {
+      	      current_map = stream.getNext(current_mid);
+      	      if(current_map == null) break;
+      	    }
+            else
+            {
+              current_entry = scan.get_next();
+              if(current_entry == null) break;
+            }
 
-            if(current_entry == null) break;
-            current_mid = ((LeafData) current_entry.data).getData();
-            current_map = super.getMap(current_mid);
+            if (m_strategy != 1)
+      	    {
+              current_mid = ((LeafData) current_entry.data).getData();
+              current_map = super.getMap(current_mid);
+            }
 
             if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
             {
@@ -414,7 +436,15 @@ public class BigT extends Heapfile
         oldest = null;
       }
 
-      scan.DestroyBTreeFileScan();
+      if (scan != null)
+      {
+        scan.DestroyBTreeFileScan();
+      }
+      if (stream != null)
+      {
+        stream.close();
+      }
+      
       return oldest;
     }
   
