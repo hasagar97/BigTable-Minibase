@@ -481,24 +481,26 @@ public class Sort extends Iterator implements GlobalConst
     String s = new String(c);
     //    short fld_no = 1;
     
-    switch (sortFldType.attrType) {
-    case AttrType.attrInteger: 
+//    switch (sortFldType.attrType) {
+//    case AttrType.attrInteger:
       //      lastElem.setHdr(fld_no, junk, null);
-      lastElem.setIntFld(_sort_fld, Integer.MIN_VALUE);
-      break;
-    case AttrType.attrReal:
+      lastElem.setIntFld(3, Integer.MIN_VALUE);
+//      break;
+//    case AttrType.attrReal:
       //      lastElem.setHdr(fld-no, junk, null);
-      lastElem.setFloFld(_sort_fld, Float.MIN_VALUE);
-      break;
-    case AttrType.attrString:
+//      lastElem.setFloFld(_sort_fld, Float.MIN_VALUE);
+//      break;
+//    case AttrType.attrString:
       //      lastElem.setHdr(fld_no, junk, s_size);
-      lastElem.setStrFld(_sort_fld, s);
-      break;
-    default:
+      lastElem.setStrFld(1, s);
+      lastElem.setStrFld(2, s);
+      lastElem.setStrFld(4, s);
+//      break;
+//    default:
       // don't know how to handle attrSymbol, attrNull
       //System.err.println("error in sort.java");
-      throw new UnknowAttrType("Sort.java: don't know how to handle attrSymbol, attrNull");
-    }
+//      throw new UnknowAttrType("Sort.java: don't know how to handle attrSymbol, attrNull");
+//    }
     
     return;
   }
@@ -643,7 +645,7 @@ public class Sort extends Iterator implements GlobalConst
     o_buf.init(bufs, _n_pages, tuple_size, temp_files[0], false);
     //    output_tuple = null;
     
-    max_elems_in_heap = 10000;
+    max_elems_in_heap = 100;
     sortFldLen = sort_fld_len;
     odr_type = order_type;
     Q = new pnodeSplayPQ(order_type, in[sort_fld - 1], order);
