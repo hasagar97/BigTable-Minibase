@@ -16,9 +16,9 @@ public class BigT extends Heapfile
 {
   private java.lang.String m_name;
   public int m_strategy;
+  public Vector<Heapfile> m_heap_files = new Vector<Heapfile>();
   public BTreeFile m_defaultindex = null;
-  public BTreeFile m_indexfile1 = null;
-  public BTreeFile m_indexfile2 = null;
+  public Vector<BTreeFile> m_index_files = new Vector<BTreeFile>();
   
   /* 
     Initializes the big table
@@ -32,25 +32,24 @@ public class BigT extends Heapfile
     
     try
     {
-      m_defaultindex = null;
-      System.out.println("Index name = " + name + "_row_col_index");
-
-      switch (m_strategy) {
-        case 1:
-          break;
-        case 2:
-          m_defaultindex = new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 3:
-          m_defaultindex = new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 4:
-          m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
-          break;
-        case 5:
-          m_defaultindex = new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
-          break;
-      }
+      // Default Row+Column index across all heap files
+      m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
+      // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
+      // Type 1 No index
+      m_index_files.add(null);
+      m_heap_files.add(new Heapfile(name + "_1"));
+      // Type 2 Row index
+      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_heap_files.add(new Heapfile(name + "_2"));
+      // Type 3 Column index
+      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_heap_files.add(new Heapfile(name + "_3"));
+      // Type 4 Row+Column index
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      m_heap_files.add(new Heapfile(name + "_4"));
+      // Type 5 Row+Value index
+      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      m_heap_files.add(new Heapfile(name + "_5"));
     }
     catch (Exception e)
     {
@@ -71,24 +70,6 @@ public class BigT extends Heapfile
         }
         catch (Exception e) {
           System.err.println("Failed to destroy default index\n");
-        }
-      }
-      if (m_indexfile1 != null)
-      {
-        try {
-          m_indexfile1.destroyFile();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to destroy indexfile1\n");
-        }
-      }
-      if (m_indexfile2 != null)
-      {
-        try {
-          m_indexfile2.destroyFile();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to destroy indexfile2\n");
         }
       }
 
@@ -262,13 +243,25 @@ public class BigT extends Heapfile
             IndexFullDeleteException {
       StringKey key;
       switch (m_strategy) {
-        case 2:
-          // one btree to index row labels
-          key = new StringKey(map.getRowLabel());
+      	case 1:
+          // no index
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
           if(operation == 0) m_defaultindex.insert(key, mid);
           else if(operation == 1) m_defaultindex.Delete(key, mid);
           else {
-            if(isRowAffected) {
+            if(isRowAffected || isColAffected) {
+              if(operation == 2) m_defaultindex.insert(key, mid);
+              else if(operation == 3) m_defaultindex.Delete(key, mid);
+            }
+          }
+          break;
+        case 2:
+          // one btree to index row labels
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
+          if(operation == 0) m_defaultindex.insert(key, mid);
+          else if(operation == 1) m_defaultindex.Delete(key, mid);
+          else {
+            if(isRowAffected || isColAffected) {
               if(operation == 2) m_defaultindex.insert(key, mid);
               else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
@@ -276,11 +269,11 @@ public class BigT extends Heapfile
           break;
         case 3:
           // one btree to index column labels
-          key = new StringKey(map.getColumnLabel());
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
           if(operation == 0) m_defaultindex.insert(key, mid);
           else if(operation == 1) m_defaultindex.Delete(key, mid);
           else {
-            if(isColAffected) {
+            if(isColAffected || isColAffected) {
               if(operation == 2) m_defaultindex.insert(key, mid);
               else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
@@ -304,17 +297,16 @@ public class BigT extends Heapfile
           break;
         case 5:
           // one btree to index column label and value (combined key) and
-          key = new StringKey(map.getRowLabel() + map.getValue());
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
           if(operation == 0) {
             m_defaultindex.insert(key, mid);
           } else if(operation == 1){
             m_defaultindex.Delete(key, mid);
           } else {
-            if(isRowAffected || isValueAffected) {
+            if(isRowAffected || isColAffected) {
               if(operation == 2) m_defaultindex.insert(key, mid);
               else if(operation == 3) m_defaultindex.Delete(key, mid);
             }
-
           }
           break;
       }
@@ -323,7 +315,6 @@ public class BigT extends Heapfile
     private RID checkDropMap ( Map map, RID mid) throws IOException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
       StringKey key = null;
       BTFileScan scan = null;
-      Stream stream = null;
       Map current_map = null;
       Map oldest_map = null;
       RID current_mid = null;
@@ -331,28 +322,10 @@ public class BigT extends Heapfile
       int timestamp_count = 0;
       KeyDataEntry current_entry = null;
       
+      key = new StringKey(map.getRowLabel() + map.getColumnLabel());
+      
       try {
-        switch (m_strategy) {
-            case 1:
-                stream = openStream(1, map.getRowLabel(), map.getColumnLabel(), "*");
-                break;
-            case 2:
-                key = new StringKey(map.getRowLabel());
-                scan = m_defaultindex.new_scan(key, key);
-                break;
-            case 3:
-                key = new StringKey(map.getColumnLabel());
-                scan = m_defaultindex.new_scan(key, key);
-                break;
-            case 4:
-                key = new StringKey(map.getRowLabel() + map.getColumnLabel());
-                scan = m_defaultindex.new_scan(key, key);
-                break;
-            case 5:
-                key = new StringKey(map.getRowLabel());
-                scan = m_defaultindex.new_scan(key, null);
-                break;
-        }
+        scan = m_defaultindex.new_scan(key, key);
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -360,34 +333,25 @@ public class BigT extends Heapfile
       }
       
       try {
-      	if (m_strategy == 1)
-      	{
-      	  current_map = stream.getNext(current_mid);
-      	}
-        else
-        {
-          current_entry = scan.get_next();
-        }
+      	current_entry = scan.get_next();
       }
       catch (Exception e) {
         System.err.println("Failed to get next entry in BTFileScan in checkDropMap\n");
       }
 
-      if ((current_entry != null) || (current_map != null))
+      if (current_entry != null)
       {
-        if (m_strategy != 1)
-      	{
-          current_mid = ((LeafData) current_entry.data).getData();
-          try {
-            current_map = super.getMap(current_mid);
-          }
-          catch (Exception e) {
-            System.err.println("Failed to getMap from heapfile in checkDropMap\n");
-          }
+        current_mid = ((LeafData) current_entry.data).getData();
+        try {
+          current_map = super.getMap(current_mid);
+        }
+        catch (Exception e) {
+          System.err.println("Failed to getMap from heapfile in checkDropMap\n");
         }
         
         if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
         {
+          System.err.println("SETTING OLDEST\n");
           timestamp_count += 1;
           oldest = current_mid;
           oldest_map = current_map;
@@ -396,28 +360,16 @@ public class BigT extends Heapfile
         while(current_entry != null)
         {
           try {
-            //System.out.println("MAP = " + current_map.getValue());
-            if (m_strategy == 1)
-      	    {
-      	      current_map = stream.getNext(current_mid);
-      	      if(current_map == null) break;
-      	    }
-            else
-            {
-              current_entry = scan.get_next();
-              if(current_entry == null) break;
-            }
+            current_entry = scan.get_next();
+            if(current_entry == null) break;
 
-            if (m_strategy != 1)
-      	    {
-              current_mid = ((LeafData) current_entry.data).getData();
-              current_map = super.getMap(current_mid);
-            }
+            current_mid = ((LeafData) current_entry.data).getData();
+            current_map = super.getMap(current_mid);
 
             if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
             {
               timestamp_count += 1;
-          
+              
               if ((oldest_map == null) || (current_map.getTimeStamp() < oldest_map.getTimeStamp()))
               {
                 oldest = current_mid;
@@ -439,10 +391,6 @@ public class BigT extends Heapfile
       if (scan != null)
       {
         scan.DestroyBTreeFileScan();
-      }
-      if (stream != null)
-      {
-        stream.close();
       }
       
       return oldest;
