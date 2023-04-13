@@ -529,24 +529,26 @@ public class Sort extends Iterator implements GlobalConst
     String s = new String(c);
     //    short fld_no = 1;
     
-    switch (sortFldType.attrType) {
-    case AttrType.attrInteger: 
+//    switch (sortFldType.attrType) {
+//    case AttrType.attrInteger:
       //      lastElem.setHdr(fld_no, junk, null);
-      lastElem.setIntFld(_sort_fld, Integer.MAX_VALUE);
-      break;
-    case AttrType.attrReal:
+      lastElem.setIntFld(3, Integer.MAX_VALUE);
+//      break;
+//    case AttrType.attrReal:
       //      lastElem.setHdr(fld_no, junk, null);
-      lastElem.setFloFld(_sort_fld, Float.MAX_VALUE);
-      break;
-    case AttrType.attrString:
+//      lastElem.setFloFld(_sort_fld, Float.MAX_VALUE);
+//      break;
+//    case AttrType.attrString:
       //      lastElem.setHdr(fld_no, junk, s_size);
-      lastElem.setStrFld(_sort_fld, s);
-      break;
-    default:
+      lastElem.setStrFld(1, s);
+      lastElem.setStrFld(2, s);
+      lastElem.setStrFld(4, s);
+//      break;
+//    default:
       // don't know how to handle attrSymbol, attrNull
       //System.err.println("error in sort.java");
-      throw new UnknowAttrType("Sort.java: don't know how to handle attrSymbol, attrNull");
-    }
+//      throw new UnknowAttrType("Sort.java: don't know how to handle attrSymbol, attrNull");
+//    }
     
     return;
   }
