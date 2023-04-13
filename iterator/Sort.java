@@ -215,7 +215,7 @@ public class Sort extends Iterator implements GlobalConst
       p_elems_curr_Q --;
       
       comp_res = MapUtils.CompareTupleWithValueSort(sortFldType, cur_node.tuple, odr_type, lastElem);  // need tuple_utils.java
-      
+      //System.out.println("Comparison result:"+comp_res);
       if ((comp_res < 0 && order.tupleOrder == TupleOrder.Ascending) || (comp_res > 0 && order.tupleOrder == TupleOrder.Descending)) {
 	// doesn't fit in current run, put into the other queue
 	try {
@@ -229,7 +229,11 @@ public class Sort extends Iterator implements GlobalConst
       else {
 	// set lastElem to have the value of the current tuple,
 	// need tuple_utils.java
-	MapUtils.SetValue(lastElem, cur_node.tuple, _sort_fld, sortFldType);
+    //	MapUtils.SetValue(lastElem, cur_node.tuple, _sort_fld, sortFldType);
+    lastElem.mapCopy(cur_node.tuple);
+
+    // here we need to copy the whole map instead of just one fiels
+
 	// write tuple to output file, need io_bufs.java, type cast???
 	//	System.out.println("Putting tuple into run " + (run_num + 1)); 
 	//	cur_node.tuple.print(_in);
@@ -556,7 +560,7 @@ public class Sort extends Iterator implements GlobalConst
    * @param am an iterator for accessing the tuples
    * @param sort_fld the field number of the field to sort on
    * @param sort_order the sorting order (ASCENDING, DESCENDING)
-   * @param sort_field_len the length of the sort field
+//   * @param sort_field_len the length of the sort field
    * @param n_pages amount of memory (in pages) available for sorting
    * @exception IOException from lower layers
    * @exception SortException something went wrong in the lower layer. 
