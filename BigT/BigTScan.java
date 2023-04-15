@@ -49,7 +49,7 @@ public class BigTScan
    *@exception FieldNumberOutOfBoundException array out of bounds
    *@exception WrongPermat exception for wrong FldSpec argument
    */
-  public Map get_next()
+  public Map getNext(RID mid)
     throws JoinsException,
 	   IOException,
            InvalidMapSizeException,
@@ -59,11 +59,10 @@ public class BigTScan
 	   UnknowAttrType,
 	   FieldNumberOutOfBoundException,
 	   WrongPermat
-    { 
-      RID mid = new RID();    
+    {   
       Map next_map = this.currentScan.getNext(mid);
       
-      if (next_map == null)
+      if ((next_map == null) && (this.currentHeapIndex < 4))
       {
         this.currentHeapIndex += 1;
         this.currentScan.closescan();
@@ -78,7 +77,7 @@ public class BigTScan
    *implement the abstract method close() from super class Iterator
    *to finish cleaning up
    */
-  public void close() 
+  public void closescan() 
     {
       if (currentScan != null) {
 	currentScan.closescan();

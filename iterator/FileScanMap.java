@@ -3,6 +3,7 @@ package iterator;
 
 import BigT.BigT;
 import BigT.Map;
+import BigT.BigTScan;
 import btree.*;
 import global.PageId;
 import global.RID;
@@ -10,7 +11,7 @@ import heap.Scan;
 
 
 public class FileScanMap extends Iterator {
-    Scan scan = null;
+    BigTScan scan = null;
     BTFileScan btScan = null;
     BigT bigtable;
 
@@ -24,6 +25,11 @@ public class FileScanMap extends Iterator {
                 hi = colFilter[1] + rowFilter[1];
                 System.out.println("Filters = " + lo + " " + hi);
                 btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
+                
+                if (btScan == null)
+                {
+                  scan = bigtable.openScan();
+                }
             }
         } catch (Exception e) {
             System.out.println(e);
