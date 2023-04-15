@@ -20,16 +20,16 @@ public class FileScanMap extends Iterator {
             this.bigtable = bigtable;
             String lo, hi;
 
-            if (colFilter != null && rowFilter != null) {
-            	lo = colFilter[0] + rowFilter[0];
-                hi = colFilter[1] + rowFilter[1];
+            if (rowFilter != null && colFilter != null) {
+            	lo = rowFilter[0] + colFilter[0];
+                hi = rowFilter[1] + colFilter[1];
                 System.out.println("Filters = " + lo + " " + hi);
                 btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
-                
-                if (btScan == null)
-                {
-                  scan = bigtable.openScan();
-                }
+            }
+            
+            if (btScan == null)
+            {
+                scan = bigtable.openScan();
             }
         } catch (Exception e) {
             System.out.println(e);

@@ -62,7 +62,7 @@ public class BigTScan
     {   
       Map next_map = this.currentScan.getNext(mid);
       
-      if ((next_map == null) && (this.currentHeapIndex < 4))
+      while ((next_map == null) && (this.currentHeapIndex < 4))
       {
         this.currentHeapIndex += 1;
         this.currentScan.closescan();
