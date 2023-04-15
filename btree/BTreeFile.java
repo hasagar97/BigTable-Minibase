@@ -699,7 +699,7 @@ public class BTreeFile extends IndexFile
 	  
 	  currentIndexPage.deleteSortedRecord 
 	    (new RID(currentIndexPage.getCurPage(),
-		     (int)currentIndexPage.getSlotCnt()-1) );              
+		     (int)currentIndexPage.getSlotCnt()-1, rid.heapIndex));              
 	}
 	
 	
@@ -731,7 +731,7 @@ public class BTreeFile extends IndexFile
 				  ((IndexData)tmpEntry.data).getData());
 
 	  currentIndexPage.deleteSortedRecord
-	    (new RID(currentIndexPage.getCurPage(), i) );      
+	    (new RID(currentIndexPage.getCurPage(), i, rid.heapIndex) );      
 	  
 	}
 	
@@ -888,7 +888,7 @@ public class BTreeFile extends IndexFile
 	      
 	      currentLeafPage.deleteSortedRecord
 		(new RID(currentLeafPage.getCurPage(),
-			 (int)currentLeafPage.getSlotCnt()-1) );              
+			 (int)currentLeafPage.getSlotCnt()-1, rid.heapIndex));              
 	    }
 	  }	  
 	  

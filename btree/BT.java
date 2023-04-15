@@ -98,7 +98,7 @@ public class BT  implements GlobalConst{
     throws  NodeNotMatchException
     {
       if ( pageType==NodeType.LEAF)
-	return 8;
+	return 12;
       else if ( pageType==NodeType.INDEX)
 	return 4;
       else throw new  NodeNotMatchException(null, "key types do not match"); 
@@ -148,6 +148,7 @@ public class BT  implements GlobalConst{
       KeyClass key;
       DataClass data;
       int n;
+      
       try {
 	
 	if ( nodeType==NodeType.INDEX ) {
@@ -155,11 +156,12 @@ public class BT  implements GlobalConst{
 	  data= new IndexData( Convert.getIntValue(offset+length-4, from));
 	}
 	else if ( nodeType==NodeType.LEAF) {
-	  n=8;
+	  n=12;
 	  RID rid=new RID();
-	  rid.slotNo =   Convert.getIntValue(offset+length-8, from);
+	  rid.slotNo =   Convert.getIntValue(offset+length-12, from);
 	  rid.pageNo =new PageId();
-	  rid.pageNo.pid= Convert.getIntValue(offset+length-4, from); 
+	  rid.pageNo.pid= Convert.getIntValue(offset+length-8, from);
+	  rid.heapIndex = Convert.getIntValue(offset+length-4, from);
 	  data = new LeafData(rid);
 	}
 	else throw new NodeNotMatchException(null, "node types do not match"); 
@@ -204,7 +206,7 @@ public class BT  implements GlobalConst{
         if( entry.data instanceof IndexData )
 	  n+=4;
         else if (entry.data instanceof LeafData )      
-	  n+=8;
+	  n+=12;
 	
         data=new byte[n];
 	
@@ -227,6 +229,8 @@ public class BT  implements GlobalConst{
 			       m, data);
 	  Convert.setIntValue( ((LeafData)entry.data).getData().pageNo.pid,
 			       m+4, data);
+	  Convert.setIntValue( ((LeafData)entry.data).getData().heapIndex,
+			       m+8, data);
 	  
         }
         else throw new NodeNotMatchException(null, "node types do not match");

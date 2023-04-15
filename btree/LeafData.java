@@ -10,21 +10,22 @@ public class LeafData extends DataClass {
   public String toString() {
      String s;
      s="[ "+ (new Integer(myRid.pageNo.pid)).toString() +" "
-              + (new Integer(myRid.slotNo)).toString() + " ]";
+              + (new Integer(myRid.slotNo)).toString() 
+              + (new Integer(myRid.heapIndex)).toString() + " ]";
      return s;
   }
 
   /** Class constructor
    *  @param    rid  the data rid
    */
-  LeafData(RID rid) {myRid= new RID(rid.pageNo, rid.slotNo);};  
+  LeafData(RID rid) {myRid= new RID(rid.pageNo, rid.slotNo, rid.heapIndex);};  
 
   /** get a copy of the rid
   *  @return the reference of the copy 
   */
-  public RID getData() {return new RID(myRid.pageNo, myRid.slotNo);};
+  public RID getData() {return new RID(myRid.pageNo, myRid.slotNo, myRid.heapIndex);};
 
   /** set the rid
    */ 
-  public void setData(RID rid) { myRid= new RID(rid.pageNo, rid.slotNo);};
+  public void setData(RID rid) { myRid= new RID(rid.pageNo, rid.slotNo, rid.heapIndex);};
 }   

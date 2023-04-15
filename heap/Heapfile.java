@@ -52,6 +52,7 @@ public class Heapfile implements Filetype,  GlobalConst {
   private     boolean     _file_deleted;
   private     String 	 _fileName;
   private static int tempfilecount = 0;
+  private int _index = 0;
   
   
   
@@ -294,6 +295,11 @@ public class Heapfile implements Filetype,  GlobalConst {
       //  - no datapage pinned yet    
       
     } // end of constructor 
+    
+  public void setIndex(int index)
+  {
+    _index = index;
+  }
   
   /** Return number of records in file.
    *
@@ -596,6 +602,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       
       unpinPage(currentDirPageId, true /* = DIRTY */);
+      rid.heapIndex = _index;
       
       
       return rid;
@@ -847,6 +854,7 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       Map amap = new Map();
       amap = dataPage.getRecord(rid);
+      rid.heapIndex = _index;
       
       /*
        * getRecord has copied the contents of rid into recPtr and fixed up

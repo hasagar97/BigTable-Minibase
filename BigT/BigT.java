@@ -27,6 +27,7 @@ public class BigT
   */
   public BigT(java.lang.String name) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
     m_name = name;
+    Heapfile heapfile = null;
     
     try
     {
@@ -35,19 +36,29 @@ public class BigT
       // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
       // Type 1 No index
       m_index_files.add(null);
-      m_heap_files.add(new Heapfile(name + "_1"));
+      heapfile = new Heapfile(name + "_1");
+      heapfile.setIndex(0);
+      m_heap_files.add(heapfile);
       // Type 2 Row index
       m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1));
-      m_heap_files.add(new Heapfile(name + "_2"));
+      heapfile = new Heapfile(name + "_2");
+      heapfile.setIndex(1);
+      m_heap_files.add(heapfile);
       // Type 3 Column index
       m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1));
-      m_heap_files.add(new Heapfile(name + "_3"));
+      heapfile = new Heapfile(name + "_3");
+      heapfile.setIndex(2);
+      m_heap_files.add(heapfile);
       // Type 4 Row+Column index
       m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
-      m_heap_files.add(new Heapfile(name + "_4"));
+      heapfile = new Heapfile(name + "_4");
+      heapfile.setIndex(3);
+      m_heap_files.add(heapfile);
       // Type 5 Row+Value index
       m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
-      m_heap_files.add(new Heapfile(name + "_5"));
+      heapfile = new Heapfile(name + "_5");
+      heapfile.setIndex(4);
+      m_heap_files.add(heapfile);
     }
     catch (Exception e)
     {
@@ -423,7 +434,6 @@ public class BigT
         
         if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
         {
-          System.err.println("SETTING OLDEST\n");
           timestamp_count += 1;
           oldest = current_mid;
           oldest_map = current_map;

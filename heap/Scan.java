@@ -97,6 +97,9 @@ public class Scan implements GlobalConst{
     
     rid.pageNo.pid = userrid.pageNo.pid;    
     rid.slotNo = userrid.slotNo;
+    rid.heapIndex = userrid.heapIndex;
+    System.err.println("GET NEXT INDEX\n");
+    System.err.println(rid.heapIndex);
          
     try {
       recptrtuple = datapage.getRecord(rid);
