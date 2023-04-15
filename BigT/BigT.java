@@ -602,6 +602,17 @@ public class BigT
     {
     	return m_heap_files.get(mid.heapIndex).getMap(mid);
     }
+    
+    public BigTScan openScan() 
+    throws IOException,
+	   FileScanException,
+	   TupleUtilsException, 
+	   InvalidRelation,
+	   InvalidMapSizeException
+    {
+      BigTScan newscan = new BigTScan(this);
+      return newscan;
+    }
   
   /*
     Initialize a stream of maps where row label matching rowFilter, 
