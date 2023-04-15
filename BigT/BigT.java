@@ -18,6 +18,7 @@ public class BigT
   public Vector<Heapfile> m_heap_files = new Vector<Heapfile>();
   public BTreeFile m_defaultindex = null;
   public Vector<BTreeFile> m_index_files = new Vector<BTreeFile>();
+  public static final int MAXINDEXNAME = 40;
   
   /* 
     Initializes the big table
@@ -414,7 +415,7 @@ public class BigT
       {
         current_mid = ((LeafData) current_entry.data).getData();
         try {
-          current_map = super.getMap(current_mid);
+          current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
         }
         catch (Exception e) {
           System.err.println("Failed to getMap from heapfile in checkDropMap\n");
@@ -435,7 +436,7 @@ public class BigT
             if(current_entry == null) break;
 
             current_mid = ((LeafData) current_entry.data).getData();
-            current_map = super.getMap(current_mid);
+            current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
 
             if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
             {
@@ -590,7 +591,17 @@ public class BigT
 
       return updateSuccess;
     }
-
+    
+    public Map getMap(RID mid)
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
+	   HFException, 
+	   HFDiskMgrException,
+	   HFBufMgrException,
+	   Exception
+    {
+    	return m_heap_files.get(mid.heapIndex).getMap(mid);
+    }
   
   /*
     Initialize a stream of maps where row label matching rowFilter, 

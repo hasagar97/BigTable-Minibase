@@ -39,6 +39,7 @@ db:
 	make -C index
 	make -C iterator
 	make -C BigT
+	make -C dboperations
 	
 doc:
 	$(JAVADOC) $(DOCFILES)

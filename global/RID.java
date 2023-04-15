@@ -17,6 +17,10 @@ public class RID{
    */
   public PageId pageNo = new PageId();
   
+  /** public int heapIndex
+   */
+  public int heapIndex;
+  
   /**
    * default constructor of class
    */
