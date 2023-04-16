@@ -15,7 +15,7 @@ public class phase2SortingTest {
         System.out.println("Slot No = " + rid.slotNo + " Page No = " + rid.pageNo.pid);
     }
 
-    public static void main(String[] args) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, SpaceNotAvailableException, InvalidSlotNumberException {
+    public static void main(String[] args) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, SpaceNotAvailableException, InvalidSlotNumberException, InvalidMapSizeException {
         String dbpath = "phase2.test3.db";
         SystemDefs sysdef = new SystemDefs( dbpath, 5000 ,5000,"Clock");
         Heapfile f = new Heapfile("first_table5");
@@ -39,17 +39,17 @@ public class phase2SortingTest {
         }
         
 
-//        Stream s = new Stream((BigT) f, 1, "[0,3]", "*", "*");
-//
-//        while (true) {
-//            try {
-//                Map item = s.getNext();
-//                if(item == null) break;
-//                System.out.println("In Scan");
-//                item.print();
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        Stream s = new Stream((BigT) f, 1, "[0,3]", "*", "*");
+
+        while (true) {
+            try {
+                Map item = s.getNext(new RID());
+                if(item == null) break;
+                System.out.println("In Scan");
+                item.print();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

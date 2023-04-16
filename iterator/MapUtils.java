@@ -235,12 +235,13 @@ public class MapUtils
 				default:
 					order_priority = new int[]{0,1,2};
 			}
-		
+
       // for(int i=0;i<order_priority.length;i++){
       //   System.out.println("order_priority: "+order_priority[i]);
       // }
       // System.out.print("\n");
-      // return CompareMapWithMap( t1, value, order_type);
+      System.out.println("comparing for:"+t1.toString() +" AND "+ value.toString());
+//       return CompareMapWithMap( t1, value, order_type);
       return CompareMapWithMap2(fldType, t1, order_priority,value);
     }
   /**

@@ -204,6 +204,18 @@ public class Map implements GlobalConst{
         return this.map_offset;
     }
 
+
+    @Override
+    public String toString() {
+        try{
+            return "{ row_label: "+getRowLabel() + ", column_label: " + getColumnLabel() + ", timestamp: "
+                    + getTimeStamp() + ", value: " + getValue()+" }";
+        }
+        catch (Exception E){
+            E.printStackTrace();
+        }
+        return "toString failed in Map.java";
+    }
     /*
       Print out the map.
     */

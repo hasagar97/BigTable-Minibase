@@ -651,7 +651,7 @@ public class Sort extends Iterator implements GlobalConst
     o_buf.init(bufs, _n_pages, tuple_size, temp_files[0], false);
     //    output_tuple = null;
     
-    max_elems_in_heap = 100;
+    max_elems_in_heap = 5;
     sortFldLen = sort_fld_len;
     odr_type = order_type;
     Q = new pnodeSplayPQ(order_type, in[sort_fld - 1], order);
