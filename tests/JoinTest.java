@@ -128,8 +128,8 @@ class JoinsDriver implements GlobalConst {
     int numboats = 5;
     int numboats_attrs = 3;
 
-    String dbpath = "G:\\ASUClasswork\\CSE510DBSI\\BigTableDBMS"+System.getProperty("user.name")+".minibase.jointestdb";
-    String logpath = "G:\\ASUClasswork\\CSE510DBSI\\BigTableDBMS"+System.getProperty("user.name")+".joinlog";
+    String dbpath = "Users\\rsalian\\Desktop\\"+System.getProperty("user.name")+".minibase.jointestdb";
+    //String logpath = "Users\\rsalian\\Desktop\\"+System.getProperty("user.name")+".joinlog";
 
 //    String remove_cmd = "echo ";
 //    String remove_logcmd = remove_cmd + logpath;
@@ -1544,12 +1544,10 @@ class JoinsDriver implements GlobalConst {
 
       short  []  Jsizes = new short[1];
       Jsizes[0] = 30;
-      AttrType [] JJtype = {
-	new AttrType(AttrType.attrString),
-      };
+      AttrType[] JJtype = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
 
-      short [] JJsize = new short[1];
-      JJsize[0] = 30;
+      short [] JJsize = {(short)20, (short)20, (short)4, (short)20};
+      //JJsize[0] = 30;
 
 
 
@@ -1618,6 +1616,7 @@ class JoinsDriver implements GlobalConst {
 				    10,
 				    inl, "boats.in",
 				    outFilter2, null, proj2, 1);
+    System.out.println("Nested loop join: "+ nlj);
       }
       catch (Exception e) {
 	System.err.println ("*** Error preparing for nested_loop_join");
@@ -1632,8 +1631,9 @@ class JoinsDriver implements GlobalConst {
       Sort sort_names = null;
       try {
 //        new Sort(attrTypes, len_in, str_sizes, iterator, 4, new TupleOrder(TupleOrder.Ascending), 20, 10, orderType);
-	sort_names = new Sort (JJtype,(short)1, JJsize,
-			       (iterator.Iterator) nlj, 1, ascending, JJsize[0], 10,2);
+	sort_names = new Sort (JJtype,(short)4, JJsize,
+			       (iterator.Iterator) nlj, 4, ascending, 20, 10,6);
+    System.out.println(sort_names);
       }
       catch (Exception e) {
 	System.err.println ("*** Error preparing for sorting");
@@ -1644,10 +1644,10 @@ class JoinsDriver implements GlobalConst {
 
       System.out.print( "After sorting the output tuples.\n");
 
-
       QueryCheck qcheck6 = new QueryCheck(6);
 //
       try {
+//	while ((t =sort_names.get_next()) !=null) {
 	while ((t =sort_names.get_next()) !=null) {
 //	  t.print(JJtype);
       t.print();

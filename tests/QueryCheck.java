@@ -642,7 +642,8 @@ public class QueryCheck {
 
   // report the status of the query
   public void report(int querynum) {
-    if( total<tuplenum )
+      System.out.println(total);
+    if( total<querynum )
       System.out.print ("\n*****Error occured in QueryCheck.\n\n");
 
     TupleList temp;
