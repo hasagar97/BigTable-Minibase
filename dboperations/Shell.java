@@ -43,7 +43,7 @@ public class Shell {
                     TYPE = Integer.valueOf(words[2]);
 
                     BIGTABLENAME = BIGTABLENAME + "_" + String.valueOf(TYPE);
-                    bigtable = new BigT(BIGTABLENAME, TYPE);
+                    bigtable = new BigT(BIGTABLENAME);
                     Batchinsert batchinsert = new Batchinsert(DATAFILENAME, TYPE, bigtable);
                     batchinsert.run();
 
@@ -59,7 +59,7 @@ public class Shell {
                     NUMBUF = Integer.valueOf(words[7]);
 
                     BIGTABLENAME = BIGTABLENAME + "_" + String.valueOf(TYPE);
-                    if(bigtable == null) bigtable = new BigT(BIGTABLENAME, TYPE);
+                    if(bigtable == null) bigtable = new BigT(BIGTABLENAME);
                     Query query = new Query(bigtable, TYPE, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER, NUMBUF);
                     query.run();
 

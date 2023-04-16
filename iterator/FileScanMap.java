@@ -3,6 +3,7 @@ package iterator;
 
 import BigT.BigT;
 import BigT.Map;
+import BigT.BigTScan;
 import btree.*;
 import global.PageId;
 import global.RID;
@@ -10,7 +11,7 @@ import heap.Scan;
 
 
 public class FileScanMap extends Iterator {
-    Scan scan = null;
+    BigTScan scan = null;
     BTFileScan btScan = null;
     BigT bigtable;
 
@@ -19,54 +20,16 @@ public class FileScanMap extends Iterator {
             this.bigtable = bigtable;
             String lo, hi;
 
-            switch (this.bigtable.m_strategy) {
-                case 1:
-                    if (rowFilter != null) {
-                        lo = rowFilter[0];
-                        hi = rowFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
-                    }
-                    break;
-
-                case 2:
-                    if (colFilter != null) {
-                        lo = colFilter[0];
-                        hi = colFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
-                    }
-                    break;
-
-                case 3:
-                    if (rowFilter != null && colFilter != null) {
-                        lo = rowFilter[0] + colFilter[0];
-                        hi = rowFilter[1] + colFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
-                    }
-                    break;
-
-                case 4:
-                    if (rowFilter != null && valFilter != null) {
-                        lo = rowFilter[0] + valFilter[0];
-                        hi = rowFilter[1] + valFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
-                    }
-                    break;
-
-                case 5:
-                    if (colFilter != null && valFilter != null) {
-                        lo = colFilter[0] + valFilter[0];
-                        hi = colFilter[1] + valFilter[1];
-                        System.out.println("Filters = " + lo + " " + hi);
-                        btScan = this.bigtable.m_indexfile1.new_scan(new StringKey(lo), new StringKey(hi));
-                    }
+            if (rowFilter != null && colFilter != null) {
+            	lo = rowFilter[0] + colFilter[0];
+                hi = rowFilter[1] + colFilter[1];
+                System.out.println("Filters = " + lo + " " + hi);
+                btScan = this.bigtable.m_defaultindex.new_scan(new StringKey(lo), new StringKey(hi));
             }
-
-            if (btScan == null) {
-                scan = this.bigtable.openScan();
+            
+            if (btScan == null)
+            {
+                scan = bigtable.openScan();
             }
         } catch (Exception e) {
             System.out.println(e);

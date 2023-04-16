@@ -12,53 +12,53 @@ import iterator.*;
 import BigT.*;
 
 
-public class BigT extends Heapfile 
+public class BigT 
 {
   private java.lang.String m_name;
-  public int m_strategy;
+  public Vector<Heapfile> m_heap_files = new Vector<Heapfile>();
   public BTreeFile m_defaultindex = null;
-  public BTreeFile m_indexfile1 = null;
-  public BTreeFile m_indexfile2 = null;
+  public Vector<BTreeFile> m_index_files = new Vector<BTreeFile>();
+  public static final int MAXINDEXNAME = 40;
   
   /* 
     Initializes the big table
   	name - name of the table
   	type - the clustering/index strategy to use
   */
-  public BigT(java.lang.String name, int type) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
-    super(name);
+  public BigT(java.lang.String name) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
     m_name = name;
-    m_strategy = type;
+    Heapfile heapfile = null;
     
     try
     {
-      m_defaultindex = new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
-      System.out.println("Index name = " + name + "_row_col_index");
-      switch (m_strategy) {
-        case 1:
-          // one btree to index row labels
-          m_indexfile1 = new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 2:
-          // one btree to index column labels
-          m_indexfile1 = new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 3:
-          // one btree to index column label and row label (combined key) and
-          // one btree to index timestamps
-          m_indexfile1 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 4:
-          // one btree to index row label and value (combined key) (default index file) and
-          // one btree to index timestamps
-          m_indexfile1 = new BTreeFile(name + "_row_val_index", AttrType.attrString, MAXINDEXNAME, 1);
-          m_indexfile2 = new BTreeFile(name + "_timestamp_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-        case 5:
-          // one btree to index timestamp and value (combined key)
-          m_indexfile1 = new BTreeFile(name + "_column_val_index", AttrType.attrString, MAXINDEXNAME, 1);
-          break;
-      }
+      // Default Row+Column index across all heap files
+      m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
+      // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
+      // Type 1 No index
+      m_index_files.add(null);
+      heapfile = new Heapfile(name + "_1");
+      heapfile.setIndex(0);
+      m_heap_files.add(heapfile);
+      // Type 2 Row index
+      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1));
+      heapfile = new Heapfile(name + "_2");
+      heapfile.setIndex(1);
+      m_heap_files.add(heapfile);
+      // Type 3 Column index
+      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1));
+      heapfile = new Heapfile(name + "_3");
+      heapfile.setIndex(2);
+      m_heap_files.add(heapfile);
+      // Type 4 Row+Column index
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      heapfile = new Heapfile(name + "_4");
+      heapfile.setIndex(3);
+      m_heap_files.add(heapfile);
+      // Type 5 Row+Value index
+      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      heapfile = new Heapfile(name + "_5");
+      heapfile.setIndex(4);
+      m_heap_files.add(heapfile);
     }
     catch (Exception e)
     {
@@ -71,7 +71,7 @@ public class BigT extends Heapfile
   */
     public void deleteBigt ()
     {
-      // Destroy the index files
+      // Destroy the index and heap files
       if (m_defaultindex != null)
       {
         try {
@@ -81,31 +81,27 @@ public class BigT extends Heapfile
           System.err.println("Failed to destroy default index\n");
         }
       }
-      if (m_indexfile1 != null)
+      
+      for (int i = 0; i < m_index_files.size(); i++)
       {
-        try {
-          m_indexfile1.destroyFile();
+        if (m_index_files.get(i) != null)
+        {
+          try {
+            m_index_files.get(i).destroyFile();
+          }
+          catch (Exception e) {
+            System.err.println("Failed to destroy index file\n");
+          }
         }
-        catch (Exception e) {
-          System.err.println("Failed to destroy indexfile1\n");
+        if (m_heap_files.get(i) != null)
+        {
+          try {
+            m_heap_files.get(i).deleteFile();
+          }
+          catch (Exception e) {
+            System.err.println("Failed to destroy heap file\n");
+          }
         }
-      }
-      if (m_indexfile2 != null)
-      {
-        try {
-          m_indexfile2.destroyFile();
-        }
-        catch (Exception e) {
-          System.err.println("Failed to destroy indexfile2\n");
-        }
-      }
-
-      // Destroy the heapfile
-      try {
-          super.deleteFile();
-      }
-      catch (Exception e) {
-          System.err.println("Failed to delete heapfile\n");
       }
     }
 
@@ -115,7 +111,14 @@ public class BigT extends Heapfile
     public int getMapCnt()
     {
       try {
-          return super.getMapCnt();
+        int totalCount = 0;
+        
+        for (Integer i = 0; i < m_heap_files.size(); i++)
+        {
+          totalCount += m_heap_files.get(i).getMapCnt();
+        }
+        
+        return totalCount;
       }
       catch (Exception e) {
           System.err.println("Failed to get Map count\n");
@@ -250,12 +253,12 @@ public class BigT extends Heapfile
 //        scan.DestroyBTreeFileScan();
 //  }
 
-    private void updateIndexFiles(Map map, RID mid, int operation) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
-      updateIndexFiles(map, mid, operation, false, false, false, false);
+    private void updateIndexFiles(Map map, RID mid, int operation, int type) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
+      updateIndexFiles(map, mid, operation, type, false, false, false, false);
     }
 
     // operation: 0 -> insert, 1 -> delete, 2 -> inserts only the affected indexes, 3 -> deletes only the affected indexes
-    private void updateIndexFiles (Map map, RID mid, int operation,
+    private void updateIndexFiles (Map map, RID mid, int operation, int type,
                                    Boolean isRowAffected,
                                    Boolean isColAffected,
                                    Boolean isTimestampAffected,
@@ -268,90 +271,124 @@ public class BigT extends Heapfile
             LeafRedistributeException, RecordNotFoundException, InsertRecException,
             DeleteFashionException, RedistributeException, FreePageException,
             IndexFullDeleteException {
-      StringKey key, key1, key2;
-      switch (m_strategy) {
-        case 1:
-          // one btree to index row labels
-          key = new StringKey(map.getRowLabel());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
-          else {
-            if(isRowAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
-            }
-          }
+      StringKey defaultkey, key;
+      
+      defaultkey = new StringKey(map.getRowLabel() + map.getColumnLabel());
+      switch (type) {
+      	case 1:
+          // no index
+          if(operation == 0) m_defaultindex.insert(defaultkey, mid);
+          else if(operation == 1) m_defaultindex.Delete(defaultkey, mid);
           break;
         case 2:
-          // one btree to index column labels
-          key = new StringKey(map.getColumnLabel());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          // one btree to index row labels
+          key = new StringKey(map.getRowLabel());
+          if(operation == 0) 
+          {
+            m_defaultindex.insert(defaultkey, mid);
+            m_index_files.get(1).insert(key, mid);
+          }
+          else if(operation == 1)
+          { 
+            m_defaultindex.Delete(defaultkey, mid);
+            m_index_files.get(1).Delete(key, mid);
+          }
           else {
-            if(isColAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
+            if(isRowAffected) {
+              if(operation == 2) 
+              {
+                m_defaultindex.insert(defaultkey, mid);
+                m_index_files.get(1).insert(key, mid);
+              }
+              else if(operation == 3)
+              {
+                m_defaultindex.Delete(defaultkey, mid);
+                m_index_files.get(1).Delete(key, mid);
+              }
             }
           }
           break;
         case 3:
-          // one btree to index column label and row label (combined key) and
-          // one btree to index timestamps
-          key1 = new StringKey(map.getRowLabel() + map.getColumnLabel());
-          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
-          if(operation == 0) {
-//            System.out.println("Inserting key1 into row_col_index = " + key1);
-            m_defaultindex.insert(key1, mid);
-            m_indexfile1.insert(key2, mid);
-          } else if(operation == 1) {
-//            System.out.println("Deleting MID from (key1)row_col_index = " + mid.pageNo.pid + " " + mid.slotNo);
-            Boolean didDeleteFromRowCol = m_defaultindex.Delete(key1, mid);
-//            System.out.println("Deleted from Row Col = " + didDeleteFromRowCol);
-            m_indexfile1.Delete(key2, mid);
-          } else {
-            if(isRowAffected || isColAffected) {
-              if(operation == 2) m_defaultindex.insert(key1, mid);
-              else if(operation == 3) m_defaultindex.Delete(key1, mid);
-            }
-
-            if(isTimestampAffected) {
-              if(operation == 2) m_indexfile1.insert(key2, mid);
-              else if(operation == 3) m_indexfile1.Delete(key2, mid);
+          // one btree to index column labels
+          key = new StringKey(map.getColumnLabel());
+          if(operation == 0) 
+          {
+            m_defaultindex.insert(defaultkey, mid);
+            m_index_files.get(2).insert(key, mid);
+          }
+          else if(operation == 1)
+          { 
+            m_defaultindex.Delete(defaultkey, mid);
+            m_index_files.get(2).Delete(key, mid);
+          }
+          else {
+            if(isColAffected) {
+              if(operation == 2) 
+              {
+                m_defaultindex.insert(defaultkey, mid);
+                m_index_files.get(2).insert(key, mid);
+              }
+              else if(operation == 3)
+              {
+                m_defaultindex.Delete(defaultkey, mid);
+                m_index_files.get(2).Delete(key, mid);
+              }
             }
           }
           break;
         case 4:
-          // one btree to index row label and value (combined key) and
-          // one btree to index timestamps
-          key1 = new StringKey(map.getRowLabel() + map.getValue());
-          key2 = new StringKey(Integer.toString(map.getTimeStamp()));
-          if(operation == 0) {
-            m_indexfile1.insert(key1, mid);
-            m_indexfile2.insert(key2, mid);
-          } else if(operation == 1){
-            m_indexfile1.Delete(key1, mid);
-            m_indexfile2.Delete(key2, mid);
-          } else {
-            if(isRowAffected || isValueAffected) {
-              if(operation == 2) m_indexfile1.insert(key1, mid);
-              else if(operation == 3) m_indexfile1.Delete(key1, mid);
-            }
-
-            if(isTimestampAffected) {
-              if(operation == 2) m_indexfile2.insert(key2, mid);
-              else if(operation == 3) m_indexfile2.Delete(key2, mid);
+          // one btree to index column label and row label (combined key) and
+          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
+          if(operation == 0) 
+          {
+            m_defaultindex.insert(defaultkey, mid);
+            m_index_files.get(3).insert(key, mid);
+          }
+          else if(operation == 1)
+          { 
+            m_defaultindex.Delete(defaultkey, mid);
+            m_index_files.get(3).Delete(key, mid);
+          }
+          else {
+            if(isRowAffected || isColAffected) {
+              if(operation == 2) 
+              {
+                m_defaultindex.insert(defaultkey, mid);
+                m_index_files.get(3).insert(key, mid);
+              }
+              else if(operation == 3)
+              {
+                m_defaultindex.Delete(defaultkey, mid);
+                m_index_files.get(3).Delete(key, mid);
+              }
             }
           }
           break;
         case 5:
-          // one btree to index timestamp + value combined labels
+          // one btree to index column label and value (combined key) and
           key = new StringKey(map.getColumnLabel() + map.getValue());
-          if(operation == 0) m_indexfile1.insert(key, mid);
-          else if(operation == 1) m_indexfile1.Delete(key, mid);
+          if(operation == 0) 
+          {
+            m_defaultindex.insert(defaultkey, mid);
+            m_index_files.get(4).insert(key, mid);
+          }
+          else if(operation == 1)
+          { 
+            m_defaultindex.Delete(defaultkey, mid);
+            m_index_files.get(4).Delete(key, mid);
+          }
           else {
-            if(isRowAffected) {
-              if(operation == 2) m_indexfile1.insert(key, mid);
-              else if(operation == 3) m_indexfile1.Delete(key, mid);
+            if(isColAffected || isValueAffected) {
+              if(operation == 2) 
+              {
+                m_defaultindex.insert(defaultkey, mid);
+                m_index_files.get(4).insert(key, mid);
+              }
+              else if(operation == 3)
+              {
+                m_defaultindex.Delete(defaultkey, mid);
+                m_index_files.get(4).Delete(key, mid);
+              }
             }
           }
           break;
@@ -368,24 +405,18 @@ public class BigT extends Heapfile
       int timestamp_count = 0;
       KeyDataEntry current_entry = null;
       
-      try {
-        key = new StringKey(map.getRowLabel() + map.getColumnLabel());
-      }
-      catch (Exception e) {
-        System.err.println("Failed to create new StringKey in checkDropMap\n");
-      }
+      key = new StringKey(map.getRowLabel() + map.getColumnLabel());
       
       try {
-        //System.out.println(key);
         scan = m_defaultindex.new_scan(key, key);
       }
       catch (Exception e) {
         e.printStackTrace();
-        System.err.println("Failed to create new BTFileScan in checkDropMap\n");
+        System.err.println("Failed to create new Scan in checkDropMap\n");
       }
       
       try {
-        current_entry = scan.get_next();
+      	current_entry = scan.get_next();
       }
       catch (Exception e) {
         System.err.println("Failed to get next entry in BTFileScan in checkDropMap\n");
@@ -394,32 +425,37 @@ public class BigT extends Heapfile
       if (current_entry != null)
       {
         current_mid = ((LeafData) current_entry.data).getData();
-        
         try {
-          current_map = super.getMap(current_mid);
+          current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
         }
         catch (Exception e) {
           System.err.println("Failed to getMap from heapfile in checkDropMap\n");
         }
         
-        timestamp_count += 1;
-        oldest = current_mid;
-        oldest_map = current_map;
+        if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
+        {
+          timestamp_count += 1;
+          oldest = current_mid;
+          oldest_map = current_map;
+        }
 
         while(current_entry != null)
         {
           try {
-            //System.out.println("MAP = " + current_map.getValue());
             current_entry = scan.get_next();
-
             if(current_entry == null) break;
+
             current_mid = ((LeafData) current_entry.data).getData();
-            current_map = super.getMap(current_mid);
-            timestamp_count += 1;
-          
-            if (oldest_map == null || current_map.getTimeStamp() < oldest_map.getTimeStamp())
+            current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
+
+            if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
             {
-              oldest = current_mid;
+              timestamp_count += 1;
+              
+              if ((oldest_map == null) || (current_map.getTimeStamp() < oldest_map.getTimeStamp()))
+              {
+                oldest = current_mid;
+              }
             }
           }
           catch (Exception e) {
@@ -434,7 +470,11 @@ public class BigT extends Heapfile
         oldest = null;
       }
 
-      scan.DestroyBTreeFileScan();
+      if (scan != null)
+      {
+        scan.DestroyBTreeFileScan();
+      }
+      
       return oldest;
     }
   
@@ -445,7 +485,7 @@ public class BigT extends Heapfile
     When a fourth map is inserted it drops the map with the oldest
     label from the big table
   */
-    public RID insertMap ( byte[] mapPtr)
+    public RID insertMap ( byte[] mapPtr, int type)
             throws InvalidSlotNumberException,
 		  InvalidMapSizeException,
 	   SpaceNotAvailableException,
@@ -454,28 +494,31 @@ public class BigT extends Heapfile
 	   HFDiskMgrException,
 	   IOException {
       RID mid = null;
+      Heapfile heap_file = null;
       
       try{
         Map map = new Map(mapPtr, 0);
+        heap_file = m_heap_files.get(type - 1);
 
         // Change insertRecord in heapfile to insertMap
-        mid = super.insertMap(mapPtr);
+        mid = heap_file.insertMap(mapPtr);
 
         // Index the Map
-        updateIndexFiles(map, mid, 0);
+        updateIndexFiles(map, mid, 0, type);
 
 //        // Check whether to drop the map
         RID oldestMapID = checkDropMap(map, mid);
 
         if(oldestMapID != null) {
           System.out.println("4th MID = " + oldestMapID.pageNo.pid + " " + oldestMapID.slotNo);
-          Map oldestMap = super.getMap(oldestMapID);
+          heap_file = m_heap_files.get(oldestMapID.heapIndex);
+          Map oldestMap = heap_file.getMap(oldestMapID);
 
-          updateIndexFiles(oldestMap, oldestMapID, 1);
+          updateIndexFiles(oldestMap, oldestMapID, 1, oldestMapID.heapIndex + 1);
 
 
           // Change deleteRecord in heapfile to deleteMap
-          Boolean didDelete = super.deleteMap(oldestMapID);
+          Boolean didDelete = heap_file.deleteMap(oldestMapID);
           System.out.println("Map deleted in heap = " + didDelete);
           //SystemDefs.JavabaseBM.softFlushAll();
         }
@@ -495,10 +538,11 @@ public class BigT extends Heapfile
       boolean deleteSuccess = false;
       
       try {
-        deleteSuccess = super.deleteMap(mid);
+        Heapfile heap_file = m_heap_files.get(mid.heapIndex);
+        deleteSuccess = heap_file.deleteMap(mid);
         if(deleteSuccess) {
-          Map map = super.getMap(mid); // getRecord from heapfile
-          updateIndexFiles(map, mid, 1);
+          Map map = heap_file.getMap(mid); // getRecord from heapfile
+          updateIndexFiles(map, mid, 1, mid.heapIndex + 1);
         }
       }
       catch (Exception e) {
@@ -512,11 +556,13 @@ public class BigT extends Heapfile
       boolean updateSuccess = false;
       
       try {
+        Heapfile heap_file = m_heap_files.get(mid.heapIndex);
+        
         // get current map
-        Map currentmap = super.getMap(mid);
+        Map currentmap = heap_file.getMap(mid);
 
         // update map (heapfile)
-        updateSuccess = super.updateMap(mid, newmap);
+        updateSuccess = heap_file.updateMap(mid, newmap);
 
         if(updateSuccess) {
           // find affected attributes
@@ -543,10 +589,10 @@ public class BigT extends Heapfile
           }
 
           // delete mid from those indexes
-          updateIndexFiles(currentmap, mid, 3, isRowAffected, isColAffected, isTimestampAffected, isValueAffected);
+          updateIndexFiles(currentmap, mid, 3, mid.heapIndex + 1, isRowAffected, isColAffected, isTimestampAffected, isValueAffected);
 
           // insert mid into the indexes which involve the affected keys
-          updateIndexFiles(newmap, mid, 2, isRowAffected, isColAffected, isTimestampAffected, isValueAffected);
+          updateIndexFiles(newmap, mid, 2, mid.heapIndex + 1, isRowAffected, isColAffected, isTimestampAffected, isValueAffected);
         }
       }
       catch (Exception e) {
@@ -555,7 +601,28 @@ public class BigT extends Heapfile
 
       return updateSuccess;
     }
-
+    
+    public Map getMap(RID mid)
+    throws InvalidSlotNumberException,
+		  InvalidMapSizeException,
+	   HFException, 
+	   HFDiskMgrException,
+	   HFBufMgrException,
+	   Exception
+    {
+    	return m_heap_files.get(mid.heapIndex).getMap(mid);
+    }
+    
+    public BigTScan openScan() 
+    throws IOException,
+	   FileScanException,
+	   TupleUtilsException, 
+	   InvalidRelation,
+	   InvalidMapSizeException
+    {
+      BigTScan newscan = new BigTScan(this);
+      return newscan;
+    }
   
   /*
     Initialize a stream of maps where row label matching rowFilter, 
@@ -575,11 +642,6 @@ public class BigT extends Heapfile
     java.lang.String valueFilter) throws InvalidMapSizeException, IOException
     {
       return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
-    }
-
-    public int getStrategy ()
-    {
-      return m_strategy;
     }
     
     public java.lang.String getName ()

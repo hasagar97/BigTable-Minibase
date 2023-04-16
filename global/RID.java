@@ -17,6 +17,10 @@ public class RID{
    */
   public PageId pageNo = new PageId();
   
+  /** public int heapIndex
+   */
+  public int heapIndex;
+  
   /**
    * default constructor of class
    */
@@ -25,10 +29,11 @@ public class RID{
   /**
    *  constructor of class
    */
-  public RID (PageId pageno, int slotno)
+  public RID (PageId pageno, int slotno, int heapindex)
     {
       pageNo = pageno;
       slotNo = slotno;
+      heapIndex = heapindex;
     }
   
   /**
@@ -38,6 +43,7 @@ public class RID{
     {
       pageNo = rid.pageNo;
       slotNo = rid.slotNo;
+      heapIndex = rid.heapIndex;
     }
   
   /** Write the rid into a byte array at offset
@@ -50,6 +56,7 @@ public class RID{
     {
       Convert.setIntValue ( slotNo, offset, ary);
       Convert.setIntValue ( pageNo.pid, offset+4, ary);
+      Convert.setIntValue ( heapIndex, offset+8, ary);
     }
   
   
@@ -61,7 +68,8 @@ public class RID{
   public boolean equals(RID rid) {
     
     if ((this.pageNo.pid==rid.pageNo.pid)
-	&&(this.slotNo==rid.slotNo))
+	&&(this.slotNo==rid.slotNo)
+	&&(this.heapIndex==rid.heapIndex))
       return true;
     else
       return false;

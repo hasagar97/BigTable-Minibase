@@ -18,11 +18,13 @@ import java.io.IOException;
 public class Batchinsert {
     private String data_file_path;
     private BigT bigtable;
+    private int type;
     PCounter pCounter = new PCounter();
 
     public Batchinsert(String DATAFILENAME, int TYPE, BigT bigtable) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
         this.data_file_path = DATAFILENAME;
         this.bigtable = bigtable;
+        this.type = TYPE;
         pCounter.initialize();
     }
 
@@ -42,7 +44,7 @@ public class Batchinsert {
             map.print();
 
             // Insert Map into BigTable
-            bigtable.insertMap(map.getMapByteArray());
+            bigtable.insertMap(map.getMapByteArray(), type);
         }
         reader.close();
         SystemDefs.JavabaseBM.softFlushAll();

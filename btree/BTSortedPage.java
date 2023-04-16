@@ -153,6 +153,7 @@ public class BTSortedPage  extends HFPage{
 	 // - slot directory compacted
 	 
 	 rid.slotNo = i;
+	 rid.heapIndex = ((LeafData)entry.data).getData().heapIndex;
 	 return rid;
      }
      catch (Exception e ) { 
