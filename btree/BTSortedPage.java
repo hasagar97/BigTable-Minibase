@@ -151,13 +151,13 @@ public class BTSortedPage  extends HFPage{
 	 // - record keys increase with increasing slot number 
 	 // (starting at slot 0)
 	 // - slot directory compacted
-	 
 	 rid.slotNo = i;
-	 rid.heapIndex = ((LeafData)entry.data).getData().heapIndex;
+     if(entry.data instanceof LeafData)
+	    rid.heapIndex = ((LeafData)entry.data).getData().heapIndex;
 	 return rid;
      }
      catch (Exception e ) { 
-       throw new InsertRecException(e, "insert record failed"); 
+       throw new InsertRecException(e, "insert record failed");
      }
      
      
