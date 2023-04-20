@@ -1,4 +1,4 @@
-batchinsert ../test_data_2 3 bigtablename
+batchinsert ../test_data_1 5 bigtablename
 query bigtablename 3 1 * * * 100
 query bigtablename 3 2 * * * 100
 query bigtablename 3 3 * * [00004,00005] 100

@@ -40,12 +40,12 @@ public class BigT
       heapfile.setIndex(0);
       m_heap_files.add(heapfile);
       // Type 2 Row index
-      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, MAXINDEXNAME, 1));
       heapfile = new Heapfile(name + "_2");
       heapfile.setIndex(1);
       m_heap_files.add(heapfile);
       // Type 3 Column index
-      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, MAXINDEXNAME, 1));
       heapfile = new Heapfile(name + "_3");
       heapfile.setIndex(2);
       m_heap_files.add(heapfile);
@@ -55,7 +55,7 @@ public class BigT
       heapfile.setIndex(3);
       m_heap_files.add(heapfile);
       // Type 5 Row+Value index
-      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
       heapfile = new Heapfile(name + "_5");
       heapfile.setIndex(4);
       m_heap_files.add(heapfile);

@@ -127,7 +127,8 @@ public class BTLeafPage extends BTSortedPage {
 
         entry=BT.getEntryFromBytes(getpage(), getSlotOffset(0), getSlotLength(0),
 				   keyType, NodeType.LEAF);
-	rid.heapIndex = ((LeafData)entry.data).getData().heapIndex;
+        if (entry.data instanceof LeafData)
+	        rid.heapIndex = ((LeafData)entry.data).getData().heapIndex;
 	
         return entry;
       }

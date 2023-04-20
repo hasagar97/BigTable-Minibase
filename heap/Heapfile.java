@@ -587,7 +587,8 @@ public class Heapfile implements Filetype,  GlobalConst {
       dpinfo.recct++;
       dpinfo.availspace = currentDataPage.available_space();
       
-      
+      System.out.println("Unpinning this page "+dpinfo.pageId.toString());
+      System.out.println("Here "+Integer.toString(dpinfo.recct));
       unpinPage(dpinfo.pageId, true /* = DIRTY */);
       
       // DataPage is now released

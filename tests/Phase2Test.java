@@ -23,9 +23,12 @@ public class Phase2Test {
     }
 
     public static void main(String[] args) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, SpaceNotAvailableException, InvalidSlotNumberException, InvalidMapSizeException, ConstructPageException, AddFileEntryException, GetFileEntryException, IteratorException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException, ScanIteratorException, BufMgrException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException {
-
-        Shell shell = new Shell();
-        shell.run();
+        try {
+            Shell shell = new Shell();
+            shell.run();
+        } catch (Exception e) {
+            System.out.print(e);
+        }
 
 //        String dbpath = "phase2.test.db";
 //        SystemDefs sysdef = new SystemDefs( dbpath, 5000 ,5000,"Clock");
