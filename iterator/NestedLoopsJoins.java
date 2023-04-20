@@ -81,6 +81,24 @@ public class NestedLoopsJoins  extends Iterator
       
       
       outer = am1;
+	  Iterator xx = am1;
+	  Map t = null;
+    int printcount=0;
+      try {
+        while ((t = xx.get_next()) != null) {
+       //    t.print(JJtype);
+       t.print();
+       printcount++;
+       //    qcheck2.Check(t);
+        }
+      }
+    catch (Exception e) {
+     System.err.println ("*** Error printing the first stream");
+     System.err.println (""+e);
+     Runtime.getRuntime().exit(1);
+   }
+
+   System.out.println("Printed values:"+printcount);
       t2_str_sizescopy =  t2_str_sizes;
       inner_tuple = new BigT.Map();
       Jtuple = new BigT.Map();
