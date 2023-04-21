@@ -205,7 +205,7 @@ class JoinsDriver implements GlobalConst {
      e.printStackTrace();
    }
 
-   int sid_fld = 3,sname_fld = 1;
+   int sid_fld = 4,sname_fld = 2;
    System.out.println("Inserting sid of sailor at: "+ sid_fld+ " Inserting sname of sailor at: "+sname_fld);
     newSailorBigT = new BigT("sailorBigT.in");
     BigT rightSailorBigT = new BigT("sailorBigT_2.in");
@@ -213,7 +213,7 @@ class JoinsDriver implements GlobalConst {
      try {
       t = new Map(size);
 
-	t.setIntFld(sid_fld, ((Sailor)sailors.elementAt(i)).sid);
+	t.setStrFld(sid_fld, Integer.toString(((Sailor)sailors.elementAt(i)).sid));
 	t.setStrFld(sname_fld, ((Sailor)sailors.elementAt(i)).sname);
 //	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
 //	t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
@@ -229,7 +229,10 @@ class JoinsDriver implements GlobalConst {
      try {
 //	rid = f.insertMap(t.returnMapByteArray());
          newSailorBigT.insertMap(t.returnMapByteArray(),1);
-         if(t.getTimeStamp()%2 !=0) rightSailorBigT.insertMap(t.returnMapByteArray(), 1);
+
+         if(Integer.valueOf(t.getValue()) %2 !=0) 
+              t.setValue("xxxxxxxxxxxx");
+         rightSailorBigT.insertMap(t.returnMapByteArray(), 1);
 
      }
      catch (Exception e) {
@@ -460,10 +463,18 @@ Query7();
         expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
         expr[0].type1 = new AttrType(AttrType.attrSymbol);
         expr[0].type2 = new AttrType(AttrType.attrSymbol);
-        expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),1);
-        expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
+        expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+        expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),2);
 
-        expr[1] = null;
+        expr[1].next  = null;
+        expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
+        expr[1].type1 = new AttrType(AttrType.attrSymbol);
+        expr[1].type2 = new AttrType(AttrType.attrSymbol);
+        expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),4);
+        expr[1].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+
+
+        expr[2] = null;
 
         expr2[0] = null;
 
@@ -1106,9 +1117,10 @@ Query7();
 
 
 
-  CondExpr [] outFilter  = new CondExpr[2];
+  CondExpr [] outFilter  = new CondExpr[3];
   outFilter[0] = new CondExpr();
   outFilter[1] = new CondExpr();
+  outFilter[2] = new CondExpr();
 
   CondExpr [] outFilter2 = new CondExpr[3];
   outFilter2[0] = new CondExpr();
@@ -1120,23 +1132,29 @@ Query7();
   t = null;
 
   AttrType [] Stypes = {
-    new AttrType(AttrType.attrInteger),
     new AttrType(AttrType.attrString),
-    new AttrType(AttrType.attrInteger),
-    new AttrType(AttrType.attrReal)
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrInteger)
   };
 
   AttrType [] Stypes2 = {
-    new AttrType(AttrType.attrInteger),
     new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrInteger)
   };
 
-  short []   Ssizes = new short[1];
+  short []   Ssizes = new short[4];
   Ssizes[0] = 30;
+  Ssizes[1] = 30;
+  Ssizes[2] = 30;
+  Ssizes[3] = 30;
   AttrType [] Rtypes = {
-    new AttrType(AttrType.attrInteger),
-    new AttrType(AttrType.attrInteger),
     new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrString),
+    new AttrType(AttrType.attrInteger)
   };
 
   short  []  Rsizes = new short[1] ;
@@ -1329,8 +1347,8 @@ Query7();
      int printcount;
   NestedLoopJoinMap nlj = null;
   try {
-    nlj = new NestedLoopJoinMap(Stypes2, 2, Ssizes,
-         Rtypes, 3, Rsizes,
+    nlj = new NestedLoopJoinMap(Stypes2, 4, Ssizes,
+    Stypes2, 4, Ssizes,
          10,
             stream, "sailorBigT_2.in",
          outFilter, null, proj1, 2);
