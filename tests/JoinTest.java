@@ -1,6 +1,9 @@
 package tests;
 //originally from : joins.C
 
+import BigT.*;
+import BigT.Map;
+import BigT.Stream;
 import iterator.*;
 import heap.*;
 import global.*;
@@ -68,9 +71,11 @@ class JoinsDriver implements GlobalConst {
  private Vector sailors;
  private Vector boats;
  private Vector reserves;
+
+ BigT newSailorBigT;
  /** Constructor
   */
- public JoinsDriver() {
+ public JoinsDriver() throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
 
    //build Sailor, Boats, Reserves table
    sailors  = new Vector();
@@ -166,7 +171,7 @@ class JoinsDriver implements GlobalConst {
    short [] Ssizes = new short [1];
    Ssizes[0] = 30; //first elt. is 30
 
-   BigT.Map t = new BigT.Map();
+   Map t = new Map();
    try {
      t.setHdr((short) 4,Stypes, Ssizes);
    }
@@ -190,7 +195,7 @@ class JoinsDriver implements GlobalConst {
      e.printStackTrace();
    }
 
-   t = new BigT.Map(size);
+   t = new Map(size);
    try {
      t.setHdr((short) 4, Stypes, Ssizes);
    }
@@ -202,9 +207,11 @@ class JoinsDriver implements GlobalConst {
 
    int sid_fld = 3,sname_fld = 1;
    System.out.println("Inserting sid of sailor at: "+ sid_fld+ " Inserting sname of sailor at: "+sname_fld);
+    newSailorBigT = new BigT("sailorBigT.in");
+    BigT rightSailorBigT = new BigT("sailorBigT_2.in");
    for (int i=0; i<numsailors; i++) {
      try {
-      t = new BigT.Map(size);
+      t = new Map(size);
 
 	t.setIntFld(sid_fld, ((Sailor)sailors.elementAt(i)).sid);
 	t.setStrFld(sname_fld, ((Sailor)sailors.elementAt(i)).sname);
@@ -220,7 +227,10 @@ class JoinsDriver implements GlobalConst {
      }
 
      try {
-	rid = f.insertMap(t.returnMapByteArray());
+//	rid = f.insertMap(t.returnMapByteArray());
+         newSailorBigT.insertMap(t.returnMapByteArray(),1);
+         if(t.getTimeStamp()%2 !=0) rightSailorBigT.insertMap(t.returnMapByteArray(), 1);
+
      }
      catch (Exception e) {
 	System.err.println("*** error in Heapfile.insertRecord() ***");
@@ -244,7 +254,7 @@ class JoinsDriver implements GlobalConst {
 //    short  []  Bsizes = new short[2];
 //    Bsizes[0] = 30;
 //    Bsizes[1] = 20;
-//    t = new BigT.Map();
+//    t = new Map();
 //    try {
 //      t.setHdr((short) 3,Btypes, Bsizes);
 //    }
@@ -268,7 +278,7 @@ class JoinsDriver implements GlobalConst {
 //      e.printStackTrace();
 //    }
 
-//    t = new BigT.Map(size);
+//    t = new Map(size);
 //    try {
 //      t.setHdr((short) 3, Btypes, Bsizes);
 //    }
@@ -313,7 +323,7 @@ class JoinsDriver implements GlobalConst {
 
 //    short [] Rsizes = new short [1];
 //    Rsizes[0] = 15;
-//    t = new BigT.Map();
+//    t = new Map();
 //    try {
 //      t.setHdr((short) 3,Rtypes, Rsizes);
 //    }
@@ -337,7 +347,7 @@ class JoinsDriver implements GlobalConst {
 //      e.printStackTrace();
 //    }
 
-//    t = new BigT.Map(size);
+//    t = new Map(size);
 //    try {
 //      t.setHdr((short) 3, Rtypes, Rsizes);
 //    }
@@ -377,7 +387,7 @@ class JoinsDriver implements GlobalConst {
 
  }
 
- public boolean runTests() {
+ public boolean runTests() throws InvalidMapSizeException, IOException {
 
    Disclaimer();
 //    Query1();
@@ -585,7 +595,7 @@ Query7();
 
    Query1_CondExpr(outFilter);
 
-   BigT.Map t = new BigT.Map();
+   Map t = new Map();
 
    AttrType [] Stypes = new AttrType[4];
    Stypes[0] = new AttrType (AttrType.attrInteger);
@@ -773,7 +783,7 @@ Query7();
 //    outFilter2[2] = new CondExpr();
 
 //    Query2_CondExpr(outFilter, outFilter2);
-//    BigT.Map t = new BigT.Map();
+//    Map t = new Map();
 //    t = null;
 
 //    AttrType [] Stypes = {
@@ -848,7 +858,7 @@ Query7();
 //    //*******************create an scan on the heapfile**************
 //    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //    // create a tuple of appropriate size
-//        BigT.Map tt = new BigT.Map();
+//        Map tt = new Map();
 //    try {
 //      tt.setHdr((short) 4, Stypes, Ssizes);
 //    }
@@ -858,7 +868,7 @@ Query7();
 //    }
 
 //    int sizett = tt.size();
-//    tt = new BigT.Map(sizett);
+//    tt = new Map(sizett);
 //    try {
 //      tt.setHdr((short) 4, Stypes, Ssizes);
 //    }
@@ -899,7 +909,7 @@ Query7();
 
 //    RID rid = new RID();
 //    int key =0;
-//    BigT.Map temp = null;
+//    Map temp = null;
 
 //    try {
 //      temp = scan.getNext(rid);
@@ -1062,7 +1072,7 @@ Query7();
 // //      }
 //  }
 
- public void Query7() {
+ public void Query7() throws InvalidMapSizeException, IOException {
   System.out.print("**********************Query7 strating *********************\n");
   boolean status = OK;
 
@@ -1106,7 +1116,7 @@ Query7();
   outFilter2[2] = new CondExpr();
 
   Query7_CondExpr(outFilter, outFilter2);
-  BigT.Map t = new BigT.Map();
+  Map t = new Map();
   t = null;
 
   AttrType [] Stypes = {
@@ -1181,7 +1191,7 @@ Query7();
   //*******************create an scan on the heapfile**************
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // create a tuple of appropriate size
-      BigT.Map tt = new BigT.Map();
+      Map tt = new Map();
   try {
     tt.setHdr((short) 4, Stypes, Ssizes);
   }
@@ -1191,7 +1201,7 @@ Query7();
   }
 
   int sizett = tt.size();
-  tt = new BigT.Map(sizett);
+  tt = new Map(sizett);
   try {
     tt.setHdr((short) 4, Stypes, Ssizes);
   }
@@ -1232,7 +1242,7 @@ Query7();
 
 //  RID rid = new RID();
 //  int key =0;
-//  BigT.Map temp = null;
+//  Map temp = null;
 //
 //  try {
 //    temp = scan.getNext(rid);
@@ -1315,14 +1325,14 @@ Query7();
 //         }
 //         System.out.println("Print count for btt tree:"+printcount);
 //     }
-
+     Stream stream = new Stream(newSailorBigT,1,"*","*","*");
      int printcount;
   NestedLoopJoinMap nlj = null;
   try {
     nlj = new NestedLoopJoinMap(Stypes2, 2, Ssizes,
          Rtypes, 3, Rsizes,
          10,
-         f, "sailors.in",
+            stream, "sailorBigT_2.in",
          outFilter, null, proj1, 2);
   }
   catch (Exception e) {
@@ -1337,9 +1347,13 @@ Query7();
    t = null;
     printcount=0;
       try {
+          Heapfile  h_file = new Heapfile("h_file");
         while ((t = nlj.get_next()) != null) {
+            System.out.println(t);
+            h_file.insertMap(t.returnMapByteArray());
+            // Stream s = new Stream(new BigT("bigtable"), 1, "*", "*", "*");
        //    t.print(JJtype);
-       t.print();
+      //  t.print();
        printcount++;
        //    qcheck2.Check(t);
         }
@@ -1443,7 +1457,7 @@ Query7();
 //
 //   Query3_CondExpr(outFilter);
 //
-//   BigT.Map t = new BigT.Map();
+//   Map t = new Map();
 //   t = null;
 //
 //   AttrType Stypes[] = {
@@ -1600,7 +1614,7 @@ Query7();
 //
 //   Query3_CondExpr(outFilter);
 //
-//   BigT.Map t = new BigT.Map();
+//   Map t = new Map();
 //   t = null;
 //
 //   AttrType Stypes[] = {
@@ -1766,7 +1780,7 @@ Query7();
 //   CondExpr [] outFilter;
 //   outFilter = Query5_CondExpr();
 //
-//   BigT.Map t = new BigT.Map();
+//   Map t = new Map();
 //   t = null;
 //
 //   AttrType Stypes[] = {
@@ -1932,7 +1946,7 @@ Query7();
 //     outFilter2[2] = new CondExpr();
 //
 //     Query6_CondExpr(outFilter, outFilter2);
-//     BigT.Map t = new BigT.Map();
+//     Map t = new Map();
 //     t = null;
 //
 //     AttrType [] Stypes = {
@@ -2117,8 +2131,7 @@ Query7();
 
 public class JoinTest
 {
- public static void main(String argv[])
- {
+ public static void main(String argv[]) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException, InvalidMapSizeException {
    boolean sortstatus;
    //SystemDefs global = new SystemDefs("bingjiedb", 100, 70, null);
    //JavabaseDB.openDB("/tmp/nwangdb", 5000);
