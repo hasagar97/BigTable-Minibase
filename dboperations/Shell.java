@@ -23,7 +23,7 @@ public class Shell {
     private static int num_pages = 5000;
     private static int bufferpoolsize = 100;
 
-    public static void run() throws BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
+    public static void run() throws Exception {
         new SystemDefs(dbpath, num_pages, bufferpoolsize, "Clock"); // creates a new db if num_pages > 0
 
         Scanner input = new Scanner(System.in);
@@ -106,6 +106,16 @@ public class Shell {
 
                     break;
 
+                case "createindex":
+                    BIGTABLENAME = words[1];
+                    int heapFileType = Integer.valueOf(words[2]);
+                    int newIndexType = Integer.valueOf(words[3]);
+
+                    bigtable = new BigT(BIGTABLENAME);
+                    bigtable.createIndex(heapFileType, newIndexType);
+
+                    break;
+
                 case "exit":
                     running = false;
                     break;
@@ -120,7 +130,7 @@ public class Shell {
         SystemDefs.JavabaseDB.closeDB();
     }
 
-    public static void main(String[] args) throws IOException, BufMgrException, InvalidPageNumberException, FileIOException, DiskMgrException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidMapSizeException, InvalidSlotNumberException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
+    public static void main(String[] args) throws Exception {
         run();
     }
 }
