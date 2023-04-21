@@ -21,9 +21,9 @@ public class RowJoin {
         this.lefT = lefT;
         this.rightT = rightT;
         this.joinType = joinType;
-        if (joinType == "sortmerge") {
+        // if (joinType == "sortmerge") {
             sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter);
-        }
+        // }
     }
 
     public void run() throws InvalidMapSizeException, IOException, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException {

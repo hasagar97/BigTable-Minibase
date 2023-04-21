@@ -30,9 +30,9 @@ public class SortMergeJoin {
                 System.out.println("HERE1"); 
                 Map rightMap = rightStream.getNext(null);
                 if (rightMap == null) {
-                    // just process leftmap
+                    break;
                 }
-                while (leftMap.getColumnLabel() != rightMap.getColumnLabel()){
+                while (rightMap != null && leftMap.getColumnLabel() != rightMap.getColumnLabel()){
                     rightMap = rightStream.getNext(null);
                 }
                 leftMap.print();

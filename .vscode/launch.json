@@ -1,0 +1,77 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "BMTest",
+            "request": "launch",
+            "mainClass": "BMTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "BTTest",
+            "request": "launch",
+            "mainClass": "BTTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "DBOperationsTest",
+            "request": "launch",
+            "mainClass": "DBOperationsTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "DBTest",
+            "request": "launch",
+            "mainClass": "DBTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "HFTest",
+            "request": "launch",
+            "mainClass": "HFTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "Phase2Basic",
+            "request": "launch",
+            "mainClass": "Phase2Basic",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "Phase2Test",
+            "request": "launch",
+            "mainClass": "Phase2Test",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "Shell",
+            "request": "launch",
+            "mainClass": "dboperations.Shell",
+            "projectName": "BigTableDBMS_bdea6a14"
+        },
+        {
+            "type": "java",
+            "name": "phase2SortingTest",
+            "request": "launch",
+            "mainClass": "phase2SortingTest",
+            "projectName": "BigTableDBMS_bdea6a14"
+        }
+    ]
+}

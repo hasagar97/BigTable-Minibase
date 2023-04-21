@@ -1,5 +1,7 @@
 batchinsert ../test_data_2 1 bigtablename
 batchinsert ../test_data_2 1 bigtablename1
+batchinsert test_data_2 1 bigtablename
+batchinsert test_data_2 1 bigtablename1
 rowjoin bigtablename bigtablename1 outputbigtable * sortmerge 100
 query bigtablename 3 1 * * * 100
 query bigtablename 3 2 * * * 100
