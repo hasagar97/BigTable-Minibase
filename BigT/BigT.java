@@ -343,33 +343,33 @@ public class BigT
 
     // type -> heapIndex
     private void indexInsertAll(RID mid, int type, StringKey[] keys) throws IOException, IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException {
-      for(int i = 1; i < 5; i++) {
-        if(m_index_files.get(type).get(i) != null) {
-          m_index_files.get(type).get(i).insert(keys[i], mid);
+      for(int i = 1; i < m_index_files.get(type - 1).size(); i++) {
+        if(m_index_files.get(type - 1).get(i) != null) {
+          m_index_files.get(type - 1).get(i).insert(keys[i], mid);
         }
       }
     }
 
     private void indexDeleteAll(RID mid, int type, StringKey[] keys) throws IOException, IteratorException, ConstructPageException, IndexInsertRecException, LeafDeleteException, PinPageException, UnpinPageException, DeleteRecException, KeyNotMatchException, IndexSearchException, LeafRedistributeException, RecordNotFoundException, InsertRecException, DeleteFashionException, RedistributeException, FreePageException, IndexFullDeleteException {
       for(int i = 1; i < 5; i++) {
-        if(m_index_files.get(type).get(i) != null) {
-          m_index_files.get(type).get(i).Delete(keys[i], mid);
+        if(m_index_files.get(type - 1).get(i) != null) {
+          m_index_files.get(type - 1).get(i).Delete(keys[i], mid);
         }
       }
     }
 
     private void indexInsertAffected(RID mid, int type, StringKey[] keys, boolean[] affectedIndexes) throws IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException {
       for(int i = 1; i < 5; i++) {
-        if(m_index_files.get(type).get(i) != null && affectedIndexes[i] == true) {
-          m_index_files.get(type).get(i).insert(keys[i], mid);
+        if(m_index_files.get(type - 1).get(i) != null && affectedIndexes[i] == true) {
+          m_index_files.get(type - 1).get(i).insert(keys[i], mid);
         }
       }
     }
 
     private void indexDeleteAffected(RID mid, int type, StringKey[] keys, boolean[] affectedIndexes) throws IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException, LeafRedistributeException, RecordNotFoundException, InsertRecException, DeleteFashionException, RedistributeException, FreePageException, IndexFullDeleteException {
       for(int i = 1; i < 5; i++) {
-        if(m_index_files.get(type).get(i) != null && affectedIndexes[i] == true) {
-          m_index_files.get(type).get(i).Delete(keys[i], mid);
+        if(m_index_files.get(type - 1).get(i) != null && affectedIndexes[i] == true) {
+          m_index_files.get(type - 1).get(i).Delete(keys[i], mid);
         }
       }
     }
