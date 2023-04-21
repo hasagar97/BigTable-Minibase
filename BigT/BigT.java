@@ -32,7 +32,7 @@ public class BigT
     try
     {
       // Default Row+Column index across all heap files
-      m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, 1);
+      m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE);
       // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
       // Type 1 No index
       m_index_files.add(null);
@@ -40,22 +40,22 @@ public class BigT
       heapfile.setIndex(0);
       m_heap_files.add(heapfile);
       // Type 2 Row index
-      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
       heapfile = new Heapfile(name + "_2");
       heapfile.setIndex(1);
       m_heap_files.add(heapfile);
       // Type 3 Column index
-      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
       heapfile = new Heapfile(name + "_3");
       heapfile.setIndex(2);
       m_heap_files.add(heapfile);
       // Type 4 Row+Column index
-      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
       heapfile = new Heapfile(name + "_4");
       heapfile.setIndex(3);
       m_heap_files.add(heapfile);
       // Type 5 Row+Value index
-      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, 1));
+      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
       heapfile = new Heapfile(name + "_5");
       heapfile.setIndex(4);
       m_heap_files.add(heapfile);
@@ -274,6 +274,7 @@ public class BigT
       StringKey defaultkey, key;
       
       defaultkey = new StringKey(map.getRowLabel() + map.getColumnLabel());
+
       switch (type) {
       	case 1:
           // no index
@@ -395,87 +396,53 @@ public class BigT
       }
     }
 
-    private RID checkDropMap ( Map map, RID mid) throws IOException, HashEntryNotFoundException, InvalidFrameNumberException, PageUnpinnedException, ReplacerException {
-      StringKey key = null;
-      BTFileScan scan = null;
-      Map current_map = null;
-      Map oldest_map = null;
-      RID current_mid = null;
-      RID oldest = null;
-      int timestamp_count = 0;
-      KeyDataEntry current_entry = null;
-      
-      key = new StringKey(map.getRowLabel() + map.getColumnLabel());
-      
-      try {
-        scan = m_defaultindex.new_scan(key, key);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("Failed to create new Scan in checkDropMap\n");
-      }
-      
-      try {
-      	current_entry = scan.get_next();
-      }
-      catch (Exception e) {
-        System.err.println("Failed to get next entry in BTFileScan in checkDropMap\n");
-      }
-
-      if (current_entry != null)
-      {
-        current_mid = ((LeafData) current_entry.data).getData();
-        try {
-          current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
-        }
-        catch (Exception e) {
-          System.err.println("Failed to getMap from heapfile in checkDropMap\n");
-        }
-        
-        if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
-        {
-          timestamp_count += 1;
-          oldest = current_mid;
-          oldest_map = current_map;
-        }
-
-        while(current_entry != null)
-        {
-          try {
-            current_entry = scan.get_next();
-            if(current_entry == null) break;
-
-            current_mid = ((LeafData) current_entry.data).getData();
-            current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);
-
-            if ((current_map.getRowLabel().equals(map.getRowLabel()) == true) && (current_map.getColumnLabel().equals(map.getColumnLabel()) == true))
-            {
-              timestamp_count += 1;
-              
-              if ((oldest_map == null) || (current_map.getTimeStamp() < oldest_map.getTimeStamp()))
-              {
-                oldest = current_mid;
-              }
-            }
-          }
-          catch (Exception e) {
-            e.printStackTrace();
-             System.err.println("Failed to process next Map in checkDropMap\n");
-          }
-        }
-      }
-
-      if (timestamp_count <= 3)
-      {
-        oldest = null;
-      }
-
-      if (scan != null)
-      {
-        scan.DestroyBTreeFileScan();
-      }
-      
-      return oldest;
+    private RID checkDropMap (Map map, RID mid) throws Exception 
+    {  
+    	StringKey key = null;  
+    	BTFileScan scan = null;  
+    	Map current_map = null;  
+    	Map oldest_map = null;  
+    	RID current_mid = null;  
+    	RID oldest = null;  
+    	int timestamp_count = 0;  
+    	KeyDataEntry current_entry = null;    
+    	key = new StringKey(map.getRowLabel() + map.getColumnLabel());    
+    	
+    	try 
+    	{    
+    	  scan = m_defaultindex.new_scan(key, key);  
+    	}  catch (Exception e) 
+    	{    
+    	  e.printStackTrace();    
+    	  System.err.println("Failed to create new Scan in checkDropMap\n");  
+    	}  
+    	
+    	Vector<Map> row_col_maps = new Vector<>();  
+    	Vector<RID> row_col_mids = new Vector<>();  
+    	
+    	while(true) {    
+    		KeyDataEntry nextMap = scan.get_next();    
+    		if(nextMap == null) break;    
+    		current_mid = ((LeafData) nextMap.data).getData();    
+    		row_col_mids.add(current_mid);    
+    		
+    		if(current_mid == null)      
+    			System.out.println("NULL MID");    
+    		current_map = m_heap_files.get(current_mid.heapIndex).getMap(current_mid);    
+    		row_col_maps.add(current_map);  
+    	}  
+    	
+    	if(row_col_maps.size() < 4)      
+    		return null;  int min_timestamp = 100000000, min_timestamp_index = -1;  
+    		
+    	for(int i = 0; i < row_col_maps.size(); i++) {    
+    		if(row_col_maps.get(i).getTimeStamp() < min_timestamp) {      
+    			min_timestamp = row_col_maps.get(i).getTimeStamp();      
+    			min_timestamp_index = i;    
+    		}  
+    	}  
+    	
+    	return row_col_mids.get(min_timestamp_index);
     }
   
   /*
@@ -515,7 +482,6 @@ public class BigT
           Map oldestMap = heap_file.getMap(oldestMapID);
 
           updateIndexFiles(oldestMap, oldestMapID, 1, oldestMapID.heapIndex + 1);
-
 
           // Change deleteRecord in heapfile to deleteMap
           Boolean didDelete = heap_file.deleteMap(oldestMapID);
