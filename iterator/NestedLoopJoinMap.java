@@ -1,7 +1,9 @@
 package iterator;
 
 
+import BigT.BigTScan;
 import BigT.Map;
+import BigT.Stream;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -23,7 +25,7 @@ public class NestedLoopJoinMap extends Iterator
 {
     private AttrType      _in1[],  _in2[];
     private   int        in1_len, in2_len;
-    private   Scan  outer;
+    private Stream outer;
     private   short t2_str_sizescopy[];
     private   CondExpr OutputFilter[];
     private   CondExpr RightFilter[];
@@ -35,7 +37,8 @@ public class NestedLoopJoinMap extends Iterator
     private   FldSpec   perm_mat[];
     private   int        nOutFlds;
     private   Heapfile  hf;
-    private   Scan      inner;
+    private BigTScan inner;
+    private BigT.BigT rightTable;
 
 
     /**constructor
@@ -63,7 +66,7 @@ public class NestedLoopJoinMap extends Iterator
                              int     len_in2,
                              short[] t2_str_sizes,
                              int     amt_of_mem,
-                             Heapfile am1,
+                             Stream am1,
                              String relationName,
                              CondExpr[] outFilter,
                              CondExpr[] rightFilter,
@@ -79,10 +82,10 @@ public class NestedLoopJoinMap extends Iterator
         in2_len = len_in2;
 
 
-        outer = am1.openScan();
+        outer = am1;
         boolean print_inputStream_in_nestedjoin=false;
                 if(print_inputStream_in_nestedjoin){
-                Scan xx = outer;
+                Stream xx = outer;
                 Map t = null;
                 int printcount=0;
                 try {
@@ -130,6 +133,7 @@ public class NestedLoopJoinMap extends Iterator
 
         try {
             hf = new Heapfile(relationName);
+            rightTable = new BigT.BigT(relationName);
 
         }
         catch(Exception e) {
@@ -192,7 +196,8 @@ public class NestedLoopJoinMap extends Iterator
                 }
 
                 try {
-                    inner = hf.openScan();
+//                    inner = hf.openScan();
+                    inner = rightTable.openScan();
                 }
                 catch(Exception e){
                     throw new NestedLoopException(e, "openScan failed");
@@ -221,7 +226,7 @@ public class NestedLoopJoinMap extends Iterator
             while ((inner_tuple = inner.getNext(rid)) != null)
             {
                 inner_tuple.setHdr((short)in2_len, _in2,t2_str_sizescopy);
-                System.out.println("NestedLoopjoinMap: inside join loop");
+                // System.out.println("NestedLoopjoinMap: inside join loop");
                 if (PredEval.Eval(RightFilter, inner_tuple, null, _in2, null) == true)
                 {
                     if (PredEval.Eval(OutputFilter, outer_tuple, inner_tuple, _in1, _in2) == true)
@@ -257,7 +262,7 @@ public class NestedLoopJoinMap extends Iterator
 
             try {
                 System.out.println(outer);
-                outer.closescan();
+                outer.close();
             }catch (Exception e) {
                 throw new JoinsException(e, "NestedLoopsJoin.java: error in closing iterator.");
             }

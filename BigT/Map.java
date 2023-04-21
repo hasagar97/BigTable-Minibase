@@ -452,7 +452,7 @@ public class Map implements GlobalConst{
        {
            Convert.setStrValue (val, fldOffset[fldNo -1], map);
 //           System.out.print("Map after setting map value:");
-           this.print();
+          //  this.print();
            return this;
        }
        else
