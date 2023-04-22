@@ -24,19 +24,32 @@ public class RetrieveRecentMaps {
     public Stream getRecentMaps(Stream stream) throws InvalidMapSizeException, IOException, InvalidFieldSize, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException {
         Map x = null;
         int recCount = 0;
-        curr_map = null;
+        Map curr_map = null;
         while((x = stream.getNext(new RID()))!= null){
             if(curr_map== null) {
-                curr_map = x;
+                Map curr_map1 = new Map();
+                curr_map1.setRowLabel(x.getRowLabel());
+                curr_map1.setColumnLabel(x.getColumnLabel());
+                curr_map1.setTimeStamp(x.getTimeStamp());
+                curr_map1.setValue(x.getValue());
+                curr_map = curr_map1;
             }
-            else if(!curr_map.getColumnLabel().equals(x.getColumnLabel())){
+            if(!curr_map.getColumnLabel().equalsIgnoreCase(x.getColumnLabel())){
                 recentValueTable.insertMap(curr_map.returnMapByteArray(), 1);
-                curr_map = x;
             }
+            curr_map.setRowLabel(x.getRowLabel());
+            curr_map.setColumnLabel(x.getColumnLabel());
+            curr_map.setTimeStamp(x.getTimeStamp());
+            curr_map.setValue(x.getValue());
             x.print();
             recCount++;
         }
         System.out.println("Total records in recentValueTable.in: "+ recCount);
+        Stream res = new Stream(recentValueTable, 6, "*","*","*");
+        Map m = null;
+        while((m = res.getNext(new RID()))!=null){
+            System.out.println("Resultant big table records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
+        }
         return new Stream(recentValueTable, 6, "*","*","*");
     }
 
