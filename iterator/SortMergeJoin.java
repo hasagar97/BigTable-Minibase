@@ -16,7 +16,7 @@ public class SortMergeJoin {
     Stream rightStream = null;
     String joinMode = "inner";
 
-    public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter) throws InvalidMapSizeException, IOException {
+    public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter) throws InvalidMapSizeException, IOException, InvalidFieldSize {
         // Start stream with bigtable2
         leftStream = new Stream(leftTable, 2, "*", columnFilter, "*");
         rightStream = new Stream(leftTable, 2, "*", columnFilter, "*");
@@ -26,19 +26,34 @@ public class SortMergeJoin {
         if (joinMode == "inner") {
             // columns equal and value equal then print
             Map leftMap = leftStream.getNext(null);
-            while (leftMap != null) {
-                System.out.println("HERE1"); 
-                Map rightMap = rightStream.getNext(null);
-                if (rightMap == null) {
-                    break;
-                }
-                while (rightMap != null && leftMap.getColumnLabel() != rightMap.getColumnLabel()){
+            Map rightMap = rightStream.getNext(null);
+
+            while (leftMap != null && rightMap != null) {
+                int compareResult = leftMap.getColumnLabel().compareTo(rightMap.getColumnLabel());
+            
+                if (compareResult == 0) {
+                    // If the join attribute values match, join the two tuples and output the result
+                    Map joinResult = new Map();
+                    joinResult.setColumnLabel(leftMap.getColumnLabel());
+                    joinResult.setRowLabel(leftMap.getRowLabel() + ":" + rightMap.getRowLabel());
+                    if (leftMap.getTimeStamp() < rightMap.getTimeStamp()) {
+                        joinResult.setTimeStamp(leftMap.getTimeStamp());
+                    } else {
+                        joinResult.setTimeStamp(rightMap.getTimeStamp());
+                    }
+                    joinResult.setValue(leftMap.getValue());
+                    joinResult.print();
+                    // Move both pointers forward
+                    leftMap = leftStream.getNext(null);
+                    rightMap = rightStream.getNext(null);
+                } else if (compareResult < 0) {
+                    // If the join attribute value in the left relation is smaller, move the left pointer forward
+                    leftMap = leftStream.getNext(null);
+                } else {
+                    // If the join attribute value in the right relation is smaller, move the right pointer forward
                     rightMap = rightStream.getNext(null);
                 }
-                leftMap.print();
-                rightMap.print();
-                leftMap = leftStream.getNext(null);
-            }
+            }            
             
         }
         // If bigtable1 next entries don't match then flush buffer
