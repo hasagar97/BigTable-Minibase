@@ -343,7 +343,7 @@ public class BigT
 
     // type -> heapIndex
     private void indexInsertAll(RID mid, int type, StringKey[] keys) throws IOException, IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException {
-      for(int i = 1; i < m_index_files.get(type - 1).size(); i++) {
+      for(int i = 1; i < 5; i++) {
         if(m_index_files.get(type - 1).get(i) != null) {
           m_index_files.get(type - 1).get(i).insert(keys[i], mid);
         }
