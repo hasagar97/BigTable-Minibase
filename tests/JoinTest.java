@@ -83,6 +83,8 @@ class JoinsDriver implements GlobalConst {
    reserves = new Vector();
 
    sailors.addElement(new Sailor(53, "Bob Holloway",       9, 53.6));
+   sailors.addElement(new Sailor(532, "Bob Holloway",       1, 53.6));
+   sailors.addElement(new Sailor(531, "Bob Holloway",       2, 53.6));
    sailors.addElement(new Sailor(54, "Susan Horowitz",     1, 34.2));
    sailors.addElement(new Sailor(57, "Yannis ",   8, 40.2));
    sailors.addElement(new Sailor(59, "Deborah Joseph",    10, 39.8));
@@ -215,8 +217,8 @@ class JoinsDriver implements GlobalConst {
 
 	t.setStrFld(sid_fld, Integer.toString(((Sailor)sailors.elementAt(i)).sid));
 	t.setStrFld(sname_fld, ((Sailor)sailors.elementAt(i)).sname);
-//	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
-//	t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
+	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
+	t.setFloFld(1, (float)((Sailor)sailors.elementAt(i)).age);
       System.out.print("**********************Created Map:\t");
       t.print();
      }
@@ -1343,10 +1345,13 @@ Query7();
 //         }
 //         System.out.println("Print count for btt tree:"+printcount);
 //     }
-     Stream stream = new Stream(newSailorBigT,1,"*","*","*");
+     // Sorting teh stream based on timestamp, hence orderType 6
+     Stream stream = new Stream(newSailorBigT,6,"*","*","*");
      int printcount;
   NestedLoopJoinMap nlj = null;
   try {
+      RetrieveRecentMaps r = new RetrieveRecentMaps();
+      r.getRecentMaps(stream);
     nlj = new NestedLoopJoinMap(Stypes2, 4, Ssizes,
     Stypes2, 4, Ssizes,
          10,
