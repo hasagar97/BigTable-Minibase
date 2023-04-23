@@ -1,9 +1,9 @@
 package iterator;
 
-
-import BigT.BigTScan;
-import BigT.Map;
-import BigT.Stream;
+import BigT.*;
+import btree.ConstructPageException;
+import btree.GetFileEntryException;
+import btree.PinPageException;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -32,13 +32,13 @@ public class NestedLoopJoinMap extends Iterator
     private   int        n_buf_pgs;        // # of buffer pages available.
     private   boolean        done,         // Is the join complete
             get_from_outer;                 // if TRUE, a tuple is got from outer
-    private BigT.Map outer_tuple, inner_tuple;
-    private BigT.Map Jtuple;           // Joined tuple
+    private Map outer_tuple, inner_tuple;
+    private Map Jtuple;           // Joined tuple
     private   FldSpec   perm_mat[];
     private   int        nOutFlds;
     private   Heapfile  hf;
     private BigTScan inner;
-    private BigT.BigT rightTable;
+    private BigT rightTable;
 
 
     /**constructor
@@ -105,8 +105,8 @@ public class NestedLoopJoinMap extends Iterator
             System.out.println(":Printed values from input stream:"+printcount);
             }
         t2_str_sizescopy =  t2_str_sizes;
-        inner_tuple = new BigT.Map();
-        Jtuple = new BigT.Map();
+        inner_tuple = new Map();
+        Jtuple = new Map();
         OutputFilter = outFilter;
         RightFilter  = rightFilter;
 
@@ -133,7 +133,7 @@ public class NestedLoopJoinMap extends Iterator
 
         try {
             hf = new Heapfile(relationName);
-            rightTable = new BigT.BigT(relationName);
+            rightTable = new BigT(relationName);
 
         }
         catch(Exception e) {
@@ -158,7 +158,7 @@ public class NestedLoopJoinMap extends Iterator
      *@exception Exception other exceptions
 
      */
-    public BigT.Map get_next()
+    public Map get_next()
             throws IOException,
             JoinsException ,
             IndexException,
@@ -247,6 +247,35 @@ public class NestedLoopJoinMap extends Iterator
 
             get_from_outer = true; // Loop back to top and get next outer tuple.
         } while (true);
+    }
+
+    public Stream nestedRowJoin(Stream left, Stream right) throws InvalidMapSizeException, IOException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, InvalidFieldSize, SpaceNotAvailableException, InvalidSlotNumberException {
+        BigT recentValueTable = new BigT("nestedJoinTable1.in");
+        Map outputMap = new Map();
+        Map leftMap = null;
+        Map rightMap = null;
+        while((leftMap = left.getNext(new RID()))!=null){
+            while((rightMap = right.getNext(new RID()))!=null){
+                if (leftMap.getValue() == rightMap.getValue() && leftMap.getColumnLabel().equalsIgnoreCase(rightMap.getColumnLabel())){
+                        outputMap.setRowLabel(leftMap.getRowLabel()+":"+rightMap.getRowLabel());
+                        outputMap.setColumnLabel(leftMap.getColumnLabel());
+                        outputMap.setTimeStamp(0);
+                        outputMap.setValue(leftMap.getValue());
+                        recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
+                        break;
+                }else if(leftMap.getValue() == rightMap.getValue() && !leftMap.getColumnLabel().equalsIgnoreCase(rightMap.getColumnLabel())){
+                    outputMap.setRowLabel(leftMap.getRowLabel()+":"+rightMap.getRowLabel());
+                    outputMap.setColumnLabel(leftMap.getColumnLabel());
+                    outputMap.setTimeStamp(leftMap.getTimeStamp());
+                    outputMap.setValue(leftMap.getValue());
+                    recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
+                    outputMap.setColumnLabel(rightMap.getColumnLabel());
+                    recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
+                    break;
+                }
+            }
+        }
+        return new Stream(recentValueTable, 6, "*", "*", "*");
     }
 
     /**
