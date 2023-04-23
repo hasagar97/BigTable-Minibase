@@ -31,7 +31,7 @@ public class Shell {
         Boolean running = true;
         while(running) {
             System.out.println();
-            System.out.println("Enter Command: (BatchInsert) / (Query) / (exit)");
+            System.out.println("Enter Command: (BatchInsert) / (Query) / (RowSort) / (MapInsert) / (CreateIndex) / (GetCounts) / (exit)");
             String command = input.nextLine();
             String[] words = command.trim().split(" ");
 
@@ -113,6 +113,17 @@ public class Shell {
 
                     bigtable = new BigT(BIGTABLENAME);
                     bigtable.createIndex(heapFileType, newIndexType);
+
+                    break;
+                    
+                case "getcounts":
+                    BIGTABLENAME = words[1];
+
+                    bigtable = new BigT(BIGTABLENAME);
+                    
+                    System.out.println("Number of Maps = " + bigtable.getMapCnt());
+                    System.out.println("Distinct Row Labels = " + bigtable.getRowCnt());
+                    System.out.println("Distinct Column Labels = " + bigtable.getColumnCnt());
 
                     break;
 
