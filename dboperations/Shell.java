@@ -23,7 +23,7 @@ public class Shell {
     private static int num_pages = 5000;
     private static int bufferpoolsize = 100;
 
-    public static void run() throws BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
+    public static void run() throws Exception, BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
         new SystemDefs(dbpath, num_pages, bufferpoolsize, "Clock"); // creates a new db if num_pages > 0
 
         Scanner input = new Scanner(System.in);
@@ -31,7 +31,7 @@ public class Shell {
         Boolean running = true;
         while(running) {
             System.out.println();
-            System.out.println("Enter Command: (BatchInsert) / (Query) / (exit)");
+            System.out.println("Enter Command: (BatchInsert) / (Query) / (RowSort) / (MapInsert) / (CreateIndex) / (GetCounts) / (exit)");
             String command = input.nextLine();
             String[] words = command.trim().split(" ");
 
@@ -121,6 +121,27 @@ public class Shell {
 
                     break;
 
+                case "createindex":
+                    BIGTABLENAME = words[1];
+                    int heapFileType = Integer.valueOf(words[2]);
+                    int newIndexType = Integer.valueOf(words[3]);
+
+                    bigtable = new BigT(BIGTABLENAME);
+                    bigtable.createIndex(heapFileType, newIndexType);
+
+                    break;
+                    
+                case "getcounts":
+                    BIGTABLENAME = words[1];
+
+                    bigtable = new BigT(BIGTABLENAME);
+                    
+                    System.out.println("Number of Maps = " + bigtable.getMapCnt());
+                    System.out.println("Distinct Row Labels = " + bigtable.getRowCnt());
+                    System.out.println("Distinct Column Labels = " + bigtable.getColumnCnt());
+
+                    break;
+
                 case "exit":
                     running = false;
                     break;
@@ -135,7 +156,7 @@ public class Shell {
         SystemDefs.JavabaseDB.closeDB();
     }
 
-    public static void main(String[] args) throws IOException, BufMgrException, InvalidPageNumberException, FileIOException, DiskMgrException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidMapSizeException, InvalidSlotNumberException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
+    public static void main(String[] args) throws Exception {
         run();
     }
 }
