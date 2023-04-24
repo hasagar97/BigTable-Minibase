@@ -28,7 +28,7 @@ public class Query {
     public Query(BigT bigtable, int ORDERTYPE, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER, int NUMBUF) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException, InvalidMapSizeException, InvalidRelation, FileScanException, TupleUtilsException {
 
         // check if this is safe
-//        SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
+        SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
         stream = new Stream(bigtable, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);
 //        stream = bigtable.openStream(ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);

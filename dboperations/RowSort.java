@@ -3,6 +3,7 @@ package dboperations;
 import BigT.BigT;
 import BigT.Stream;
 import BigT.Map;
+import bufmgr.BufMgr;
 import bufmgr.BufMgrException;
 import global.RID;
 import global.SystemDefs;
@@ -16,7 +17,10 @@ public class RowSort {
     public RowSort(BigT in, BigT out, String columnName, int n_pages) throws InvalidMapSizeException, IOException {
         this.in = in;
         this.out = out;
-        stream = new Stream(in, 6, "*", columnName, "*");
+
+        SystemDefs.JavabaseBM = new BufMgr(n_pages, "Clock");
+
+        stream = new Stream(in, 1, "*", columnName, "*");
     }
 
     public void run() throws InvalidMapSizeException, IOException, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException {
