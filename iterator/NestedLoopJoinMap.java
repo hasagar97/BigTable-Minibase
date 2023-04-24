@@ -251,27 +251,34 @@ public class NestedLoopJoinMap extends Iterator
 
     public Stream nestedRowJoin(Stream left, Stream right) throws InvalidMapSizeException, IOException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, InvalidFieldSize, SpaceNotAvailableException, InvalidSlotNumberException {
         BigT recentValueTable = new BigT("nestedJoinTable1.in");
-        Map outputMap = new Map();
         Map leftMap = null;
         Map rightMap = null;
         while((leftMap = left.getNext(new RID()))!=null){
             while((rightMap = right.getNext(new RID()))!=null){
-                if (leftMap.getValue() == rightMap.getValue() && leftMap.getColumnLabel().equalsIgnoreCase(rightMap.getColumnLabel())){
-                        outputMap.setRowLabel(leftMap.getRowLabel()+":"+rightMap.getRowLabel());
-                        outputMap.setColumnLabel(leftMap.getColumnLabel());
-                        outputMap.setTimeStamp(0);
-                        outputMap.setValue(leftMap.getValue());
-                        recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
-                        break;
-                }else if(leftMap.getValue() == rightMap.getValue() && !leftMap.getColumnLabel().equalsIgnoreCase(rightMap.getColumnLabel())){
-                    outputMap.setRowLabel(leftMap.getRowLabel()+":"+rightMap.getRowLabel());
-                    outputMap.setColumnLabel(leftMap.getColumnLabel());
-                    outputMap.setTimeStamp(leftMap.getTimeStamp());
-                    outputMap.setValue(leftMap.getValue());
-                    recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
-                    outputMap.setColumnLabel(rightMap.getColumnLabel());
-                    recentValueTable.insertMap(outputMap.returnMapByteArray(), 1);
-                    break;
+                int compareResult = leftMap.getValue().compareTo(rightMap.getValue());
+                if (compareResult == 0) {
+                    // If the join attribute values match, join the two tuples and output the result
+                    Map leftJoinResult = new Map();
+                    Map rightJoinResult = new Map();
+                    // Check if column label is the same if it is then use some other condition
+                    int columnCompare = leftMap.getValue().compareTo(rightMap.getValue());
+                    leftJoinResult.setRowLabel(leftMap.getRowLabel() + ":" + rightMap.getRowLabel());
+                    leftJoinResult.setValue(leftMap.getValue());
+                    leftJoinResult.setTimeStamp(leftMap.getTimeStamp());
+
+                    rightJoinResult.setRowLabel(leftMap.getRowLabel() + ":" + rightMap.getRowLabel());
+                    rightJoinResult.setValue(rightMap.getValue());
+                    rightJoinResult.setTimeStamp(rightMap.getTimeStamp());
+                                
+                    if (columnCompare == 0) {
+                        leftJoinResult.setColumnLabel(leftMap.getColumnLabel() + "_left");
+                        rightJoinResult.setColumnLabel(rightMap.getColumnLabel() + "_right");
+                    } else {
+                        leftJoinResult.setColumnLabel(leftMap.getColumnLabel());
+                        rightJoinResult.setColumnLabel(rightMap.getColumnLabel());
+                    }        
+                    recentValueTable.insertMap(leftJoinResult.returnMapByteArray(), 1);
+                    recentValueTable.insertMap(rightJoinResult.returnMapByteArray(), 1);
                 }
             }
         }
