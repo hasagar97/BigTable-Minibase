@@ -286,6 +286,14 @@ public class Map implements GlobalConst{
         return this;
     }
 
+    public Map mapReplace(Map toMap) throws InvalidFieldSize, IOException
+    {
+      this.setColumnLabel(toMap.getColumnLabel());
+      this.setRowLabel(toMap.getRowLabel());
+      this.setTimeStamp(toMap.getTimeStamp());
+      this.setValue(toMap.getValue());
+      return this;
+    }
 
 
     /**

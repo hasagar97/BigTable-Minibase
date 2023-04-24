@@ -4,6 +4,9 @@ import BigT.BigT;
 import iterator.*;
 import BigT.Map;
 import BigT.Stream;
+import btree.ConstructPageException;
+import btree.GetFileEntryException;
+import btree.PinPageException;
 import bufmgr.BufMgrException;
 import global.RID;
 import global.SystemDefs;
@@ -17,12 +20,12 @@ public class RowJoin {
     BigT lefT, rightT;
     String joinType;
 
-    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws InvalidMapSizeException, IOException, InvalidFieldSize {
+    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws InvalidMapSizeException, IOException, InvalidFieldSize, HFDiskMgrException, HFException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidSlotNumberException, SpaceNotAvailableException {
         this.lefT = lefT;
         this.rightT = rightT;
         this.joinType = joinType;
         if (joinType.equals("sortmerge")) {
-            sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter);
+            sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter, outputTable);
         } else {
             // Add nested join code here
         }
