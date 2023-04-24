@@ -71,33 +71,6 @@ public class SortMergeJoin {
                     
                     result.insertMap(leftJoinResult.getMapByteArray(), 1);
                     result.insertMap(rightJoinResult.getMapByteArray(), 1);
-                    // Check if value is in most recent 3 values
-                    // leftResultStream = new Stream(leftTable, 1, leftJoinResult.getRowLabel(), leftJoinResult.getColumnLabel(), leftJoinResult.getValue());
-                    // rightResultStream = new Stream(leftTable, 1, leftJoinResult.getRowLabel(), leftJoinResult.getColumnLabel(), leftJoinResult.getValue());
-
-                    // Map [] leftMaps = new Map[3];
-                    // Map tempMap = leftResultStream.getNext(null);
-                    // int i = 0;
-                    // if (tempMap != null) {
-                    //     leftMaps[i] = tempMap;
-                    //     i++;
-                    // }
-                    // while (tempMap != null) {
-                    //     leftMaps[i] = leftResultStream.getNext(null);
-                    //     i++;
-                    // }
-                    // if (leftMaps.length < 3) {
-                    //     result.
-                    // }
-                    // else {
-                    //     for (i=0;i<leftMaps.length;i++) {
-                    //         if (leftJoinResult.getTimeStamp() > leftMaps[i].getTimeStamp()) {
-                    //             // Insert leftjoinresult into DB and then delete the other item
-                    //             leftMaps[i].mapReplace(leftJoinResult);
-                    //             break;
-                    //         }
-                    //     }
-                    // }
                     // Move both pointers forward
                     leftMap = leftStream.getNext(null);
                     rightMap = rightStream.getNext(null);
