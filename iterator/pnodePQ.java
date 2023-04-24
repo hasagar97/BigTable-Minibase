@@ -23,6 +23,8 @@ public abstract class pnodePQ
   /** the sorting order (Ascending or Descending) */
   protected TupleOrder            sort_order;
 
+  protected String                rowSortColumnName;
+
   /**
    * class constructor, set <code>count</code> to <code>0</code>.
    */
@@ -74,13 +76,13 @@ public abstract class pnodePQ
    */
   public int pnodeCMP(pnode a, pnode b)
           throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
-    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, fld_no, b.tuple);
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, fld_no, b.tuple, rowSortColumnName);
     return ans;
   }
 
   public int pnodeCMP(pnode a, pnode b, int orderType)
           throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
-    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, orderType, b.tuple);
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, orderType, b.tuple, rowSortColumnName);
     return ans;
   }
 

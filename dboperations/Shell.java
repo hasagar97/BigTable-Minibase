@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class Shell {
     private static String dbpath = "phase2.test.db";
     private static int num_pages = 5000;
-    private static int bufferpoolsize = 100;
+    private static int bufferpoolsize = 500;
 
     public static void run() throws Exception, BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
         new SystemDefs(dbpath, num_pages, bufferpoolsize, "Clock"); // creates a new db if num_pages > 0

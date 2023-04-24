@@ -30,7 +30,7 @@ public class Query {
         // check if this is safe
         SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
-        stream = new Stream(bigtable, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);
+        stream = new Stream(bigtable, ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER, null);
 //        stream = bigtable.openStream(ORDERTYPE, ROWFILTER, COLUMNFILTER, VALUEFILTER);
 
         pCounter.initialize();

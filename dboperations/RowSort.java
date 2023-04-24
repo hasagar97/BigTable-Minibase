@@ -18,9 +18,9 @@ public class RowSort {
         this.in = in;
         this.out = out;
 
-        SystemDefs.JavabaseBM = new BufMgr(n_pages, "Clock");
+//        SystemDefs.JavabaseBM = new BufMgr(n_pages, "Clock");
 
-        stream = new Stream(in, 1, "*", columnName, "*");
+        stream = new Stream(in, 1, "*", "*", "*", columnName);
     }
 
     public void run() throws InvalidMapSizeException, IOException, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, BufMgrException {
