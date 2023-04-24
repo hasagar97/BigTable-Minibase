@@ -17,10 +17,44 @@ public class BigT
   private java.lang.String m_name;
   public Vector<Heapfile> m_heap_files = new Vector<Heapfile>();
   public BTreeFile m_defaultindex = null;
-  public Vector<BTreeFile> m_index_files = new Vector<BTreeFile>();
   public static final int MAXINDEXNAME = 40;
-  
-  /* 
+  public HashMap<Integer, HashMap<Integer, BTreeFile>> m_index_files = new HashMap<Integer, HashMap<Integer, BTreeFile>>();
+
+  private String getIndexName(int heapFileType, int indexType) {
+    String name = getHeapfileName(heapFileType);
+    switch (indexType) {
+      case 1:
+        name += "_no_index";
+        break;
+
+      case 2:
+        name += "row_index";
+        break;
+
+      case 3:
+        name += "col_index";
+        break;
+
+      case 4:
+        name += "col_row_index";
+        break;
+
+      case 5:
+        name += "row_val_index";
+        break;
+
+      default:
+        break;
+    }
+
+    return name;
+  }
+
+  private String getHeapfileName(int heapFileType) {
+    return m_name + "_" + String.valueOf(heapFileType);
+  }
+
+  /*
     Initializes the big table
   	name - name of the table
   	type - the clustering/index strategy to use
@@ -28,35 +62,51 @@ public class BigT
   public BigT(java.lang.String name) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException {
     m_name = name;
     Heapfile heapfile = null;
-    
+
+    // BigT already exists
+//    if(m_defaultindex != null) return;
+
     try
     {
+      // initialize m_index_files hashmap
+      m_index_files.put(0, new HashMap<>());
+      m_index_files.put(1, new HashMap<>());
+      m_index_files.put(2, new HashMap<>());
+      m_index_files.put(3, new HashMap<>());
+      m_index_files.put(4, new HashMap<>());
+
+
       // Default Row+Column index across all heap files
       m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE);
       // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
+
       // Type 1 No index
-      m_index_files.add(null);
+      m_index_files.get(0).put(0, null);
       heapfile = new Heapfile(name + "_1");
       heapfile.setIndex(0);
       m_heap_files.add(heapfile);
+
       // Type 2 Row index
-      m_index_files.add(new BTreeFile(name + "_row_index", AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
-      heapfile = new Heapfile(name + "_2");
+      m_index_files.get(1).put(1, new BTreeFile(getIndexName(2, 2), AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
+      heapfile = new Heapfile(getHeapfileName(2));
       heapfile.setIndex(1);
       m_heap_files.add(heapfile);
+
       // Type 3 Column index
-      m_index_files.add(new BTreeFile(name + "_column_index", AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
-      heapfile = new Heapfile(name + "_3");
+      m_index_files.get(2).put(2, new BTreeFile(getIndexName(3, 3), AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
+      heapfile = new Heapfile(getHeapfileName(3));
       heapfile.setIndex(2);
       m_heap_files.add(heapfile);
-      // Type 4 Row+Column index
-      m_index_files.add(new BTreeFile(name + "_row_col_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
-      heapfile = new Heapfile(name + "_4");
+
+      // Type 4 Column+Row index
+      m_index_files.get(3).put(3, new BTreeFile(getIndexName(4, 4), AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
+      heapfile = new Heapfile(getHeapfileName(4));
       heapfile.setIndex(3);
       m_heap_files.add(heapfile);
+
       // Type 5 Row+Value index
-      m_index_files.add(new BTreeFile(name + "_row_val_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
-      heapfile = new Heapfile(name + "_5");
+      m_index_files.get(4).put(4, new BTreeFile(getIndexName(5, 5), AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
+      heapfile = new Heapfile(getHeapfileName(5));
       heapfile.setIndex(4);
       m_heap_files.add(heapfile);
     }
@@ -81,28 +131,32 @@ public class BigT
           System.err.println("Failed to destroy default index\n");
         }
       }
-      
-      for (int i = 0; i < m_index_files.size(); i++)
-      {
-        if (m_index_files.get(i) != null)
+
+      for(int heapIndex = 0; heapIndex < 5; heapIndex++) {
+        for (int i = 0; i < m_index_files.get(heapIndex).size(); i++)
         {
-          try {
-            m_index_files.get(i).destroyFile();
+          if (m_index_files.get(heapIndex).get(i) != null)
+          {
+            try {
+              m_index_files.get(heapIndex).get(i).destroyFile();
+            }
+            catch (Exception e) {
+              System.err.println("Failed to destroy index file\n");
+            }
           }
-          catch (Exception e) {
-            System.err.println("Failed to destroy index file\n");
-          }
-        }
-        if (m_heap_files.get(i) != null)
-        {
-          try {
-            m_heap_files.get(i).deleteFile();
-          }
-          catch (Exception e) {
-            System.err.println("Failed to destroy heap file\n");
+          if (m_heap_files.get(heapIndex) != null)
+          {
+            try {
+              m_heap_files.get(heapIndex).deleteFile();
+            }
+            catch (Exception e) {
+              System.err.println("Failed to destroy heap file\n");
+            }
           }
         }
       }
+
+
     }
 
   /*
@@ -253,6 +307,73 @@ public class BigT
 //        scan.DestroyBTreeFileScan();
 //  }
 
+    public void createIndex(int heapfileType, int indexType) throws Exception {
+      if(indexType == 1) {
+        System.out.println("No Index created (TYPE 1)");
+        return;
+      }
+
+      if(m_index_files.get(heapfileType-1).get(indexType-1) != null) {
+        System.out.println("Index already created on the heapfile");
+        return;
+      }
+
+      // create new "indexType" index on heapfile "heapFileType"
+      String newIndexName = getIndexName(heapfileType, indexType);
+      m_index_files.get(heapfileType-1).put(indexType-1, new BTreeFile(newIndexName, AttrType.attrString, MAXINDEXNAME, DeleteFashion.NAIVE_DELETE));
+
+      BTFileScan btFileScan = m_defaultindex.new_scan(null, null);
+      while(true) {
+        KeyDataEntry entry = btFileScan.get_next();
+        if(entry == null) break;
+
+        if(entry.data instanceof LeafData) {
+
+          RID mid = ((LeafData)entry.data).getData();
+          KeyClass key = entry.key;
+
+          if(mid.heapIndex == heapfileType) {
+            m_index_files.get(heapfileType-1).get(indexType-1).insert(new StringKey(key.toString()), mid);
+          }
+
+        }
+      }
+      System.out.println("Index created");
+    }
+
+    // type -> heapIndex
+    private void indexInsertAll(RID mid, int type, StringKey[] keys) throws IOException, IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException {
+      for(int i = 1; i < 5; i++) {
+        if(m_index_files.get(type - 1).get(i) != null) {
+          m_index_files.get(type - 1).get(i).insert(keys[i], mid);
+        }
+      }
+    }
+
+    private void indexDeleteAll(RID mid, int type, StringKey[] keys) throws IOException, IteratorException, ConstructPageException, IndexInsertRecException, LeafDeleteException, PinPageException, UnpinPageException, DeleteRecException, KeyNotMatchException, IndexSearchException, LeafRedistributeException, RecordNotFoundException, InsertRecException, DeleteFashionException, RedistributeException, FreePageException, IndexFullDeleteException {
+      for(int i = 1; i < 5; i++) {
+        if(m_index_files.get(type - 1).get(i) != null) {
+          m_index_files.get(type - 1).get(i).Delete(keys[i], mid);
+        }
+      }
+    }
+
+    private void indexInsertAffected(RID mid, int type, StringKey[] keys, boolean[] affectedIndexes) throws IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException {
+      for(int i = 1; i < 5; i++) {
+        if(m_index_files.get(type - 1).get(i) != null && affectedIndexes[i] == true) {
+          m_index_files.get(type - 1).get(i).insert(keys[i], mid);
+        }
+      }
+    }
+
+    private void indexDeleteAffected(RID mid, int type, StringKey[] keys, boolean[] affectedIndexes) throws IteratorException, ConstructPageException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, DeleteRecException, KeyTooLongException, KeyNotMatchException, IndexSearchException, LeafRedistributeException, RecordNotFoundException, InsertRecException, DeleteFashionException, RedistributeException, FreePageException, IndexFullDeleteException {
+      for(int i = 1; i < 5; i++) {
+        if(m_index_files.get(type - 1).get(i) != null && affectedIndexes[i] == true) {
+          m_index_files.get(type - 1).get(i).Delete(keys[i], mid);
+        }
+      }
+    }
+
     private void updateIndexFiles(Map map, RID mid, int operation, int type) throws IteratorException, ConstructPageException, InsertRecException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, NodeNotMatchException, LeafInsertRecException, PinPageException, IOException, UnpinPageException, FreePageException, IndexFullDeleteException, DeleteRecException, LeafRedistributeException, KeyTooLongException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException {
       updateIndexFiles(map, mid, operation, type, false, false, false, false);
     }
@@ -275,124 +396,52 @@ public class BigT
       
       defaultkey = new StringKey(map.getRowLabel() + map.getColumnLabel());
 
-      switch (type) {
-      	case 1:
-          // no index
-          if(operation == 0) m_defaultindex.insert(defaultkey, mid);
-          else if(operation == 1) m_defaultindex.Delete(defaultkey, mid);
-          break;
-        case 2:
-          // one btree to index row labels
-          key = new StringKey(map.getRowLabel());
-          if(operation == 0) 
-          {
+      StringKey[] keys = new StringKey[5];
+      keys[0] = null;
+      keys[1] = new StringKey(map.getRowLabel());
+      keys[2] = new StringKey(map.getColumnLabel());
+      keys[3] = new StringKey(map.getColumnLabel() + map.getRowLabel());
+      keys[4] = new StringKey(map.getRowLabel() + map.getValue());
+
+      if(operation == 0) {
+        m_defaultindex.insert(defaultkey, mid);
+        indexInsertAll(mid, type, keys);
+      } else if(operation == 1) {
+        m_defaultindex.Delete(defaultkey, mid);
+        indexDeleteAll(mid, type, keys);
+      } else {
+        boolean[] affectedIndexes = new boolean[5];
+        affectedIndexes[0] = false;
+        affectedIndexes[1] = false;
+        affectedIndexes[2] = false;
+        affectedIndexes[3] = false;
+        affectedIndexes[4] = false;
+
+        if(isRowAffected) {
+          affectedIndexes[1] = true;
+          affectedIndexes[3] = true;
+          affectedIndexes[4] = true;
+        }
+        if(isColAffected) {
+          affectedIndexes[2] = true;
+          affectedIndexes[3] = true;
+        }
+        if(isTimestampAffected) {
+          // No indexes to update
+        }
+        if(isValueAffected) {
+          affectedIndexes[4] = true;
+        }
+
+        if(operation == 3) {
+          if(isRowAffected || isColAffected)
             m_defaultindex.insert(defaultkey, mid);
-            m_index_files.get(1).insert(key, mid);
-          }
-          else if(operation == 1)
-          { 
+          indexInsertAffected(mid, type, keys, affectedIndexes);
+        } else if(operation == 4) {
+          if(isRowAffected || isColAffected)
             m_defaultindex.Delete(defaultkey, mid);
-            m_index_files.get(1).Delete(key, mid);
-          }
-          else {
-            if(isRowAffected) {
-              if(operation == 2) 
-              {
-                m_defaultindex.insert(defaultkey, mid);
-                m_index_files.get(1).insert(key, mid);
-              }
-              else if(operation == 3)
-              {
-                m_defaultindex.Delete(defaultkey, mid);
-                m_index_files.get(1).Delete(key, mid);
-              }
-            }
-          }
-          break;
-        case 3:
-          // one btree to index column labels
-          key = new StringKey(map.getColumnLabel());
-          if(operation == 0) 
-          {
-            m_defaultindex.insert(defaultkey, mid);
-            m_index_files.get(2).insert(key, mid);
-          }
-          else if(operation == 1)
-          { 
-            m_defaultindex.Delete(defaultkey, mid);
-            m_index_files.get(2).Delete(key, mid);
-          }
-          else {
-            if(isColAffected) {
-              if(operation == 2) 
-              {
-                m_defaultindex.insert(defaultkey, mid);
-                m_index_files.get(2).insert(key, mid);
-              }
-              else if(operation == 3)
-              {
-                m_defaultindex.Delete(defaultkey, mid);
-                m_index_files.get(2).Delete(key, mid);
-              }
-            }
-          }
-          break;
-        case 4:
-          // one btree to index column label and row label (combined key) and
-          key = new StringKey(map.getRowLabel() + map.getColumnLabel());
-          if(operation == 0) 
-          {
-            m_defaultindex.insert(defaultkey, mid);
-            m_index_files.get(3).insert(key, mid);
-          }
-          else if(operation == 1)
-          { 
-            m_defaultindex.Delete(defaultkey, mid);
-            m_index_files.get(3).Delete(key, mid);
-          }
-          else {
-            if(isRowAffected || isColAffected) {
-              if(operation == 2) 
-              {
-                m_defaultindex.insert(defaultkey, mid);
-                m_index_files.get(3).insert(key, mid);
-              }
-              else if(operation == 3)
-              {
-                m_defaultindex.Delete(defaultkey, mid);
-                m_index_files.get(3).Delete(key, mid);
-              }
-            }
-          }
-          break;
-        case 5:
-          // one btree to index column label and value (combined key) and
-          key = new StringKey(map.getColumnLabel() + map.getValue());
-          if(operation == 0) 
-          {
-            m_defaultindex.insert(defaultkey, mid);
-            m_index_files.get(4).insert(key, mid);
-          }
-          else if(operation == 1)
-          { 
-            m_defaultindex.Delete(defaultkey, mid);
-            m_index_files.get(4).Delete(key, mid);
-          }
-          else {
-            if(isColAffected || isValueAffected) {
-              if(operation == 2) 
-              {
-                m_defaultindex.insert(defaultkey, mid);
-                m_index_files.get(4).insert(key, mid);
-              }
-              else if(operation == 3)
-              {
-                m_defaultindex.Delete(defaultkey, mid);
-                m_index_files.get(4).Delete(key, mid);
-              }
-            }
-          }
-          break;
+          indexDeleteAffected(mid, type, keys, affectedIndexes);
+        }
       }
     }
 
