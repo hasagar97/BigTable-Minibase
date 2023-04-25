@@ -130,6 +130,8 @@ public class Shell {
 
                     bigtable.insertMap(newMap.getMapByteArray(), type);
 
+                    SystemDefs.JavabaseBM.softFlushAll();
+
                     break;
 
                 case "createindex":
