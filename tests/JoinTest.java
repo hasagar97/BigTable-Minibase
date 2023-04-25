@@ -1350,8 +1350,8 @@ Query7();
      int printcount;
   NestedLoopJoinMap nlj = null;
   try {
-      RetrieveRecentMaps r = new RetrieveRecentMaps();
-      r.getRecentMaps(stream);
+      RetrieveRecentMaps r = new RetrieveRecentMaps("hardcoded");
+      r.getRecentMaps(stream,"hardcoded");
     nlj = new NestedLoopJoinMap(Stypes2, 4, Ssizes,
     Stypes2, 4, Ssizes,
          10,

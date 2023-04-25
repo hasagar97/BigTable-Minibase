@@ -18,10 +18,12 @@ public class RetrieveRecentMaps {
 
     BigT recentValueTable = new BigT("recentValueTable.in");
 
-    public RetrieveRecentMaps() throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
+    public RetrieveRecentMaps(String tableName) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
+        recentValueTable = new BigT(tableName);
     }
 
-    public Stream getRecentMaps(Stream stream) throws InvalidMapSizeException, IOException, InvalidFieldSize, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException {
+    public Stream getRecentMaps(Stream stream,String TableName) throws InvalidMapSizeException, IOException, InvalidFieldSize, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException {
+        recentValueTable = new BigT(TableName);
         Map x = null;
         int recCount = 0;
         Map curr_map = null;
@@ -41,7 +43,7 @@ public class RetrieveRecentMaps {
             curr_map.setColumnLabel(x.getColumnLabel());
             curr_map.setTimeStamp(x.getTimeStamp());
             curr_map.setValue(x.getValue());
-            x.print();
+//            x.print();
             recCount++;
         }
         System.out.println("Total records in recentValueTable.in: "+ recCount);

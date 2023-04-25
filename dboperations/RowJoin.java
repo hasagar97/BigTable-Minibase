@@ -63,12 +63,18 @@ public class RowJoin {
             sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter, outputTable);
         } else {
             // Add nested join code here
-            RetrieveRecentMaps r = new RetrieveRecentMaps();
-            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*", null));
-            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*", null));
+            RetrieveRecentMaps r = new RetrieveRecentMaps(lefT.getName()+"_ll");
+            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*", null),lefT.getName()+"_ll");
+            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*", null),rightT.getName()+"_ll");
             nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right);
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right, outputTable);
+
+
+            Stream lt = new Stream(lefT,6, "*", "*","*", null);
+            Stream rt = new Stream(rightT,6, "*", "*","*", null);
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
+
             Map op = new Map();
             while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
                 System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
