@@ -46,11 +46,11 @@ public class RetrieveRecentMaps {
         }
         System.out.println("Total records in recentValueTable.in: "+ recCount);
         //order type 2 - based on columnlabel
-        Stream res = new Stream(recentValueTable, 2, "*","*","*");
-        Map m = null;
-        while((m = res.getNext(new RID()))!=null){
-            System.out.println("Resultant big table records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
-        }
+//        Stream res = new Stream(recentValueTable, 2, "*","*","*");
+//        Map m = null;
+//        while((m = res.getNext(new RID()))!=null){
+//            System.out.println("Resultant big table records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
+//        }
         return new Stream(recentValueTable, 6, "*","*","*");
     }
 

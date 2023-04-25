@@ -4,6 +4,7 @@ import BigT.BigT;
 import btree.ConstructPageException;
 import btree.GetFileEntryException;
 import btree.PinPageException;
+import global.AttrOperator;
 import global.AttrType;
 import iterator.*;
 import BigT.Map;
@@ -33,16 +34,31 @@ public class RowJoin {
             new AttrType(AttrType.attrInteger)
     };
     CondExpr [] outFilter  = new CondExpr[3];
+    CondExpr [] outFilter2 = new CondExpr[3];
 
     FldSpec []  proj1 = {
             new FldSpec(new RelSpec(RelSpec.outer), 2),
             new FldSpec(new RelSpec(RelSpec.innerRel), 2)
     };
 
+    short[] sizes = new short[4];
+
+
     public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws InvalidMapSizeException, IOException, InvalidFieldSize, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidSlotNumberException, NestedLoopException {
         this.lefT = lefT;
         this.rightT = rightT;
         this.joinType = joinType;
+        sizes[0] = 30;
+        sizes[1] = 30;
+        sizes[2] = 30;
+        sizes[3] = 30;
+        outFilter[0] = new CondExpr();
+        outFilter[1] = new CondExpr();
+        outFilter[2] = new CondExpr();
+        outFilter2[0] = new CondExpr();
+        outFilter2[1] = new CondExpr();
+        outFilter2[2] = new CondExpr();
+        Query7_CondExpr(outFilter, outFilter2);
         if (joinType.equals("sortmerge")) {
             sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter);
         } else {
@@ -50,13 +66,35 @@ public class RowJoin {
             RetrieveRecentMaps r = new RetrieveRecentMaps();
             left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*"));
             right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*"));
-            nestedLoopJoinMapStreamLeft = new NestedLoopJoinMap(in1, 4, new short[4], in1,4, new short[4], 10, left, lefT.getName()+".in",
+            nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
-//            nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, new short[4], in1,4, new short[4], 10, right, rightT.toString(),
-//                    outFilter, null, proj1, 2);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamLeft.nestedRowJoin(left, right);
-
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right);
+            Map op = new Map();
+            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
+                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
+            }
         }
+    }
+
+    private void Query7_CondExpr(CondExpr[] expr, CondExpr[] expr2) {
+
+        expr[0].next  = null;
+        expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
+        expr[0].type1 = new AttrType(AttrType.attrSymbol);
+        expr[0].type2 = new AttrType(AttrType.attrSymbol);
+        expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+        expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),2);
+
+        expr[1].next  = null;
+        expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
+        expr[1].type1 = new AttrType(AttrType.attrSymbol);
+        expr[1].type2 = new AttrType(AttrType.attrSymbol);
+        expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),4);
+        expr[1].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+        expr[2] = null;
+        expr2[0] = null;
+        expr2[1] = null;
+        expr2[2] = null;
     }
 
     public void run() throws Exception {
@@ -65,6 +103,7 @@ public class RowJoin {
             if (joinType == "sortmerge")
                 map = sortMergeJoinStream.getNext();
             else if (joinType == "nested") {
+                System.out.println("requexsting next joined map ");
                 map = nestedJoinOutputStream.getNext(new RID());
             }
             if(map == null) break;
