@@ -68,11 +68,17 @@ public class RowJoin {
             right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*"));
             nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right);
-            Map op = new Map();
-            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
-                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
-            }
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right,outputTable);
+//            Map op = new Map();
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(new Stream(lefT,6, "*", "*","*"),
+                    new Stream(rightT,6, "*", "*","*"),
+                    outputTable);
+            // while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
+            //     System.out.println("Resultant output Join records::"+op.toString());
+            // }
+
+
+
         }
     }
 
