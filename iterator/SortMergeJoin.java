@@ -41,7 +41,7 @@ public class SortMergeJoin {
 
             while (leftMap != null) {
                 String valueFilter = "["+leftMap.getValue()+","+leftMap.getValue()+"]";
-                rightStream = new Stream(rightTable, 1, "*", "*", valueFilter, null);
+                rightStream = new Stream(rightTable, 1, "*", columnFilter, valueFilter, null);
                 Map rightMap = rightStream.getNext(null);
                 
                 while (rightMap != null) {
