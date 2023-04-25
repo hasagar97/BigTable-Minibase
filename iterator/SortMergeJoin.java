@@ -30,7 +30,6 @@ public class SortMergeJoin {
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws InvalidMapSizeException, IOException, InvalidFieldSize, HFDiskMgrException, HFException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidSlotNumberException, SpaceNotAvailableException {
         // Start stream with bigtable2
         leftStream = new Stream(leftTable, 1, "*", columnFilter, "*", null);
-        rightStream = new Stream(leftTable, 1, "*", columnFilter, "*", null);
 
         BigT result = new BigT(outputTable);
         System.out.println("Stream created");
@@ -39,17 +38,18 @@ public class SortMergeJoin {
         if (joinMode == "inner") {
             // columns equal and value equal then print
             Map leftMap = leftStream.getNext(null);
-            Map rightMap = rightStream.getNext(null);
 
-            while (leftMap != null && rightMap != null) {
-                int compareResult = leftMap.getValue().compareTo(rightMap.getValue());
-            
-                if (compareResult == 0) {
+            while (leftMap != null) {
+                String valueFilter = "["+leftMap.getValue()+","+leftMap.getValue()+"]";
+                rightStream = new Stream(rightTable, 1, "*", "*", valueFilter, null);
+                Map rightMap = rightStream.getNext(null);
+                
+                while (rightMap != null) {
                     // If the join attribute values match, join the two tuples and output the result
                     Map leftJoinResult = new Map();
                     Map rightJoinResult = new Map();
                     // Check if column label is the same if it is then use some other condition
-                    int columnCompare = leftMap.getValue().compareTo(rightMap.getValue());
+                    int columnCompare = leftMap.getColumnLabel().compareTo(rightMap.getColumnLabel());
                     leftJoinResult.setRowLabel(leftMap.getRowLabel() + ":" + rightMap.getRowLabel());
                     leftJoinResult.setValue(leftMap.getValue());
                     leftJoinResult.setTimeStamp(leftMap.getTimeStamp());
@@ -71,16 +71,10 @@ public class SortMergeJoin {
                     
                     result.insertMap(leftJoinResult.getMapByteArray(), 1);
                     result.insertMap(rightJoinResult.getMapByteArray(), 1);
-                    // Move both pointers forward
-                    leftMap = leftStream.getNext(null);
-                    rightMap = rightStream.getNext(null);
-                } else if (compareResult < 0) {
-                    // If the join attribute value in the left relation is smaller, move the left pointer forward
-                    leftMap = leftStream.getNext(null);
-                } else {
-                    // If the join attribute value in the right relation is smaller, move the right pointer forward
+                    // Move pointers forward
                     rightMap = rightStream.getNext(null);
                 }
+                leftMap = leftStream.getNext(null);
             }            
 
         }
