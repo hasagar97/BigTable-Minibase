@@ -295,12 +295,12 @@ public class NestedLoopJoinMap extends Iterator
         });
 
         Map m = null;
-        Stream res = new Stream(output_join_table, 2, "*","*","*");
+        Stream res = new Stream(output_join_table, 2, "*","*","*", null);
         while((m = res.getNext(new RID()))!=null){
             System.out.println("Nested Join output records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
         }
 
-        return new Stream(output_join_table, 6, "*", "*", "*");
+        return new Stream(output_join_table, 6, "*", "*", "*", null);
     }
 
     /**
