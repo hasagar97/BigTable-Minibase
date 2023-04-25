@@ -645,7 +645,7 @@ public class Sort extends Iterator implements GlobalConst
     o_buf.init(bufs, _n_pages, tuple_size, temp_files[0], false);
     //    output_tuple = null;
     
-    max_elems_in_heap = 10000;
+    max_elems_in_heap = 1000000000;
     sortFldLen = sort_fld_len;
     odr_type = order_type;
     this.rowSortColumnName = rowSortColumnName;

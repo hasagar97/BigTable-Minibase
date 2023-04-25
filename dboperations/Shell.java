@@ -16,6 +16,8 @@ import BigT.Map;
 import BigT.BigTScan;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Scanner;
 
 public class Shell {
@@ -100,8 +102,12 @@ public class Shell {
                     BigT lefT = new BigT(LEFTTABLE);
                     BigT righT = new BigT(RIGHTTABLE);
                     System.out.println("Initializing rowjoin with jointype "+ JOINTYPE);
+                    Instant start = Instant.now();
                     RowJoin rowJoin = new RowJoin(lefT, righT, OUTPUTTABLE, COLUMNFILTER, JOINTYPE, NUMBUF);
                     rowJoin.run();
+                    Instant finish = Instant.now();
+                    Integer timeElapsed = Math.round(Duration.between(start, finish).toMillis());
+                    System.out.println("Total Run time " + Integer.toString(timeElapsed) + " ms");
                     break;
 
                 case "mapinsert":
@@ -135,7 +141,7 @@ public class Shell {
                     bigtable.createIndex(heapFileType, newIndexType);
 
                     break;
-                    
+
                 case "getcounts":
                     BIGTABLENAME = words[1];
                     NUMBUF = Integer.valueOf(words[2]);
@@ -143,7 +149,7 @@ public class Shell {
                     SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
                     bigtable = new BigT(BIGTABLENAME);
-                    
+
                     System.out.println("Number of Maps = " + bigtable.getMapCnt());
                     System.out.println("Distinct Row Labels = " + bigtable.getRowCnt());
                     System.out.println("Distinct Column Labels = " + bigtable.getColumnCnt());

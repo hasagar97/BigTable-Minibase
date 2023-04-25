@@ -1,15 +1,19 @@
 package iterator;
 
-
-import BigT.BigTScan;
-import BigT.Map;
-import BigT.Stream;
+import BigT.*;
+import btree.ConstructPageException;
+import btree.GetFileEntryException;
+import btree.PinPageException;
 import heap.*;
 import global.*;
 import bufmgr.*;
 import index.*;
 import java.lang.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  *
  *  This file contains an implementation of the nested loops join
@@ -32,13 +36,15 @@ public class NestedLoopJoinMap extends Iterator
     private   int        n_buf_pgs;        // # of buffer pages available.
     private   boolean        done,         // Is the join complete
             get_from_outer;                 // if TRUE, a tuple is got from outer
-    private BigT.Map outer_tuple, inner_tuple;
-    private BigT.Map Jtuple;           // Joined tuple
+    private Map outer_tuple, inner_tuple;
+    private Map Jtuple;           // Joined tuple
     private   FldSpec   perm_mat[];
     private   int        nOutFlds;
     private   Heapfile  hf;
     private BigTScan inner;
-    private BigT.BigT rightTable;
+    private BigT rightTable;
+
+    BigT output_join_table;
 
 
     /**constructor
@@ -72,7 +78,7 @@ public class NestedLoopJoinMap extends Iterator
                              CondExpr[] rightFilter,
                              FldSpec[] proj_list,
                              int        n_out_flds
-    ) throws IOException, NestedLoopException, InvalidMapSizeException {
+    ) throws IOException, NestedLoopException, InvalidMapSizeException, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException {
 
         _in1 = new AttrType[in1.length];
         _in2 = new AttrType[in2.length];
@@ -80,8 +86,8 @@ public class NestedLoopJoinMap extends Iterator
         System.arraycopy(in2,0,_in2,0,in2.length);
         in1_len = len_in1;
         in2_len = len_in2;
-
-
+        output_join_table = new BigT("nestedJoinTable1.in");
+        System.out.println("Initialized bigT in output_join_table");
         outer = am1;
         boolean print_inputStream_in_nestedjoin=false;
                 if(print_inputStream_in_nestedjoin){
@@ -105,8 +111,8 @@ public class NestedLoopJoinMap extends Iterator
             System.out.println(":Printed values from input stream:"+printcount);
             }
         t2_str_sizescopy =  t2_str_sizes;
-        inner_tuple = new BigT.Map();
-        Jtuple = new BigT.Map();
+        inner_tuple = new Map();
+        Jtuple = new Map();
         OutputFilter = outFilter;
         RightFilter  = rightFilter;
 
@@ -132,8 +138,8 @@ public class NestedLoopJoinMap extends Iterator
 
 
         try {
-            hf = new Heapfile(relationName);
-            rightTable = new BigT.BigT(relationName);
+//            hf = new Heapfile(relationName);
+            rightTable = new BigT(relationName);
 
         }
         catch(Exception e) {
@@ -158,7 +164,7 @@ public class NestedLoopJoinMap extends Iterator
      *@exception Exception other exceptions
 
      */
-    public BigT.Map get_next()
+    public Map get_next()
             throws IOException,
             JoinsException ,
             IndexException,
@@ -248,6 +254,154 @@ public class NestedLoopJoinMap extends Iterator
             get_from_outer = true; // Loop back to top and get next outer tuple.
         } while (true);
     }
+
+    private String trim(String s,int x){
+        return s.substring(0, Math.min(s.length(), x));
+    }
+    public Stream nestedRowJoin(Stream left, Stream right, String outputTable) throws InvalidMapSizeException, IOException, ConstructPageException,
+            HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, InvalidFieldSize, SpaceNotAvailableException, InvalidSlotNumberException {
+
+        output_join_table = new BigT(outputTable);
+
+        Map leftMap = null;
+        Map rightMap = null;
+        HashMap<String, Map> leftHashMap = new HashMap();
+        HashMap<String, Map> rightHashMap = new HashMap();
+
+        while((leftMap = left.getNext(new RID()))!=null){
+            Map newMap = new Map();
+            newMap.setRowLabel(leftMap.getRowLabel());
+            newMap.setColumnLabel(leftMap.getColumnLabel());
+            newMap.setTimeStamp(leftMap.getTimeStamp());
+            newMap.setValue(leftMap.getValue());
+            leftHashMap.put(leftMap.getColumnLabel(), newMap);
+        }
+        while((rightMap = right.getNext(new RID()))!=null){
+            Map newMap = new Map();
+            newMap.setRowLabel(rightMap.getRowLabel());
+            newMap.setColumnLabel(rightMap.getColumnLabel());
+            newMap.setTimeStamp(rightMap.getTimeStamp());
+            newMap.setValue(rightMap.getValue());
+            rightHashMap.put(rightMap.getColumnLabel(), newMap);
+        }
+
+        leftHashMap.forEach((k,v)->{
+            if(rightHashMap.containsKey(k)){
+                try {
+                    if(v.getValue().equals(rightHashMap.get(k).getValue())) {
+                        try {
+                            Map outputMap1 = new Map();
+                            outputMap1.setRowLabel(v.getRowLabel() + ":" + rightHashMap.get(k).getRowLabel());
+                            outputMap1.setColumnLabel(v.getColumnLabel() + "_left");
+                            outputMap1.setTimeStamp(v.getTimeStamp());
+                            outputMap1.setValue(v.getValue());
+                            output_join_table.insertMap(outputMap1.returnMapByteArray(), 1);
+                            System.out.println("NJ______________");
+                            outputMap1.print();
+
+                            Map outputMap2 = new Map();
+                            outputMap2.setRowLabel(v.getRowLabel() + ":" + rightHashMap.get(k).getRowLabel());
+                            outputMap2.setColumnLabel(v.getColumnLabel() + "_right");
+                            outputMap2.setTimeStamp(rightHashMap.get(k).getTimeStamp());
+                            outputMap2.setValue(v.getValue());
+                            output_join_table.insertMap(outputMap2.returnMapByteArray(), 1);
+                            outputMap2.print();
+                            System.out.println("NJ______________");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (InvalidFieldSize | InvalidSlotNumberException | InvalidMapSizeException |
+                                 SpaceNotAvailableException | HFException | HFBufMgrException | HFDiskMgrException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+//        Map m = null;
+//        Stream res = new Stream(output_join_table, 2, "*","*","*", null);
+//        while((m = res.getNext(new RID()))!=null){
+//            System.out.println("Nested Join output records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
+//        }
+
+        return new Stream(output_join_table, 6, "*", "*", "*", null);
+    }
+
+
+    public Stream nestedRowJoinCross(Stream left,Stream right, String outputTable) throws PinPageException, HFBufMgrException, HFException, IOException, ConstructPageException, GetFileEntryException, HFDiskMgrException, InvalidMapSizeException, InvalidFieldSize {
+        BigT output_join_table = new BigT(outputTable);
+
+//        Map outputMap = new Map();
+        Map leftMap = null;
+        Map rightMap = null;
+//        HashMap<String, Map> leftMapList = new HashMap();
+//        HashMap<String, Map> rightMapList = new HashMap();
+        List<Map> leftMapList = new ArrayList<Map>();
+        List<Map> rightMapList = new ArrayList<Map>();
+        while((leftMap = left.getNext(new RID()))!=null){
+            Map newMap = new Map();
+            newMap.setRowLabel(leftMap.getRowLabel());
+            newMap.setColumnLabel(leftMap.getColumnLabel());
+            newMap.setTimeStamp(leftMap.getTimeStamp());
+            newMap.setValue(leftMap.getValue());
+            leftMapList.add( newMap);
+        }
+        while((rightMap = right.getNext(new RID()))!=null){
+            Map newMap = new Map();
+            newMap.setRowLabel(rightMap.getRowLabel());
+            newMap.setColumnLabel(rightMap.getColumnLabel());
+            newMap.setTimeStamp(rightMap.getTimeStamp());
+            newMap.setValue(rightMap.getValue());
+            rightMapList.add( newMap);
+        }
+
+        leftMapList.forEach(v->{
+
+            rightMapList.forEach(vr -> {
+                try {
+                    if(!vr.getColumnLabel().equals(v.getColumnLabel()) && v.getValue().equals(vr.getValue())) {
+                        try {
+                            Map outputMap = new Map();
+                            outputMap.setRowLabel(trim(v.getRowLabel(),7) + ":" + trim(vr.getRowLabel(),7));
+                            outputMap.setColumnLabel(v.getColumnLabel());
+                            outputMap.setTimeStamp(v.getTimeStamp());
+                            outputMap.setValue(v.getValue());
+                            output_join_table.insertMap(outputMap.returnMapByteArray(), 1);
+                            System.out.println("CJ______________");
+                            outputMap.print();
+                            Map outputMap2 = new Map();
+                            outputMap2.setRowLabel(trim(v.getRowLabel(),7) + ":" + trim(vr.getRowLabel(),7));
+                            outputMap2.setColumnLabel(vr.getColumnLabel());
+                            outputMap2.setTimeStamp(vr.getTimeStamp());
+                            outputMap2.setValue(vr.getValue());
+                            output_join_table.insertMap(outputMap2.returnMapByteArray(), 1);
+                            outputMap2.print();
+                            System.out.println("CJ______________");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (InvalidFieldSize | InvalidSlotNumberException | InvalidMapSizeException |
+                                 SpaceNotAvailableException | HFException | HFBufMgrException | HFDiskMgrException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        });
+
+        Map m = null;
+        Stream res = new Stream(output_join_table, 2, "*","*","*",null);
+        while((m = res.getNext(new RID()))!=null){
+            System.out.println("Nested Join output records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
+        }
+
+        return new Stream(output_join_table, 6, "*", "*", "*",null);
+    }
+
 
     /**
      * implement the abstract method close() from super class Iterator
