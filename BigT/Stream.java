@@ -24,8 +24,9 @@ public class Stream {
           short [] str_sizes = {(short)20, (short)20, (short)4, (short)20};
           this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 4, new TupleOrder(TupleOrder.Ascending), 20, 10, orderType, rowSortColumnName);
         } catch (Exception e) {
-            e.printStackTrace();
+          e.printStackTrace();
           System.out.println(e);
+          System.exit(1);
         }
 
     }
