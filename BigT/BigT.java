@@ -198,15 +198,15 @@ public class BigT
       switch (type) {
             case 1:
               // Want to stream entries by ordered row label
-              stream = new Stream(this, 3, "*", "*", "*");
+              stream = new Stream(this, 3, "*", "*", "*", null);
               break;
             case 2:
               // Want to stream entries by ordered column label
-              stream = new Stream(this, 4, "*", "*", "*");
+              stream = new Stream(this, 4, "*", "*", "*", null);
               break;
             default:
               // Want to stream entries by ordered row label
-              stream = new Stream(this, 3, "*", "*", "*");
+              stream = new Stream(this, 3, "*", "*", "*", null);
               break;
       }
 
@@ -656,7 +656,7 @@ public class BigT
     java.lang.String columnFilter,
     java.lang.String valueFilter) throws InvalidMapSizeException, IOException
     {
-      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter);
+      return new Stream(this, orderType, rowFilter, columnFilter, valueFilter, null);
     }
     
     public java.lang.String getName ()

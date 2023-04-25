@@ -13,7 +13,7 @@ public class Stream {
     String[] rowFilter, colFilter, valFilter;
     Sort sortedStream;
 
-    public Stream(BigT bigtable, int orderType, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER) throws InvalidMapSizeException, IOException {
+    public Stream(BigT bigtable, int orderType, String ROWFILTER, String COLUMNFILTER, String VALUEFILTER, String rowSortColumnName) throws InvalidMapSizeException, IOException {
         rowFilter = processFilter(ROWFILTER);
         colFilter = processFilter(COLUMNFILTER);
         valFilter = processFilter(VALUEFILTER);
@@ -22,7 +22,7 @@ public class Stream {
           AttrType[] attrTypes = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
           short len_in = 4;
           short [] str_sizes = {(short)20, (short)20, (short)4, (short)20};
-          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 4, new TupleOrder(TupleOrder.Ascending), 20, 10, orderType);
+          this.sortedStream = new Sort(attrTypes, len_in, str_sizes, iterator, 4, new TupleOrder(TupleOrder.Ascending), 20, 10, orderType, rowSortColumnName);
         } catch (Exception e) {
             e.printStackTrace();
           System.out.println(e);

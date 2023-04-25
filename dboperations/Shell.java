@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class Shell {
     private static String dbpath = "phase2.test.db";
     private static int num_pages = 5000;
-    private static int bufferpoolsize = 100;
+    private static int bufferpoolsize = 500;
 
     public static void run() throws Exception, BufMgrException, IOException, SpaceNotAvailableException, InvalidMapSizeException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFieldSize, PageNotFoundException, HashOperationException, PagePinnedException, PageUnpinnedException, InvalidRelation, FileScanException, TupleUtilsException, PageNotReadException, UnknowAttrType, FieldNumberOutOfBoundException, PredEvalException, WrongPermat, JoinsException, InvalidTypeException {
         new SystemDefs(dbpath, num_pages, bufferpoolsize, "Clock"); // creates a new db if num_pages > 0
@@ -45,6 +45,9 @@ public class Shell {
                     DATAFILENAME = words[1];
                     BIGTABLENAME = words[3];
                     TYPE = Integer.valueOf(words[2]);
+                    NUMBUF = Integer.valueOf(words[4]);
+
+                    SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
                     bigtable = new BigT(BIGTABLENAME);
                     Batchinsert batchinsert = new Batchinsert(DATAFILENAME, TYPE, bigtable);
@@ -110,6 +113,8 @@ public class Shell {
                     BIGTABLENAME = words[6];
                     NUMBUF = Integer.valueOf(words[7]);
 
+                    SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
+
                     bigtable = new BigT(BIGTABLENAME);
                     Map newMap = new Map();
                     newMap.setRowLabel(row);
@@ -133,6 +138,9 @@ public class Shell {
 
                 case "getcounts":
                     BIGTABLENAME = words[1];
+                    NUMBUF = Integer.valueOf(words[2]);
+
+                    SystemDefs.JavabaseBM = new BufMgr(NUMBUF, "Clock");
 
                     bigtable = new BigT(BIGTABLENAME);
 

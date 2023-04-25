@@ -80,7 +80,7 @@ public class DuplElim extends Iterator
 	{
 	  try {
 	    _am = new Sort(in, len_in, s_sizes, am, 1, order,
-			   sortFldLen, amt_of_mem, 6);
+			   sortFldLen, amt_of_mem, 6, null);
 	  }catch(SortException e){
 	    e.printStackTrace();
 	    throw new DuplElimException(e, "SortException is caught by DuplElim.java");

@@ -108,7 +108,7 @@ public class MapUtils
 
     public static int CompareMapWithMap2(AttrType fldType,
                                         BigT.Map t1, int[] order_priority,
-                                        BigT.Map t2)
+                                        BigT.Map t2, String rowSortColumnName)
             throws IOException,
             UnknowAttrType,
             TupleUtilsException, CorruptedFieldNo {
@@ -118,6 +118,15 @@ public class MapUtils
 
 //        if (t1_fld_no != t2_fld_no) System.out.println("t1 fieldNo not equal to t2_filed nube rin CompareMapWithMap");
         for(int i=0;i< order_priority.length ; i++){
+
+			// If Sort is being called by the rowSort operator, then do the timestamp comparison only if both the maps
+			// being compared have the column name provided to rowSort
+			if(rowSortColumnName != null && order_priority[i] == 2) {
+				String map1_col = t1.getColumnLabel(), map2_col = t2.getColumnLabel();
+				if(map1_col.compareTo(rowSortColumnName) != 0 || map2_col.compareTo(rowSortColumnName) != 0)
+					continue; // skips to the next order_type field
+			}
+
             int x = CompareMapWithMap(t1,t2,order_priority[i]);
             // System.out.print("Res["+i+"] value is: "+x);
             if(x!=0){
@@ -210,7 +219,7 @@ public class MapUtils
   
 	public static int CompareTupleWithValueSort(AttrType fldType,
 										  BigT.Map t1, int order_type,
-										  BigT.Map value)
+										  BigT.Map value, String rowSortColumnName)
 		  throws IOException,
 		  UnknowAttrType,
 		  TupleUtilsException, CorruptedFieldNo {
@@ -241,7 +250,7 @@ public class MapUtils
       // }
       // System.out.print("\n");
       // return CompareMapWithMap( t1, value, order_type);
-      return CompareMapWithMap2(fldType, t1, order_priority,value);
+      return CompareMapWithMap2(fldType, t1, order_priority,value, rowSortColumnName);
     }
   /**
    *This function Compares two Tuple inn all fields 
