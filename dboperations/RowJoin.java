@@ -60,12 +60,12 @@ public class RowJoin {
         outFilter2[2] = new CondExpr();
         Query7_CondExpr(outFilter, outFilter2);
         if (joinType.equals("sortmerge")) {
-            sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter);
+            sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter, outputTable);
         } else {
             // Add nested join code here
             RetrieveRecentMaps r = new RetrieveRecentMaps();
-            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*"));
-            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*"));
+            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*", null));
+            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*", null));
             nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
             nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right);

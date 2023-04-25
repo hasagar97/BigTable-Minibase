@@ -1346,7 +1346,7 @@ Query7();
 //         System.out.println("Print count for btt tree:"+printcount);
 //     }
      // Sorting teh stream based on timestamp, hence orderType 6
-     Stream stream = new Stream(newSailorBigT,6,"*","*","*");
+     Stream stream = new Stream(newSailorBigT,6,"*","*","*", null);
      int printcount;
   NestedLoopJoinMap nlj = null;
   try {

@@ -51,7 +51,7 @@ public class RetrieveRecentMaps {
 //        while((m = res.getNext(new RID()))!=null){
 //            System.out.println("Resultant big table records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
 //        }
-        return new Stream(recentValueTable, 6, "*","*","*");
+        return new Stream(recentValueTable, 6, "*","*","*", null);
     }
 
 }
