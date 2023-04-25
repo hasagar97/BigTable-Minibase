@@ -1,0 +1,6 @@
+tests/*.db
+**/*.class
+.idea/*
+**.iml
+jdk.txt
+.idea/**/workspace.xml

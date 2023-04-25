@@ -24,10 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1b578b2c-78df-4744-acb5-074796781d6d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BigT/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BigT/Stream.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Stream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global/Convert.java" beforeDir="false" afterPath="$PROJECT_DIR$/global/Convert.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/phase2SortingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/phase2SortingTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/JoinTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/JoinTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +33,13 @@
   </component>
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -51,7 +55,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="Application.JoinTest">
+    <configuration name="JoinTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.JoinTest" />
+      <module name="BigTableDBMS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Phase2Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="tests.Phase2Test" />
       <module name="BigTableDBMS" />
@@ -67,6 +89,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.JoinTest" />
         <item itemvalue="Application.Phase2Test" />
       </list>
     </recent_temporary>
@@ -95,31 +118,67 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="116" y="118" width="1688" height="797" key="DiffContextDialog" timestamp="1679270688858">
-      <screen x="0" y="0" width="1920" height="1032" />
+    <state x="93" y="93" width="1351" height="631" key="DiffContextDialog" timestamp="1682054139932">
+      <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="93" y="93" width="1350" height="630" key="DiffContextDialog/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679211267906" />
+    <state x="93" y="93" width="1351" height="631" key="DiffContextDialog/0.0.1536.816@0.0.1536.816" timestamp="1682054139932" />
     <state x="116" y="118" width="1688" height="797" key="DiffContextDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1679270688858" />
-    <state width="1493" height="258" key="GridCell.Tab.0.bottom" timestamp="1679252453916">
+    <state x="549" y="163" key="FileChooserDialogImpl" timestamp="1681971589312">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1493" height="258" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
-    <state width="1493" height="258" key="GridCell.Tab.0.center" timestamp="1679252453916">
+    <state x="549" y="163" key="FileChooserDialogImpl/0.0.1536.816@0.0.1536.816" timestamp="1681971589312" />
+    <state width="1493" height="257" key="GridCell.Tab.0.bottom" timestamp="1681981042905">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1493" height="258" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
-    <state width="1493" height="258" key="GridCell.Tab.0.left" timestamp="1679252453916">
+    <state width="1877" height="279" key="GridCell.Tab.0.bottom/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681813775790" />
+    <state width="1877" height="265" key="GridCell.Tab.0.bottom/0.0.1536.816/1920.6.1920.1032@1920.6.1920.1032" timestamp="1681680792700" />
+    <state width="1493" height="257" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.0.center" timestamp="1681981042905">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1493" height="258" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
-    <state width="1493" height="258" key="GridCell.Tab.0.right" timestamp="1679252453916">
+    <state width="1877" height="279" key="GridCell.Tab.0.center/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681813775789" />
+    <state width="1877" height="265" key="GridCell.Tab.0.center/0.0.1536.816/1920.6.1920.1032@1920.6.1920.1032" timestamp="1681680792699" />
+    <state width="1493" height="257" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.0.left" timestamp="1681981042905">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1493" height="258" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
-    <state x="493" y="134" width="672" height="535" key="search.everywhere.popup" timestamp="1679271841651">
+    <state width="1877" height="279" key="GridCell.Tab.0.left/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681813775789" />
+    <state width="1877" height="265" key="GridCell.Tab.0.left/0.0.1536.816/1920.6.1920.1032@1920.6.1920.1032" timestamp="1681680792698" />
+    <state width="1493" height="257" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.0.right" timestamp="1681981042905">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1877" height="279" key="GridCell.Tab.0.right/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681813775789" />
+    <state width="1877" height="265" key="GridCell.Tab.0.right/0.0.1536.816/1920.6.1920.1032@1920.6.1920.1032" timestamp="1681680792699" />
+    <state width="1493" height="257" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.1.bottom" timestamp="1681981042905">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="257" key="GridCell.Tab.1.bottom/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.1.center" timestamp="1681981042905">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="257" key="GridCell.Tab.1.center/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.1.left" timestamp="1681981042905">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="257" key="GridCell.Tab.1.left/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state width="1493" height="257" key="GridCell.Tab.1.right" timestamp="1681981042905">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="257" key="GridCell.Tab.1.right/0.0.1536.816@0.0.1536.816" timestamp="1681981042905" />
+    <state x="-1480" y="96" key="SettingsEditor" timestamp="1681809575247">
+      <screen x="-1920" y="6" width="1920" height="1032" />
+    </state>
+    <state x="-1480" y="96" key="SettingsEditor/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681809575247" />
+    <state x="493" y="134" width="672" height="536" key="search.everywhere.popup" timestamp="1682062984042">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@-1920.0.1920.1032" timestamp="1679209387693" />
     <state x="493" y="134" width="672" height="535" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679271841651" />
+    <state x="-1304" y="175" width="840" height="677" key="search.everywhere.popup/0.0.1536.816/-1920.6.1920.1032@-1920.6.1920.1032" timestamp="1681811755916" />
+    <state x="2536" y="175" width="840" height="677" key="search.everywhere.popup/0.0.1536.816/1920.6.1920.1032@1920.6.1920.1032" timestamp="1681628148591" />
+    <state x="493" y="134" width="672" height="536" key="search.everywhere.popup/0.0.1536.816@0.0.1536.816" timestamp="1682062984042" />
   </component>
 </project>

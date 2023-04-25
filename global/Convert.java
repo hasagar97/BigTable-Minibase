@@ -311,6 +311,7 @@ public class Convert{
 
 // get the smaller size between the length of bytes and 64 bytes
 int sz = Math.min(bytes.length, 64-position);
+System.out.println("Writing "+sz+ " bytes in setStrMapValue with position:"+position+" and string:"+value);
 
 // copy the first 64 bytes of bytes into data[] at the given position
 System.arraycopy(bytes, 0, data, position, sz);

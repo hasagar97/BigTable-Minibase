@@ -212,6 +212,19 @@ public class Map implements GlobalConst{
                 + getTimeStamp() + ", value: " + getValue()+" }");
     }
 
+    @Override
+    public String toString() {
+      try {
+        return "{ row_label: "+getRowLabel() + ", column_label: " + getColumnLabel() + ", timestamp: "
+        + getTimeStamp() + ", value: " + getValue()+" }";
+      }
+      catch(Exception E){
+        System.out.println("Exception in Map.toString");
+        E.printStackTrace();
+      }
+      return "";
+    }
+
     /*
       Get the length of the tuple
     */
@@ -273,6 +286,14 @@ public class Map implements GlobalConst{
         return this;
     }
 
+    public Map mapReplace(Map toMap) throws InvalidFieldSize, IOException
+    {
+      this.setColumnLabel(toMap.getColumnLabel());
+      this.setRowLabel(toMap.getRowLabel());
+      this.setTimeStamp(toMap.getTimeStamp());
+      this.setValue(toMap.getValue());
+      return this;
+    }
 
 
     /**
@@ -433,11 +454,13 @@ public class Map implements GlobalConst{
     public Map setStrFld(int fldNo, String val)
             throws IOException, FieldNumberOutOfBoundException
     {
-//        System.out.println("setStrFld(int fldNo, String val) fldno :"+fldNo+ "val:" + val);
-//        System.out.println("Map size:"+map.length+" offset : "+map_offset+ " field offset"+ fldOffset[fldNo -1]);
+//        System.out.println("\t setStrFld(int fldNo, String val) fldno :"+fldNo+ " val:" + val);
+//       System.out.println("\t Map size:"+map.length+" offset : "+map_offset+ " field offset"+ fldOffset[fldNo -1]);
        if ( (fldNo > 0) && (fldNo <= fldCnt))
        {
-           Convert.setStrMapValue (val, fldOffset[fldNo -1], map);
+           Convert.setStrValue (val, fldOffset[fldNo -1], map);
+//           System.out.print("Map after setting map value:");
+          //  this.print();
            return this;
        }
        else

@@ -89,6 +89,21 @@ public class Shell {
                     }
                     break;
 
+                case "rowjoin":
+                    String LEFTTABLE = words[1];
+                    String RIGHTTABLE = words[2];
+                    String OUTPUTTABLE = words[3];
+                    COLUMNFILTER = words[4];
+                    String JOINTYPE = words[5];
+                    NUMBUF = Integer.valueOf(words[6]);
+
+                    BigT lefT = new BigT(LEFTTABLE);
+                    BigT righT = new BigT(RIGHTTABLE);
+                    System.out.println("Initializing rowjoin with jointype "+ JOINTYPE);
+                    RowJoin rowJoin = new RowJoin(lefT, righT, OUTPUTTABLE, COLUMNFILTER, JOINTYPE, NUMBUF);
+                    rowJoin.run();
+                    break;
+
                 case "mapinsert":
                     String row = words[1];
                     String col = words[2];
