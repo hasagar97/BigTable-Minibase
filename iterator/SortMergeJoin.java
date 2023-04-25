@@ -29,8 +29,8 @@ public class SortMergeJoin {
 
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws InvalidMapSizeException, IOException, InvalidFieldSize, HFDiskMgrException, HFException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidSlotNumberException, SpaceNotAvailableException {
         // Start stream with bigtable2
-        leftStream = new Stream(leftTable, 1, "*", columnFilter, "*");
-        rightStream = new Stream(leftTable, 1, "*", columnFilter, "*");
+        leftStream = new Stream(leftTable, 1, "*", columnFilter, "*", null);
+        rightStream = new Stream(leftTable, 1, "*", columnFilter, "*", null);
 
         BigT result = new BigT(outputTable);
         System.out.println("Stream created");

@@ -1,3 +1,5 @@
+package tests;
+
 import BigT.BigT;
 import BigT.Map;
 import BigT.Stream;
