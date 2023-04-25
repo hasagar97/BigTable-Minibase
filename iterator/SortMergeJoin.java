@@ -26,7 +26,7 @@ public class SortMergeJoin {
     Stream rightResultStream = null;
 
     String joinMode = "inner";
-
+    Stream resultStream = null;
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws InvalidMapSizeException, IOException, InvalidFieldSize, HFDiskMgrException, HFException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException, InvalidSlotNumberException, SpaceNotAvailableException {
         // Start stream with bigtable2
         leftStream = new Stream(leftTable, 1, "*", columnFilter, "*", null);
@@ -76,15 +76,15 @@ public class SortMergeJoin {
                 }
                 leftMap = leftStream.getNext(null);
             }            
-
         }
         // If bigtable1 next entries don't match then flush buffer
 
         // Print out the result
+        resultStream = new Stream(result, 3, "*", "*", "*", null);
     }
 
-    public Map getNext() {
-        return null;
+    public Map getNext() throws InvalidMapSizeException, IOException {
+        return resultStream.getNext(null);
     }
 
 }
