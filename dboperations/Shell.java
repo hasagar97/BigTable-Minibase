@@ -1,8 +1,6 @@
 package dboperations;
 
-import btree.ConstructPageException;
-import btree.GetFileEntryException;
-import btree.PinPageException;
+import btree.*;
 import bufmgr.*;
 import diskmgr.DiskMgrException;
 import diskmgr.FileIOException;
@@ -155,6 +153,27 @@ public class Shell {
                     System.out.println("Number of Maps = " + bigtable.getMapCnt());
                     System.out.println("Distinct Row Labels = " + bigtable.getRowCnt());
                     System.out.println("Distinct Column Labels = " + bigtable.getColumnCnt());
+
+                    break;
+
+                case "valueindextest":
+                    BIGTABLENAME = words[1];
+                    bigtable = new BigT(BIGTABLENAME);
+
+                    BTFileScan btFileScan = bigtable.m_valueIndex.new_scan(null, null);
+                    while(true) {
+                        KeyDataEntry entry = btFileScan.get_next();
+                        if(entry == null) break;
+
+                        if(entry.data instanceof LeafData) {
+
+                            RID mid = ((LeafData)entry.data).getData();
+                            KeyClass key = entry.key;
+
+                            Map map = bigtable.m_heap_files.get(mid.heapIndex).getMap(mid);
+                            map.print();
+                        }
+                    }
 
                     break;
 

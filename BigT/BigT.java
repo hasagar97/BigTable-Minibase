@@ -17,6 +17,7 @@ public class BigT
   private java.lang.String m_name;
   public Vector<Heapfile> m_heap_files = new Vector<Heapfile>();
   public BTreeFile m_defaultindex = null;
+  public BTreeFile m_valueIndex = null;
   public static final int MAXINDEXNAME = 40;
   public HashMap<Integer, HashMap<Integer, BTreeFile>> m_index_files = new HashMap<Integer, HashMap<Integer, BTreeFile>>();
 
@@ -78,6 +79,7 @@ public class BigT
 
       // Default Row+Column index across all heap files
       m_defaultindex = new BTreeFile(name + "_default_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE);
+      m_valueIndex = new BTreeFile(name + "_value_index", AttrType.attrString, 2*MAXINDEXNAME, DeleteFashion.NAIVE_DELETE);
       // Create storage types aligned in vectors so that index file index and heap file index in vectors are the same index.
 
       // Type 1 No index
@@ -126,6 +128,16 @@ public class BigT
       {
         try {
           m_defaultindex.destroyFile();
+        }
+        catch (Exception e) {
+          System.err.println("Failed to destroy default index\n");
+        }
+      }
+      // Destroy the index and heap files
+      if (m_valueIndex != null)
+      {
+        try {
+          m_valueIndex.destroyFile();
         }
         catch (Exception e) {
           System.err.println("Failed to destroy default index\n");
@@ -392,9 +404,10 @@ public class BigT
             LeafRedistributeException, RecordNotFoundException, InsertRecException,
             DeleteFashionException, RedistributeException, FreePageException,
             IndexFullDeleteException {
-      StringKey defaultkey, key;
+      StringKey defaultkey, valueKey;
       
       defaultkey = new StringKey(map.getRowLabel() + map.getColumnLabel());
+      valueKey = new StringKey(map.getValue());
 
       StringKey[] keys = new StringKey[5];
       keys[0] = null;
@@ -405,9 +418,11 @@ public class BigT
 
       if(operation == 0) {
         m_defaultindex.insert(defaultkey, mid);
+        m_valueIndex.insert(valueKey, mid);
         indexInsertAll(mid, type, keys);
       } else if(operation == 1) {
         m_defaultindex.Delete(defaultkey, mid);
+        m_valueIndex.Delete(valueKey, mid);
         indexDeleteAll(mid, type, keys);
       } else {
         boolean[] affectedIndexes = new boolean[5];
@@ -436,10 +451,12 @@ public class BigT
         if(operation == 3) {
           if(isRowAffected || isColAffected)
             m_defaultindex.insert(defaultkey, mid);
+            m_valueIndex.insert(valueKey, mid);
           indexInsertAffected(mid, type, keys, affectedIndexes);
         } else if(operation == 4) {
           if(isRowAffected || isColAffected)
             m_defaultindex.Delete(defaultkey, mid);
+            m_valueIndex.Delete(valueKey, mid);
           indexDeleteAffected(mid, type, keys, affectedIndexes);
         }
       }
