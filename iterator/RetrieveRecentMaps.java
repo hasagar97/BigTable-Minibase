@@ -20,6 +20,8 @@ public class RetrieveRecentMaps {
 
     public RetrieveRecentMaps(String tableName) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
         recentValueTable = new BigT(tableName);
+        recentValueTable.deleteBigt();
+        recentValueTable = new BigT(tableName);
     }
     public BigT getBigT() {
         return recentValueTable;

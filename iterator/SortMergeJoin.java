@@ -27,7 +27,7 @@ public class SortMergeJoin {
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws Exception {
         // Start stream with bigtable2
         RetrieveRecentMaps r = new RetrieveRecentMaps("SortMergeJoinUniqueTable");
-        leftResultStream = r.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "SortMergeJoinUniqueTable");
+        leftStream = r.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "SortMergeJoinUniqueTable");
 
         BigT result = new BigT(outputTable);
         System.out.println("Stream created");
@@ -38,7 +38,7 @@ public class SortMergeJoin {
             Map leftMap = leftStream.getNext(null);
 
             while (leftMap != null) {
-                BTFileScan rightStream = r.getBigT().m_valueIndex.new_scan(new StringKey(leftMap.getValue()), new StringKey(leftMap.getValue()));
+                BTFileScan rightStream = r.getBigT().m_valueIndex.new_scan(null, null); //new StringKey(leftMap.getValue()), new StringKey(leftMap.getValue()));
                 while(true) {
                     KeyDataEntry entry = rightStream.get_next();
                     if(entry == null) break;
