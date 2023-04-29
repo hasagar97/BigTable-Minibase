@@ -12,36 +12,38 @@ import heap.SpaceNotAvailableException;
 import iterator.*;
 import java.io.IOException;
 import BigT.BigT;
+import BigT.BigTScan;
 import BigT.Map;
 import BigT.Stream;
 import btree.*;
 
 public class SortMergeJoin {
-    Stream leftStream = null;
-    Stream rightStream = null;
+    BigTScan leftStream = null;
     Stream tempStream = null;
     Stream leftResultStream = null;
     Stream rightResultStream = null;
 
     String joinMode = "inner";
     Stream resultStream = null;
+    Integer counter = 0;
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws Exception {
         // Start stream with bigtable2
-        RetrieveRecentMaps r1 = new RetrieveRecentMaps("LeftSortMergeJoinUniqueTable");
-        leftStream = r1.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "LeftSortMergeJoinUniqueTable");
-        leftTable = new BigT("LeftSortMergeJoinUniqueTable");
-        
-        RetrieveRecentMaps r2 = new RetrieveRecentMaps("RightSortMergeJoinUniqueTable");
-        rightStream = r2.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "RightSortMergeJoinUniqueTable");
-        rightTable = new BigT("RightSortMergeJoinUniqueTable");
+        RetrieveRecentMaps r1 = new RetrieveRecentMaps("LeftSortMergeJoinUniqueTable" + counter.toString());
+        r1.getRecentMaps(leftTable, "LeftSortMergeJoinUniqueTable"  + counter.toString());
+        leftTable = new BigT("LeftSortMergeJoinUniqueTable"  + counter.toString());
+        leftStream = leftTable.openScan();
 
+        RetrieveRecentMaps r2 = new RetrieveRecentMaps("RightSortMergeJoinUniqueTable"  + counter.toString());
+        r2.getRecentMaps(rightTable, "RightSortMergeJoinUniqueTable"  + counter.toString());
+        rightTable = new BigT("RightSortMergeJoinUniqueTable"  + counter.toString());
+        
         BigT result = new BigT(outputTable);
         System.out.println("Stream created");
 
         // Create temp buffer with bigtable2 entries which are same
         if (joinMode == "inner") {
             // columns equal and value equal then print
-            Map leftMap = leftStream.getNext(null);
+            Map leftMap = leftStream.getNext(new RID());
 
             while (leftMap != null) {
                 BTFileScan rightStream = rightTable.m_valueIndex.new_scan(new StringKey(leftMap.getValue()), new StringKey(leftMap.getValue()));
@@ -81,7 +83,7 @@ public class SortMergeJoin {
                         result.insertMap(rightJoinResult.getMapByteArray(), 1);
                     }
                 }
-                leftMap = leftStream.getNext(null);
+                leftMap = leftStream.getNext(new RID());
             }            
         }
         // If bigtable1 next entries don't match then flush buffer

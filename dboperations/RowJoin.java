@@ -1,6 +1,7 @@
 package dboperations;
 
 import BigT.BigT;
+import BigT.BigTScan;
 import btree.ConstructPageException;
 import btree.GetFileEntryException;
 import btree.PinPageException;
@@ -25,7 +26,8 @@ public class RowJoin {
     String joinType;
     Stream left = null;
     Stream right = null;
-    Stream nestedJoinOutputStream = null;
+    BigTScan nestedJoinOutputStream = null;
+    Integer counter = 1;
 
     AttrType[] in1 = {
             new AttrType(AttrType.attrString),
@@ -63,17 +65,23 @@ public class RowJoin {
             sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter, outputTable);
         } else {
             // Add nested join code here
-            RetrieveRecentMaps r = new RetrieveRecentMaps(lefT.getName()+"_ll");
-            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*", null),lefT.getName()+"_ll");
-            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*", null),rightT.getName()+"_ll");
+            counter++;
+            RetrieveRecentMaps r = new RetrieveRecentMaps(lefT.getName()+"_ll_"+counter.toString());
+            BigT uniqueLeftT = new BigT(lefT.getName()+"_ll_"+counter.toString());
+            BigT uniqueRightT = new BigT(rightT.getName()+"_ll_"+counter.toString());
+
+            r.getRecentMaps(lefT,lefT.getName()+"_ll_"+counter.toString());
+            r.getRecentMaps(rightT,rightT.getName()+"_ll_"+counter.toString());
             nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right, outputTable);
 
+            
+            BigTScan lt = uniqueLeftT.openScan();
+            BigTScan rt = uniqueRightT.openScan();
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(lt, rt, outputTable);
 
-            Stream lt = new Stream(lefT,6, "*", "*","*", null);
-            Stream rt = new Stream(rightT,6, "*", "*","*", null);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
+            
+            // nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
 
             Map op = new Map();
 //            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
