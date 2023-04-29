@@ -76,9 +76,9 @@ public class RowJoin {
             nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
 
             Map op = new Map();
-            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
-                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
-            }
+//            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
+//                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
+//            }
         }
     }
 
@@ -109,7 +109,7 @@ public class RowJoin {
             if (joinType == "sortmerge")
                 map = sortMergeJoinStream.getNext();
             else if (joinType == "nested") {
-                System.out.println("requexsting next joined map ");
+                // System.out.println("requexsting next joined map ");
                 map = nestedJoinOutputStream.getNext(new RID());
             }
             if(map == null) break;

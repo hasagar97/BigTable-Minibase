@@ -237,7 +237,7 @@ public class NestedLoopJoinMap extends Iterator
                 {
                     if (PredEval.Eval(OutputFilter, outer_tuple, inner_tuple, _in1, _in2) == true)
                     {
-                        System.out.println("match found for: "+inner_tuple.toString()+"  AND " + outer_tuple.toString());
+//                        System.out.println("match found for: "+inner_tuple.toString()+"  AND " + outer_tuple.toString());
                         // Apply a projection on the outer and inner tuples.
                         Projection.Join(outer_tuple, _in1,
                                 inner_tuple, _in2,
@@ -296,7 +296,7 @@ public class NestedLoopJoinMap extends Iterator
                             outputMap1.setTimeStamp(v.getTimeStamp());
                             outputMap1.setValue(v.getValue());
                             output_join_table.insertMap(outputMap1.returnMapByteArray(), 1);
-                            System.out.println("NJ______________");
+                            System.out.println("______________");
                             outputMap1.print();
 
                             Map outputMap2 = new Map();
@@ -306,7 +306,7 @@ public class NestedLoopJoinMap extends Iterator
                             outputMap2.setValue(v.getValue());
                             output_join_table.insertMap(outputMap2.returnMapByteArray(), 1);
                             outputMap2.print();
-                            System.out.println("NJ______________");
+                            System.out.println("______________");
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         } catch (InvalidFieldSize | InvalidSlotNumberException | InvalidMapSizeException |
@@ -369,7 +369,7 @@ public class NestedLoopJoinMap extends Iterator
                             outputMap.setTimeStamp(v.getTimeStamp());
                             outputMap.setValue(v.getValue());
                             output_join_table.insertMap(outputMap.returnMapByteArray(), 1);
-                            System.out.println("CJ______________");
+                            System.out.println("______________");
                             outputMap.print();
                             Map outputMap2 = new Map();
                             outputMap2.setRowLabel(trim(v.getRowLabel(),7) + ":" + trim(vr.getRowLabel(),7));
@@ -378,7 +378,7 @@ public class NestedLoopJoinMap extends Iterator
                             outputMap2.setValue(vr.getValue());
                             output_join_table.insertMap(outputMap2.returnMapByteArray(), 1);
                             outputMap2.print();
-                            System.out.println("CJ______________");
+                            System.out.println("______________");
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         } catch (InvalidFieldSize | InvalidSlotNumberException | InvalidMapSizeException |
@@ -393,11 +393,11 @@ public class NestedLoopJoinMap extends Iterator
 
         });
 
-        Map m = null;
-        Stream res = new Stream(output_join_table, 2, "*","*","*",null);
-        while((m = res.getNext(new RID()))!=null){
-            System.out.println("Nested Join output records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
-        }
+//        Map m = null;
+//        Stream res = new Stream(output_join_table, 2, "*","*","*",null);
+//        while((m = res.getNext(new RID()))!=null){
+//            System.out.println("Nested Join output records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
+//        }
 
         return new Stream(output_join_table, 6, "*", "*", "*",null);
     }
