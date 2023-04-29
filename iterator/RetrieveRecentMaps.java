@@ -21,7 +21,9 @@ public class RetrieveRecentMaps {
     public RetrieveRecentMaps(String tableName) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
         recentValueTable = new BigT(tableName);
     }
-
+    public BigT getBigT() {
+        return recentValueTable;
+    }
     public Stream getRecentMaps(Stream stream,String TableName) throws InvalidMapSizeException, IOException, InvalidFieldSize, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException {
         recentValueTable = new BigT(TableName);
         Map x = null;

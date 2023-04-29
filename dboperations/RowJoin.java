@@ -44,7 +44,7 @@ public class RowJoin {
     short[] sizes = new short[4];
 
 
-    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws InvalidMapSizeException, IOException, InvalidFieldSize, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidSlotNumberException, NestedLoopException {
+    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws Exception {
         this.lefT = lefT;
         this.rightT = rightT;
         this.joinType = joinType;
