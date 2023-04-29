@@ -19,6 +19,7 @@ import btree.*;
 public class SortMergeJoin {
     Stream leftStream = null;
     Stream rightStream = null;
+    Stream tempStream = null;
     Stream leftResultStream = null;
     Stream rightResultStream = null;
 
@@ -26,8 +27,13 @@ public class SortMergeJoin {
     Stream resultStream = null;
     public SortMergeJoin(BigT leftTable, BigT rightTable, String columnFilter, String outputTable) throws Exception {
         // Start stream with bigtable2
-        RetrieveRecentMaps r = new RetrieveRecentMaps("SortMergeJoinUniqueTable");
-        leftStream = r.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "SortMergeJoinUniqueTable");
+        RetrieveRecentMaps r1 = new RetrieveRecentMaps("LeftSortMergeJoinUniqueTable");
+        leftStream = r1.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "LeftSortMergeJoinUniqueTable");
+        leftTable = new BigT("LeftSortMergeJoinUniqueTable");
+        
+        RetrieveRecentMaps r2 = new RetrieveRecentMaps("RightSortMergeJoinUniqueTable");
+        rightStream = r2.getRecentMaps(new Stream(leftTable, 1, "*", columnFilter, "*", null), "RightSortMergeJoinUniqueTable");
+        rightTable = new BigT("RightSortMergeJoinUniqueTable");
 
         BigT result = new BigT(outputTable);
         System.out.println("Stream created");
@@ -38,7 +44,7 @@ public class SortMergeJoin {
             Map leftMap = leftStream.getNext(null);
 
             while (leftMap != null) {
-                BTFileScan rightStream = r.getBigT().m_valueIndex.new_scan(null, null); //new StringKey(leftMap.getValue()), new StringKey(leftMap.getValue()));
+                BTFileScan rightStream = rightTable.m_valueIndex.new_scan(new StringKey(leftMap.getValue()), new StringKey(leftMap.getValue()));
                 while(true) {
                     KeyDataEntry entry = rightStream.get_next();
                     if(entry == null) break;
