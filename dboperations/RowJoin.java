@@ -1,6 +1,7 @@
 package dboperations;
 
 import BigT.BigT;
+import BigT.BigTScan;
 import btree.ConstructPageException;
 import btree.GetFileEntryException;
 import btree.PinPageException;
@@ -25,7 +26,8 @@ public class RowJoin {
     String joinType;
     Stream left = null;
     Stream right = null;
-    Stream nestedJoinOutputStream = null;
+    BigTScan nestedJoinOutputStream = null;
+    Integer counter = 1;
 
     AttrType[] in1 = {
             new AttrType(AttrType.attrString),
@@ -44,7 +46,7 @@ public class RowJoin {
     short[] sizes = new short[4];
 
 
-    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws InvalidMapSizeException, IOException, InvalidFieldSize, ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, SpaceNotAvailableException, InvalidSlotNumberException, NestedLoopException {
+    public RowJoin(BigT lefT, BigT rightT, String outputTable, String columnFilter, String joinType, int numbuf) throws Exception {
         this.lefT = lefT;
         this.rightT = rightT;
         this.joinType = joinType;
@@ -63,22 +65,28 @@ public class RowJoin {
             sortMergeJoinStream = new SortMergeJoin(lefT, rightT, columnFilter, outputTable);
         } else {
             // Add nested join code here
-            RetrieveRecentMaps r = new RetrieveRecentMaps(lefT.getName()+"_ll");
-            left = r.getRecentMaps(new Stream(lefT,6, "*", "*","*", null),lefT.getName()+"_ll");
-            right = r.getRecentMaps(new Stream(rightT,6, "*", "*","*", null),rightT.getName()+"_ll");
+            counter++;
+            RetrieveRecentMaps r = new RetrieveRecentMaps(lefT.getName()+"_ll_"+counter.toString());
+            BigT uniqueLeftT = new BigT(lefT.getName()+"_ll_"+counter.toString());
+            BigT uniqueRightT = new BigT(rightT.getName()+"_ll_"+counter.toString());
+
+            r.getRecentMaps(lefT,lefT.getName()+"_ll_"+counter.toString());
+            r.getRecentMaps(rightT,rightT.getName()+"_ll_"+counter.toString());
             nestedLoopJoinMapStreamRight = new NestedLoopJoinMap(in1, 4, sizes, in1,4, sizes, 20, right, rightT.getName()+".in",
                     outFilter, null, proj1, 2);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(left, right, outputTable);
 
+            
+            BigTScan lt = uniqueLeftT.openScan();
+            BigTScan rt = uniqueRightT.openScan();
+            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoin(lt, rt, outputTable);
 
-            Stream lt = new Stream(lefT,6, "*", "*","*", null);
-            Stream rt = new Stream(rightT,6, "*", "*","*", null);
-            nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
+            
+            // nestedJoinOutputStream = nestedLoopJoinMapStreamRight.nestedRowJoinCross(lt,rt,outputTable);
 
             Map op = new Map();
-            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
-                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
-            }
+//            while((op =  nestedJoinOutputStream.getNext(new RID()))!=null){
+//                System.out.println("Resultant output Join records:: Row:"+op.getRowLabel() +" Col:"+ op.getColumnLabel()+ " #TS: "+ op.getTimeStamp()+ " val: "+ op.getValue());
+//            }
         }
     }
 
@@ -109,7 +117,7 @@ public class RowJoin {
             if (joinType == "sortmerge")
                 map = sortMergeJoinStream.getNext();
             else if (joinType == "nested") {
-                System.out.println("requexsting next joined map ");
+                // System.out.println("requexsting next joined map ");
                 map = nestedJoinOutputStream.getNext(new RID());
             }
             if(map == null) break;

@@ -1,6 +1,7 @@
 package iterator;
 
 import BigT.BigT;
+import BigT.BigTScan;
 import BigT.Map;
 import BigT.Stream;
 import btree.ConstructPageException;
@@ -19,10 +20,14 @@ public class RetrieveRecentMaps {
     BigT recentValueTable = new BigT("recentValueTable.in");
 
     public RetrieveRecentMaps(String tableName) throws ConstructPageException, HFDiskMgrException, HFException, GetFileEntryException, HFBufMgrException, PinPageException, IOException {
-        recentValueTable = new BigT(tableName);
+        recentValueTable = new BigT(tableName);   
     }
-
-    public Stream getRecentMaps(Stream stream,String TableName) throws InvalidMapSizeException, IOException, InvalidFieldSize, SpaceNotAvailableException, HFDiskMgrException, HFException, InvalidSlotNumberException, HFBufMgrException, ConstructPageException, GetFileEntryException, PinPageException {
+    public BigT getBigT() {
+        return recentValueTable;
+    }
+    public void getRecentMaps(BigT originalTable,String TableName) throws Exception {
+    try {
+        BigTScan stream = originalTable.openScan();
         recentValueTable = new BigT(TableName);
         Map x = null;
         int recCount = 0;
@@ -47,13 +52,15 @@ public class RetrieveRecentMaps {
             recCount++;
         }
         System.out.println("Total records in recentValueTable.in: "+ recCount);
+    } catch (Exception e) {
+        System.out.println(e);
+        System.exit(0);
+    }
         //order type 2 - based on columnlabel
 //        Stream res = new Stream(recentValueTable, 2, "*","*","*");
 //        Map m = null;
 //        while((m = res.getNext(new RID()))!=null){
 //            System.out.println("Resultant big table records: "+ m.getColumnLabel()+ " #TS: "+ m.getTimeStamp());
-//        }
-        return new Stream(recentValueTable, 6, "*","*","*", null);
     }
 
 }

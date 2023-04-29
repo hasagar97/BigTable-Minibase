@@ -1,11 +1,14 @@
-batchinsert ./test_data_2 1 bigtablename 1000
-batchinsert ./test_data_3 1 bigtablename1 1000
+batchinsert ../test_data_1 1 bigtablename 1000
+batchinsert ../test_data_1 1 bigtablename1 1000
 batchinsert test_data_2 1 bigtablename 1000
-batchinsert test_data_3 1 bigtablename1 1000
-rowjoin bigtablename bigtablename1 outputbigtable2 * sortmerge 100
-rowjoin bigtablename bigtablename1 outputbigtable * nested 100
+batchinsert test_data_2 1 bigtablename1 1000
+rowjoin bigtablename bigtablename1 outputbigtable1 * sortmerge 1000
+rowjoin bigtablename bigtablename1 outputbigtable3 * nested 1000
 query outputbigtable 3 * * * 100
 query bigtablename 3 2 * * * 100
 query bigtablename 3 3 * * [00004,00005] 100
 query bigtablename 3 4 * * * 100
 query bigtablename 3 6 [Italy,Taiwan] * [00004,00005] 100
+getCounts outputbigtable 1000
+getCounts outputbigtable2 1000
+getCounts bigtablename_ll 1000
