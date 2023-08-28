@@ -1,8 +1,6 @@
 package iterator;
 import heap.*;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 
 import java.io.*;
 
@@ -55,15 +53,15 @@ public class OBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception other exceptions
    */
-  public Tuple  Put(Tuple buf)
+  public BigT.Map Put(BigT.Map buf)
     throws IOException,
 	   Exception
     {
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
-      Tuple tuple_ptr = new Tuple(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
+      BigT.Map tuple_ptr = new BigT.Map(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
       
       t_written++; t_wr_to_pg++; t_wr_to_buf++; dirty = true;
       
@@ -109,7 +107,7 @@ public class OBuf implements GlobalConst{
 		  {
 		    System.arraycopy(_bufs[count],t_size*i,tempbuf,0,t_size);
 		    try {
-		      rid =  _temp_fd.insertRecord(tempbuf);
+		      rid =  _temp_fd.insertMap(tempbuf);
 		    }
 		    catch (Exception e){
 		      throw e;
@@ -120,7 +118,7 @@ public class OBuf implements GlobalConst{
 		  {       
 		    System.arraycopy(_bufs[count],t_size*i,tempbuf,0,t_size);
 		    try {
-		      rid =  _temp_fd.insertRecord(tempbuf);
+		      rid =  _temp_fd.insertMap(tempbuf);
 		    }
 		    catch (Exception e){
 		      throw e;

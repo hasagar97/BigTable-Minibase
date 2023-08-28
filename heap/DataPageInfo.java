@@ -4,6 +4,7 @@ package heap;
 /** File DataPageInfo.java */
 
 
+import BigT.Map;
 import global.*;
 import java.io.*;
 
@@ -26,7 +27,7 @@ class DataPageInfo implements GlobalConst{
     
   /** auxiliary fields of DataPageInfo */
 
-  public static final int size = 12;// size of DataPageInfo object in bytes
+  public static final int size = 64;// size of DataPageInfo object in bytes
 
   private byte [] data;  // a data buffer
   
@@ -45,7 +46,7 @@ class DataPageInfo implements GlobalConst{
    */
   public DataPageInfo()
   {  
-    data = new byte[12]; // size of datapageinfo
+    data = new byte[64]; // size of datapageinfo
     int availspace = 0;
     recct =0;
     pageId.pid = INVALID_PAGE;
@@ -72,16 +73,16 @@ class DataPageInfo implements GlobalConst{
    *  it will make a copy of the data in the tuple
    * @param atuple: the input tuple
    */
-  public DataPageInfo(Tuple _atuple)
-       throws InvalidTupleSizeException, IOException
+  public DataPageInfo(BigT.Map _atuple)
+       throws InvalidMapSizeException, IOException
   {   
      // need check _atuple size == this.size ?otherwise, throw new exception
-    if (_atuple.getLength()!=12){
-      throw new InvalidTupleSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
-    }
+//    if (_atuple.getLength()!=12){
+//      throw new InvalidMapSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
+//    }
 
-    else{
-      data = _atuple.returnTupleByteArray();
+//    else{
+      data = _atuple.returnMapByteArray();
       offset = _atuple.getOffset();
       
       availspace = Convert.getIntValue(offset, data);
@@ -89,7 +90,7 @@ class DataPageInfo implements GlobalConst{
       pageId = new PageId();
       pageId.pid = Convert.getIntValue(offset+8, data);
       
-    }
+//    }
   }
   
   
@@ -97,7 +98,7 @@ class DataPageInfo implements GlobalConst{
    *  
    *
    */
-  public Tuple convertToTuple()
+  public BigT.Map convertToTuple()
        throws IOException
   {
 
@@ -108,7 +109,8 @@ class DataPageInfo implements GlobalConst{
 
 
     // 2) creat a Tuple object using this array
-    Tuple atuple = new Tuple(data, offset, size); 
+//    System.out.println("Converting to map in datapageinfo with offset "+offset);
+    BigT.Map atuple = new BigT.Map(data, offset, size);
  
     // 3) return tuple object
     return atuple;
@@ -120,7 +122,7 @@ class DataPageInfo implements GlobalConst{
    *  to the data[](may be in buffer pool)
    *  
    */
-  public void flushToTuple() throws IOException
+  public void flushToMap() throws IOException
   {
      // write availspace, recct, pageId into "data[]"
     Convert.setIntValue(availspace, offset, data);

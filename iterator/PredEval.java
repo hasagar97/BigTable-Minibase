@@ -1,5 +1,6 @@
 package iterator;
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -17,25 +18,25 @@ public class PredEval
    *@param in2[] the attribute type corespond to the t2
    *@exception IOException  some I/O error
    *@exception UnknowAttrType don't know the attribute type
-   *@exception InvalidTupleSizeException size of tuple not valid
+   *@exception InvalidMapSizeException size of tuple not valid
    *@exception InvalidTypeException type of tuple not valid
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception PredEvalException exception from this method
    */
-  public static boolean Eval(CondExpr p[], Tuple t1, Tuple t2, AttrType in1[], 
-			     AttrType in2[])
+  public static boolean Eval(CondExpr p[], BigT.Map t1, BigT.Map t2, AttrType in1[],
+                             AttrType in2[])
     throws IOException,
 	   UnknowAttrType,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException,
 	   FieldNumberOutOfBoundException,
 	   PredEvalException
     {
       CondExpr temp_ptr;
       int       i = 0;
-      Tuple    tuple1 = null, tuple2 = null;
+      BigT.Map tuple1 = null, tuple2 = null;
       int      fld1, fld2;
-      Tuple    value =   new Tuple();
+      BigT.Map value =   new BigT.Map();
       short[]     str_size = new short[1];
       AttrType[]  val_type = new AttrType[1];
       
@@ -128,8 +129,8 @@ public class PredEval
 	      
 	      // Got the arguments, now perform a comparison.
 	      try {
-		comp_res = TupleUtils.CompareTupleWithTuple(comparison_type, tuple1, fld1, tuple2, fld2);
-	      }catch (TupleUtilsException e){
+		comp_res = MapUtils.CompareMapWithMap(comparison_type, tuple1, fld1, tuple2, fld2);
+	      }catch (TupleUtilsException | CorruptedFieldNo e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }
 	      op_res = false;

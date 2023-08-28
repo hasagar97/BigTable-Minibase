@@ -111,7 +111,7 @@ public class BTSortedPage  extends HFPage{
      try {
        
        record=BT.getBytesFromEntry(entry);  
-       rid=super.insertRecord(record);
+       rid=super.insertMap(record);
          if (rid==null) return null;
 	 
          if ( entry.data instanceof LeafData )
@@ -174,7 +174,7 @@ public class BTSortedPage  extends HFPage{
     {
       try {
 	
-	deleteRecord(rid);
+	deleteMap(rid);
 	compact_slot_dir();
 	return true;  
 	// ASSERTIONS:

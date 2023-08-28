@@ -1,8 +1,9 @@
 package tests;
 
 import java.io.*;
-import java.util.*;
 import java.lang.*;
+
+import BigT.Map;
 import heap.*;
 import bufmgr.*;
 import diskmgr.*;
@@ -116,7 +117,6 @@ public boolean runTests () {
     if ( status == OK ) {
       System.out.println ("  - Add " + choice + " records to the file\n");
       for (int i =0; (i < choice) && (status == OK); i++) {
-	
 	//fixed length record
 	DummyRecord rec = new DummyRecord(reclen);
 	rec.ival = i;
@@ -124,7 +124,7 @@ public boolean runTests () {
 	rec.name = "record" + i;
 
 	try {
-	  rid = f.insertRecord(rec.toByteArray());
+	  rid = f.insertMap(rec.toByteArray());
 	}
 	catch (Exception e) {
 	  status = FAIL;
@@ -141,9 +141,9 @@ public boolean runTests () {
       }
       
       try {
-	if ( f.getRecCnt() != choice ) {
+	if ( f.getMapCnt() != choice ) {
 	  status = FAIL;
-	  System.err.println ("*** File reports " + f.getRecCnt() + 
+	  System.err.println ("*** File reports " + f.getMapCnt() +
 			      " records, not " + choice + "\n");
 	}
       }
@@ -182,7 +182,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len, i = 0;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      BigT.Map tuple = new BigT.Map();
       
       boolean done = false;
       while (!done) { 
@@ -298,7 +298,7 @@ public boolean runTests () {
     
     if ( status == OK ) {
       int len, i = 0;
-      Tuple tuple = new Tuple();
+      BigT.Map tuple = new BigT.Map();
       boolean done = false;
 
       while (!done) { 
@@ -319,7 +319,7 @@ public boolean runTests () {
 	  if ( i % 2 == 0 ) odd = false;
 	  if ( odd )  {       // Delete the odd-numbered ones.
 	    try {
-	      status = f.deleteRecord( rid );
+	      status = f.deleteMap( rid );
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
@@ -362,7 +362,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len, i = 0;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      BigT.Map tuple = new BigT.Map();
       boolean done = false;
 
       while ( !done ) {
@@ -442,7 +442,7 @@ public boolean runTests () {
 
       int len, i = 0;
       DummyRecord rec = null; 
-      Tuple tuple = new Tuple();
+      BigT.Map tuple = new BigT.Map();
       boolean done = false;
       
       while ( !done ) {
@@ -468,9 +468,9 @@ public boolean runTests () {
 
 	  rec.fval =(float) 7*i;     // We'll check that i==rec.ival below.
 
-	  Tuple newTuple = null; 
+	  BigT.Map newTuple = null;
 	  try {
-	    newTuple = new Tuple (rec.toByteArray(),0,rec.getRecLength()); 
+	    newTuple = new BigT.Map(rec.toByteArray(),0,rec.getRecLength());
 	  }
 	  catch (Exception e) {
 	    status = FAIL;
@@ -478,7 +478,7 @@ public boolean runTests () {
 	    e.printStackTrace();
 	  }
 	  try {
-	    status = f.updateRecord(rid, newTuple); 
+	    status = f.updateMap(rid, newTuple);
 	  }
 	  catch (Exception e) {
 	    status = FAIL;
@@ -526,8 +526,8 @@ public boolean runTests () {
       int len, i = 0;
       DummyRecord rec = null;
       DummyRecord rec2 = null;
-      Tuple tuple = new Tuple(); 
-      Tuple tuple2 = new Tuple(); 
+      BigT.Map tuple = new BigT.Map();
+      BigT.Map tuple2 = new BigT.Map();
       boolean done = false;
       
       while ( !done ) {
@@ -553,7 +553,7 @@ public boolean runTests () {
 
 	  // While we're at it, test the getRecord method too.
 	  try {
-	    tuple2 = f.getRecord( rid ); 
+	    tuple2 = f.getMap( rid );
 	  }
 	  catch (Exception e) {
 	    status = FAIL;
@@ -636,7 +636,7 @@ public boolean runTests () {
     if ( status == OK ) {
       int len;
       DummyRecord rec = null;
-      Tuple tuple = new Tuple();
+      BigT.Map tuple = new BigT.Map();
       
       try {
 	tuple = scan.getNext(rid);
@@ -661,16 +661,16 @@ public boolean runTests () {
 	  status = FAIL;
 	}
 	len = tuple.getLength();
-	  Tuple newTuple = null;
+	  BigT.Map newTuple = null;
 	try {
-	  newTuple = new Tuple(rec.toByteArray(), 0, len-1);
+	  newTuple = new BigT.Map(rec.toByteArray(), 0, len-1);
 	}
 	catch (Exception e) {
 	  System.err.println (""+e);
 	  e.printStackTrace();
 	}
 	try {
-	  status = f.updateRecord( rid, newTuple );
+	  status = f.updateMap( rid, newTuple );
 	}
 	catch (ChainException e) { 
 	  status = checkException (e, "heap.InvalidUpdateException");
@@ -702,16 +702,16 @@ public boolean runTests () {
 	}
 	
 	len = tuple.getLength();
-	Tuple newTuple = null;
+	BigT.Map newTuple = null;
 	try {
-	  newTuple = new Tuple(rec.toByteArray(), 0, len+1);
+	  newTuple = new BigT.Map(rec.toByteArray(), 0, len+1);
 	}
 	catch (Exception e) {
 	  System.err.println( ""+e );
 	  e.printStackTrace();
 	}
 	try {
-	  status = f.updateRecord( rid, newTuple );
+	  status = f.updateMap( rid, newTuple );
 	}
 	catch (ChainException e) {
 	  status = checkException(e, "heap.InvalidUpdateException");
@@ -740,7 +740,7 @@ public boolean runTests () {
       System.out.println ("  - Try to insert a record that's too long\n");
       byte [] record = new byte [MINIBASE_PAGESIZE+4];
       try {
-	rid = f.insertRecord( record );
+	rid = f.insertMap( record );
       }
       catch (ChainException e) {
 	status = checkException (e, "heap.SpaceNotAvailableException");
@@ -830,12 +830,12 @@ class DummyRecord  {
 
   /** constructor: translate a tuple to a DummyRecord object
    *  it will make a copy of the data in the tuple
-   * @param atuple: the input tuple
+   * @param _atuple: the input tuple
    */
-  public DummyRecord(Tuple _atuple) 
+  public DummyRecord(BigT.Map _atuple)
 	throws java.io.IOException{   
     data = new byte[_atuple.getLength()];
-    data = _atuple.getTupleByteArray();
+    data = _atuple.getMapByteArray();
     setRecLen(_atuple.getLength());
     
     setIntRec (data);

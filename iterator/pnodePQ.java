@@ -1,9 +1,7 @@
 
 package iterator;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
-import heap.*;
+
 import java.io.*;
 
 /**
@@ -51,8 +49,8 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */
-  abstract public void  enq(pnode  item) 
-           throws IOException, UnknowAttrType, TupleUtilsException;      
+  abstract public void  enq(pnode  item)
+          throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo;
 
   /**
    * removes the minimum (Ascending) or maximum (Descending) element
@@ -74,9 +72,15 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */
-  public int pnodeCMP(pnode a, pnode b) 
-         throws IOException, UnknowAttrType, TupleUtilsException {
-    int ans = TupleUtils.CompareTupleWithTuple(fld_type, a.tuple, fld_no, b.tuple, fld_no);
+  public int pnodeCMP(pnode a, pnode b)
+          throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, fld_no, b.tuple);
+    return ans;
+  }
+
+  public int pnodeCMP(pnode a, pnode b, int orderType)
+          throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
+    int ans = MapUtils.CompareTupleWithValueSort(fld_type, a.tuple, orderType, b.tuple);
     return ans;
   }
 
@@ -91,7 +95,7 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */  
-  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, TupleUtilsException {
+  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
     return pnodeCMP(a, b) == 0;
   }
   

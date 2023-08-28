@@ -56,8 +56,7 @@ public class pnodeSplayPQ extends pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */
-  public void enq(pnode item) throws IOException, UnknowAttrType, TupleUtilsException 
-  {
+  public void enq(pnode item) throws IOException, UnknowAttrType, TupleUtilsException, CorruptedFieldNo {
     count ++;
     pnodeSplayNode newnode = new pnodeSplayNode(item);
     pnodeSplayNode t = root;
@@ -67,7 +66,7 @@ public class pnodeSplayPQ extends pnodePQ
       return;
     }
     
-    int comp = pnodeCMP(item, t.item);
+    int comp = pnodeCMP(item, t.item, fld_no);
     
     pnodeSplayNode l = pnodeSplayNode.dummy;
     pnodeSplayNode r = pnodeSplayNode.dummy;
@@ -82,7 +81,7 @@ public class pnodeSplayPQ extends pnodePQ
 	  comp = 0;
 	  done = true;
 	}
-	else comp = pnodeCMP(item, tr.item);
+	else comp = pnodeCMP(item, tr.item, fld_no);
 	
 	if ((sort_order.tupleOrder == TupleOrder.Ascending && comp <= 0) ||(sort_order.tupleOrder == TupleOrder.Descending && comp >= 0))  {
 	  l.rt = t; t.par = l;
@@ -96,7 +95,7 @@ public class pnodeSplayPQ extends pnodePQ
 	    comp = 0;
 	    done = true;
 	  }
-	  else comp = pnodeCMP(item, trr.item);
+	  else comp = pnodeCMP(item, trr.item, fld_no);
 	  
 	  if ((t.rt = tr.lt) != null) t.rt.par = t;
 	  tr.lt = t; t.par = tr;
@@ -112,7 +111,7 @@ public class pnodeSplayPQ extends pnodePQ
 	  comp = 0;
 	  done = true;
 	}
-	else comp = pnodeCMP(item, tl.item);
+	else comp = pnodeCMP(item, tl.item, fld_no);
 	
 	if ((sort_order.tupleOrder == TupleOrder.Ascending && comp >= 0) || (sort_order.tupleOrder == TupleOrder.Descending && comp <= 0)) {
 	  r.lt = t; t.par = r;
@@ -126,7 +125,7 @@ public class pnodeSplayPQ extends pnodePQ
 	    comp = 0;
 	    done = true;
 	  }
-	  else comp = pnodeCMP(item, tll.item);
+	  else comp = pnodeCMP(item, tll.item, fld_no);
 	  
 	  if ((t.lt = tl.rt) != null) t.lt.par = t;
 	  tl.rt = t; t.par = tl;

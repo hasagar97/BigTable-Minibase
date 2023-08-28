@@ -1,7 +1,6 @@
 package index;
+import BigT.Map;
 import global.*;
-import bufmgr.*;
-import diskmgr.*; 
 import btree.*;
 import iterator.*;
 import heap.*; 
@@ -31,7 +30,7 @@ public class IndexScan extends Iterator {
    * @param indexOnly whether the answer requires only the key or the tuple
    * @exception IndexException error from the lower layer
    * @exception InvalidTypeException tuple type not valid
-   * @exception InvalidTupleSizeException tuple size not valid
+   * @exception InvalidMapSizeException tuple size not valid
    * @exception UnknownIndexTypeException index type unknown
    * @exception IOException from the lower layer
    */
@@ -50,7 +49,7 @@ public class IndexScan extends Iterator {
 	   ) 
     throws IndexException, 
 	   InvalidTypeException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   UnknownIndexTypeException,
 	   IOException
   {
@@ -61,10 +60,10 @@ public class IndexScan extends Iterator {
     
     AttrType[] Jtypes = new AttrType[noOutFlds];
     short[] ts_sizes;
-    Jtuple = new Tuple();
+    Jtuple = new BigT.Map();
     
     try {
-      ts_sizes = TupleUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
+      ts_sizes = MapUtils.setup_op_tuple(Jtuple, Jtypes, types, noInFlds, str_sizes, outFlds, noOutFlds);
     }
     catch (TupleUtilsException e) {
       throw new IndexException(e, "IndexScan.java: TupleUtilsException caught from TupleUtils.setup_op_tuple()");
@@ -76,7 +75,7 @@ public class IndexScan extends Iterator {
     _selects = selects;
     perm_mat = outFlds;
     _noOutFlds = noOutFlds;
-    tuple1 = new Tuple();    
+    tuple1 = new BigT.Map();
     try {
       tuple1.setHdr((short) noInFlds, types, str_sizes);
     }
@@ -133,7 +132,7 @@ public class IndexScan extends Iterator {
    * @exception UnknownKeyTypeException key type unknown
    * @exception IOException from the lower layer
    */
-  public Tuple get_next() 
+  public BigT.Map get_next()
     throws IndexException, 
 	   UnknownKeyTypeException,
 	   IOException
@@ -207,7 +206,7 @@ public class IndexScan extends Iterator {
       // not index_only, need to return the whole tuple
       rid = ((LeafData)nextentry.data).getData();
       try {
-	tuple1 = f.getRecord(rid);
+	tuple1 = f.getMap(rid);
       }
       catch (Exception e) {
 	throw new IndexException(e, "IndexScan.java: getRecord failed");
@@ -282,8 +281,8 @@ public class IndexScan extends Iterator {
   private int           _noInFlds;
   private int           _noOutFlds;
   private Heapfile      f;
-  private Tuple         tuple1;
-  private Tuple         Jtuple;
+  private BigT.Map tuple1;
+  private BigT.Map Jtuple;
   private int           t1_size;
   private int           _fldNum;       
   private boolean       index_only;    

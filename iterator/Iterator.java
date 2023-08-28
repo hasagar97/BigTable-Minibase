@@ -1,4 +1,5 @@
 package iterator;
+import BigT.Map;
 import global.*;
 import heap.*;
 import diskmgr.*;
@@ -26,7 +27,7 @@ public abstract class Iterator implements Flags {
    *@exception IOException I/O errors
    *@exception JoinsException some join exception
    *@exception IndexException exception from super class    
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception TupleUtilsException exception from using tuple utilities
@@ -37,11 +38,11 @@ public abstract class Iterator implements Flags {
    *@exception UnknownKeyTypeException key type unknown
    *@exception Exception other exceptions
    */
-  public abstract Tuple get_next() 
+  public abstract BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException, 
 	   PageNotReadException,
 	   TupleUtilsException, 

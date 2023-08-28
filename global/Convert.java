@@ -3,7 +3,7 @@
 package global;
 
 import java.io.*;
-import java.lang.*;
+import java.util.*;
 
 public class Convert{
  
@@ -22,10 +22,13 @@ public class Convert{
       DataInputStream instr;
       int value;
       byte tmp[] = new byte[4];
-      
-      // copy the value from data array out to a tmp byte array
-      System.arraycopy (data, position, tmp, 0, 4);
-      
+
+      try {
+        // copy the value from data array out to a tmp byte array
+        System.arraycopy(data, position, tmp, 0, 4);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       /* creates a new data input stream to read data from the
        * specified input stream
        */
@@ -123,6 +126,28 @@ public class Convert{
       instr = new DataInputStream(in);
       value = instr.readUTF();
       return value;
+    }
+
+    public static String getMapStrValue (int position, byte []data, int length)
+    throws java.io.IOException
+    {
+      try{
+      byte[] lengthBytes = new byte[2];
+      lengthBytes[0] = (byte) ((data.length >> 8) & 0xFF);
+      lengthBytes[1] = (byte) (data.length & 0xFF);
+
+    // Combine the length bytes and the UTF-8 bytes into a single byte array
+      byte[] c_LengthBytes = new byte[lengthBytes.length + data.length];
+      System.arraycopy(lengthBytes, 0, c_LengthBytes, 0, lengthBytes.length);
+      System.arraycopy(data, position+2, c_LengthBytes, lengthBytes.length, length-2);
+
+      DataInputStream dis = new DataInputStream(new ByteArrayInputStream(c_LengthBytes));
+      String readStr = dis.readUTF().trim();
+      return readStr;
+      }catch(Exception e){
+          System.out.println("Error!!!!");
+      }
+      return "";
     }
   
   /**
@@ -257,20 +282,38 @@ public class Convert{
   /* creates a new data output stream to write data to
    * underlying output stream
    */
- 
+
    OutputStream out = new ByteArrayOutputStream();
    DataOutputStream outstr = new DataOutputStream (out);
-   
+
    // write the value to the output stream
-   
+
    outstr.writeUTF(value);
-   // creates a byte array with this output stream size and the 
+   // creates a byte array with this output stream size and the
    // valid contents of the buffer have been copied into it
    byte []B = ((ByteArrayOutputStream) out).toByteArray();
-   
-   int sz =outstr.size();  
+
+   int sz =Math.min(outstr.size(), 64);
+//   System.out.println("the size for array copy in setStrValue sz:"+sz);
    // copies the contents of this byte array into data[]
-   System.arraycopy (B, 0, data, position, sz);
+   System.arraycopy (Arrays.copyOfRange(B, 0, 64), 0, data, position, sz);
+   
+ }
+
+ public static void setStrMapValue (String value, int position, byte []data)
+        throws java.io.IOException
+ {
+   ByteArrayOutputStream out = new ByteArrayOutputStream();
+   DataOutputStream outstr = new DataOutputStream (out);
+   
+   outstr.writeBytes(value);
+   byte[] bytes = out.toByteArray();
+
+// get the smaller size between the length of bytes and 64 bytes
+int sz = Math.min(bytes.length, 64-position);
+
+// copy the first 64 bytes of bytes into data[] at the given position
+System.arraycopy(bytes, 0, data, position, sz);
    
  }
   

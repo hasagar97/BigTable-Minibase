@@ -1,10 +1,10 @@
 package iterator;
    
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
-import diskmgr.*;
 import index.*;
 import java.lang.*;
 import java.io.*;
@@ -30,8 +30,8 @@ public class NestedLoopsJoins  extends Iterator
   private   int        n_buf_pgs;        // # of buffer pages available.
   private   boolean        done,         // Is the join complete
     get_from_outer;                 // if TRUE, a tuple is got from outer
-  private   Tuple     outer_tuple, inner_tuple;
-  private   Tuple     Jtuple;           // Joined tuple
+  private BigT.Map outer_tuple, inner_tuple;
+  private BigT.Map Jtuple;           // Joined tuple
   private   FldSpec   perm_mat[];
   private   int        nOutFlds;
   private   Heapfile  hf;
@@ -82,8 +82,8 @@ public class NestedLoopsJoins  extends Iterator
       
       outer = am1;
       t2_str_sizescopy =  t2_str_sizes;
-      inner_tuple = new Tuple();
-      Jtuple = new Tuple();
+      inner_tuple = new BigT.Map();
+      Jtuple = new BigT.Map();
       OutputFilter = outFilter;
       RightFilter  = rightFilter;
       
@@ -98,7 +98,7 @@ public class NestedLoopsJoins  extends Iterator
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	t_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
+	t_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
 					   in1, len_in1, in2, len_in2,
 					   t1_str_sizes, t2_str_sizes,
 					   proj_list, nOutFlds);
@@ -122,7 +122,7 @@ public class NestedLoopsJoins  extends Iterator
    *@exception IOException I/O errors
    *@exception JoinsException some join exception
    *@exception IndexException exception from super class
-   *@exception InvalidTupleSizeException invalid tuple size
+   *@exception InvalidMapSizeException invalid tuple size
    *@exception InvalidTypeException tuple type not valid
    *@exception PageNotReadException exception from lower layer
    *@exception TupleUtilsException exception from using tuple utilities
@@ -134,11 +134,11 @@ public class NestedLoopsJoins  extends Iterator
    *@exception Exception other exceptions
 
    */
-  public Tuple get_next()
+  public BigT.Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
-	   InvalidTupleSizeException,
+          InvalidMapSizeException,
 	   InvalidTypeException, 
 	   PageNotReadException,
 	   TupleUtilsException, 

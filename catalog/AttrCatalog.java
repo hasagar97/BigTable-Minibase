@@ -7,10 +7,10 @@
 package catalog;
 
 import java.io.*;
+
+import BigT.Map;
 import global.*;
 import heap.*;
-import bufmgr.*;
-import diskmgr.*;
 
 
 public class AttrCatalog extends Heapfile
@@ -28,7 +28,7 @@ public class AttrCatalog extends Heapfile
       
       int sizeOfInt = 4;
       int sizeOfFloat = 4;
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new BigT.Map(BigT.Map.max_size);
       attrs = new AttrType[9];
       
       attrs[0] = new AttrType(AttrType.attrString);
@@ -312,7 +312,7 @@ public class AttrCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertMap(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	throw new AttrCatalogException(e2, "insertRecord failed");
@@ -364,7 +364,7 @@ public class AttrCatalog extends Heapfile
 	     && record.attrName.equalsIgnoreCase(attrName)==true )
 	  {
 	    try {
-	      deleteRecord(rid);
+	      deleteMap(rid);
 	    }
 	    catch (Exception e3) {
 	      throw new AttrCatalogException(e3, "deleteRecord failed");
@@ -381,7 +381,7 @@ public class AttrCatalog extends Heapfile
   // Tuple must have been initialized properly in the 
   // constructor
   // Converts AttrDesc to tuple. 
-  public void make_tuple(Tuple tuple, AttrDesc record)
+  public void make_tuple(BigT.Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -419,7 +419,7 @@ public class AttrCatalog extends Heapfile
   // READ_TUPLE
   //--------------------------------------------------
   
-  public void read_tuple(Tuple tuple, AttrDesc record)
+  public void read_tuple(BigT.Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -473,7 +473,7 @@ public class AttrCatalog extends Heapfile
 		       IndexType accessType){};
   
   
-  Tuple tuple;
+  BigT.Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   short max;

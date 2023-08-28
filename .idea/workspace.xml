@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1b578b2c-78df-4744-acb5-074796781d6d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BigT/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BigT/Stream.java" beforeDir="false" afterPath="$PROJECT_DIR$/BigT/Stream.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global/Convert.java" beforeDir="false" afterPath="$PROJECT_DIR$/global/Convert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/phase2SortingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/phase2SortingTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2NDKWY6mvLry3iWAXyNvPXFfzLi" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Phase2Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.Phase2Test" />
+      <module name="BigTableDBMS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Phase2Test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1b578b2c-78df-4744-acb5-074796781d6d" name="Changes" comment="" />
+      <created>1679193245399</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679193245399</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="116" y="118" width="1688" height="797" key="DiffContextDialog" timestamp="1679270688858">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="93" y="93" width="1350" height="630" key="DiffContextDialog/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679211267906" />
+    <state x="116" y="118" width="1688" height="797" key="DiffContextDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1679270688858" />
+    <state width="1493" height="258" key="GridCell.Tab.0.bottom" timestamp="1679252453916">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="258" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
+    <state width="1493" height="258" key="GridCell.Tab.0.center" timestamp="1679252453916">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="258" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
+    <state width="1493" height="258" key="GridCell.Tab.0.left" timestamp="1679252453916">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="258" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
+    <state width="1493" height="258" key="GridCell.Tab.0.right" timestamp="1679252453916">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1493" height="258" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1679252453916" />
+    <state x="493" y="134" width="672" height="535" key="search.everywhere.popup" timestamp="1679271841651">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="-1304" y="169" width="672" height="676" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@-1920.0.1920.1032" timestamp="1679209387693" />
+    <state x="493" y="134" width="672" height="535" key="search.everywhere.popup/0.0.1536.816/-1920.0.1920.1032@0.0.1536.816" timestamp="1679271841651" />
+  </component>
+</project>

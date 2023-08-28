@@ -5,6 +5,7 @@ package heap;
 import java.io.*;
 import java.lang.*;
 
+import BigT.Map;
 import global.*;
 import diskmgr.*;
 
@@ -38,6 +39,7 @@ public class HFPage extends Page
   public static final int PREV_PAGE = 8;
   public static final int NEXT_PAGE = 12;
   public static final int CUR_PAGE = 16;
+  public static final int MAP_FIXED_LEN = 12; // To be changed
   
   /* Warning:
      These items must all pack tight, (no padding) for
@@ -325,6 +327,21 @@ public class HFPage extends Page
       short val= Convert.getShortValue(position +2, data);
       return val;
     }
+
+    public byte[] readByteSubarray(int slot_offset, int num_bytes) {
+      /* 
+         Reads num_bytes from the byte subarray at slot_offset + MAP_FIXED_LEN.
+         Assumes that the data array has already been initialized.
+      */
+      int byte_subarray_offset = slot_offset + MAP_FIXED_LEN;
+      byte[] byte_subarray = new byte[num_bytes];
+      /* 
+      The System.arraycopy() method is used to copy the byte subarray from the data array 
+      starting at byte_subarray_offset and with length num_bytes into the byte_subarray array.
+      */
+      System.arraycopy(data, byte_subarray_offset, byte_subarray, 0, num_bytes);
+      return byte_subarray;
+  }
   
   
   /**
@@ -334,7 +351,7 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status insertRecord(char *recPtr, int recLen, RID& rid)
    */
-  public RID insertRecord ( byte [] record)		
+  public RID insertMap(byte [] record)
     throws IOException
     {
       RID rid = new RID();
@@ -402,7 +419,7 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status deleteRecord(const RID& rid)
    */
-  public void deleteRecord ( RID rid )
+  public void deleteMap(RID rid )
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -497,17 +514,17 @@ public class HFPage extends Page
   /**
    * @return RID of next record on the page, null if no more 
    * records exist on the page
-   * @param 	curRid	current record ID
+   * @param 	currentDataPageRid	current record ID
    * @exception  IOException I/O errors
    * in C++ Status nextRecord (RID curRid, RID& nextRid)
    */
-  public RID nextRecord (RID curRid) 
+  public RID nextRecord (RID currentDataPageRid) 
     throws IOException 
     {
       RID rid = new RID();
       slotCnt = Convert.getShortValue (SLOT_CNT, data);
       
-      int i=curRid.slotNo;
+      int i=currentDataPageRid.slotNo;
       short length; 
       
       // find the next non-empty slot
@@ -534,13 +551,13 @@ public class HFPage extends Page
    * copies out record with RID rid into record pointer.
    * <br>
    * Status getRecord(RID rid, char *recPtr, int& recLen)
-   * @param	rid 	the record ID
-   * @return 	a tuple contains the record
+   * @param	currentDataPageRid 	the record ID
+   * @return 	a map contains the record
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception  	IOException I/O errors
-   * @see 	Tuple
+   * @see 	Map
    */
-  public Tuple getRecord ( RID rid ) 
+  public Map getRecord ( RID currentDataPageRid ) 
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -548,9 +565,9 @@ public class HFPage extends Page
       short offset;
       byte []record;
       PageId pageNo = new PageId();
-      pageNo.pid= rid.pageNo.pid;
+      pageNo.pid= currentDataPageRid.pageNo.pid;
       curPage.pid = Convert.getIntValue (CUR_PAGE, data);
-      int slotNo = rid.slotNo;
+      int slotNo = currentDataPageRid.slotNo;
       
       // length of record being returned
       recLen = getSlotLength (slotNo);
@@ -561,8 +578,8 @@ public class HFPage extends Page
 	  offset = getSlotOffset (slotNo);
 	  record = new byte[recLen];
 	  System.arraycopy(data, offset, record, 0, recLen);
-	  Tuple tuple = new Tuple(record, 0, recLen);
-	  return tuple;
+	  Map map = new Map(record, 0, recLen);
+	  return map;
 	}
       
       else {
@@ -573,16 +590,16 @@ public class HFPage extends Page
     }
   
   /**
-   * returns a tuple in a byte array[pageSize] with given RID rid.
+   * returns a map in a byte array[pageSize] with given RID rid.
    * <br>
    * in C++	Status returnRecord(RID rid, char*& recPtr, int& recLen)
    * @param       rid     the record ID
-   * @return      a tuple  with its length and offset in the byte array
+   * @return      a map  with its length and offset in the byte array
    * @exception   InvalidSlotNumberException Invalid slot number
    * @exception   IOException I/O errors
-   * @see 	Tuple
+   * @see 	Map
    */  
-  public Tuple returnRecord ( RID rid )
+  public Map returnRecord ( RID rid )
     throws IOException, 
 	   InvalidSlotNumberException
     {
@@ -603,8 +620,8 @@ public class HFPage extends Page
 	{
 	  
 	  offset = getSlotOffset (slotNo);
-	  Tuple tuple = new Tuple(data, offset, recLen);
-	  return tuple;
+	  Map map = new Map(data, offset, recLen);
+	  return map;
 	}
       
       else {   

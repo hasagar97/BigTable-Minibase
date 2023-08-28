@@ -7,7 +7,8 @@
 package catalog;
 
 import java.io.*;
-import bufmgr.*;
+
+import BigT.Map;
 import global.*;
 import heap.*;
 import diskmgr.*;
@@ -22,7 +23,7 @@ public class Utility implements Catalogglobal{
  void deleteRecUT(String relation, attrNode item){};
 
  // DELETES INDEX ENRIES FOR RECORDS
- void deleteRecIndexesUT(String relation, RID rid, Tuple tuple){};
+ void deleteRecIndexesUT(String relation, RID rid, BigT.Map tuple){};
 
  // WRAPS INSERT UTILITY  IN TX
  public static void insertRecordUT(String relation, int attrCnt, attrNode [] attrList)
@@ -93,7 +94,7 @@ public static void insertRecUT(String relation, int attrCnt, attrNode [] attrLis
  // DELETE FOLLOWING ON RETURN 
  AttrDesc  [] attrRecs = null;
  IndexDesc [] indexRecs = null;
- Tuple     tuple = null;
+ BigT.Map tuple = null;
  String    indexName = null;
  BTreeFile btree = null;
  AttrType  [] typeArray = null;
@@ -160,7 +161,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
    
 // CREATE TUPLE  
 
-  tuple = new Tuple(Tuple.max_size);
+  tuple = new BigT.Map(BigT.Map.max_size);
 
   count = ExtendedSystemDefs.MINIBASE_ATTRCAT.getTupleStructure(relation,
         count, typeArray,sizeArray);
@@ -202,7 +203,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
 
 // INSERT INTO DATAFILE
-	heap.insertRecord(tuple.getTupleByteArray());
+	heap.insertMap(tuple.getMapByteArray());
 
 // NOW INSERT INTO EACH INDEX FOR RELATION
 
@@ -275,8 +276,8 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
  void loadRecordsUT(String relation, String fileName){};
 
  // LOADS INDEXES
- void loadIndexesUT(Tuple tuple, int attrCnt, int indexCnt,
-     AttrDesc [] attrs, IndexDesc [] indexes, void [] iFiles, RID rid ){};
+// void loadIndexesUT(Tuple tuple, int attrCnt, int indexCnt,
+//     AttrDesc [] attrs, IndexDesc [] indexes, void [] iFiles, RID rid ){};
 
 //-------------------------------
 // TYPECHECK INTS

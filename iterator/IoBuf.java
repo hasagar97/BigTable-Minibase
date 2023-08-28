@@ -2,8 +2,6 @@
 package iterator;
 import heap.*;
 import global.*;
-import diskmgr.*;
-import bufmgr.*;
 
 import java.io.*;
 
@@ -49,7 +47,7 @@ public class IoBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception  other exceptions
    */
-  public void Put(Tuple buf)
+  public void Put(BigT.Map buf)
     throws NoOutputBuffer,
 	   IOException,
 	   Exception
@@ -58,7 +56,7 @@ public class IoBuf implements GlobalConst{
 	throw new NoOutputBuffer("IoBuf:Trying to write to io buffer when it is acting as a input buffer");
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
       
       t_written++; t_wr_to_pg++; t_wr_to_buf++; dirty = true;
@@ -85,11 +83,11 @@ public class IoBuf implements GlobalConst{
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public Tuple Get(Tuple  buf)
+  public BigT.Map Get(BigT.Map buf)
     throws IOException,
 	   Exception
     {
-      Tuple temptuple;
+      BigT.Map temptuple;
       if (done){
 	buf =null;
 	return null;
@@ -115,7 +113,7 @@ public class IoBuf implements GlobalConst{
 	      buf = null;
 	      return null;
 	    }
-	  buf.tupleSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);      
+	  buf.mapSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);
 	  
 	  // Setup for next read
 	  t_rd_from_pg++;
@@ -152,7 +150,7 @@ public class IoBuf implements GlobalConst{
 		{
 		  System.arraycopy(_bufs[count],t_size*i,tempbuf,0,t_size);
 		  try {
-		    rid =  _temp_fd.insertRecord(tempbuf);
+		    rid =  _temp_fd.insertMap(tempbuf);
 		  }
 		  catch (Exception e){
 		    throw e;
